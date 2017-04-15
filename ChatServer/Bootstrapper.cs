@@ -1,4 +1,6 @@
-﻿using Nancy;
+﻿using System.IO;
+using Nancy;
+using Nancy.Json;
 using Nancy.TinyIoc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -17,6 +19,7 @@ namespace ChatServer
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 PreserveReferencesHandling = PreserveReferencesHandling.None
             });
+            container.Register(GlobalConfig.LoadConfig());
         }
     }
 }

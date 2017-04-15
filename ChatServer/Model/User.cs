@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 
 namespace ChatServer.Model
 {
-    class User
+    public class User
     {
-        [Key]
-        public int userId { get; set; }
-        public string  username { get; set; }
-        public string fristName { get; set; }
-        public string password { get; set; }
-        public string copany { get; set; }
-        public string country { get; set; }
-        public DateTime  dateOfBirth { get; set; }
-        public string pictureURL { get; set; }
-        public string  gender { get; set; }
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string Password { get; set; }
+        public string Company { get; set; }
+        public string Country { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string PictureUrl { get; set; }
+        public string Gender { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime Updated { get; set; }
+
+        public virtual List<UserTeam> UserTeams { get; set; }
+
+        public virtual List<Team> Teams => UserTeams.Select(ut => ut.Team).ToList();
     }
 }
