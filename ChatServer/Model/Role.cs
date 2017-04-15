@@ -6,13 +6,8 @@ using System.Text;
 
 namespace ChatServer.Model
 {
-    public class Role
+    public class Role : Entity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime Updated { get; set; }
     }
 }

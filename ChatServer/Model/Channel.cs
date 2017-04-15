@@ -6,15 +6,10 @@ using System.Text;
 
 namespace ChatServer.Model
 {
-    public class Channel
+    public class Channel : Entity
     {
-        public int Id { get; set; }
         public string ChannelName { get; set; }
         public int TeamId { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime Updated { get; set; }
 
         public virtual Team Team { get; set; }
         public virtual List<Message> Messages { get; set; }

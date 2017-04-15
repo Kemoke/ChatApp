@@ -7,9 +7,8 @@ using System.Text;
 
 namespace ChatServer.Model
 {
-    public class User
+    public class User : Entity
     {
-        public int Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string FirstName { get; set; }
@@ -19,10 +18,6 @@ namespace ChatServer.Model
         public DateTime DateOfBirth { get; set; }
         public string PictureUrl { get; set; }
         public string Gender { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime Updated { get; set; }
 
         public virtual List<UserTeam> UserTeams { get; set; }
 

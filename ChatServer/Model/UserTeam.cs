@@ -6,16 +6,11 @@ using System.Text;
 
 namespace ChatServer.Model
 {
-    public class UserTeam
+    public class UserTeam : Entity
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
         public int TeamId { get; set; }
         public int RoleId { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime Updated { get; set; }
 
         public virtual User User { get; set; }
         public virtual Team Team { get; set; }
