@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 using ChatServer.Model;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +28,10 @@ namespace ChatServer
             switch (config.DbName.ToLower())
             {
                 case "inmemory":
-                    optionsBuilder.UseInMemoryDatabase("Chat");
+                    optionsBuilder.UseInMemoryDatabase(config.DbName);
                     break;
                 case "localdb":
-                    optionsBuilder.UseSqlServer(@"Server=(localdb)\v11.0;Integrated Security=true;");
+                    optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB");
                     break;
                 case "pgsql":
                     var connectionString = new NpgsqlConnectionStringBuilder
