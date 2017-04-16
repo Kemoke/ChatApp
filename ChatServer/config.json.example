@@ -1,0 +1,9 @@
+﻿{
+  "AppKey": "long secure string",
+  "HostName": "localhost:8080",
+  "DbHost": "localhost", 
+  "DbType": "localdb/pgsql/inmemory",
+  "DbName": "Chatapp",
+  "Username": "user",
+  "Password": "pass"
+}

@@ -9,6 +9,12 @@ namespace ChatServer
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
+        private readonly GlobalConfig config;
+
+        public Bootstrapper(GlobalConfig config)
+        {
+            this.config = config;
+        }
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
@@ -19,7 +25,7 @@ namespace ChatServer
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 PreserveReferencesHandling = PreserveReferencesHandling.None
             });
-            container.Register(GlobalConfig.LoadConfig());
+            container.Register(config);
         }
     }
 }

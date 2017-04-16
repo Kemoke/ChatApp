@@ -8,12 +8,11 @@ namespace ChatServer
 {
     public class Startup
     {
-
         public void Configure(IApplicationBuilder app)
         {
             app.UseOwin(x => x.UseNancy(new NancyOptions
             {
-                Bootstrapper = new Bootstrapper()
+                Bootstrapper = new Bootstrapper(GlobalConfig.LoadConfig())
             }));
         }
     }
