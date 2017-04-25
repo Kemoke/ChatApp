@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Nancy;
-using Nancy.Json;
+﻿using Nancy;
 using Nancy.TinyIoc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

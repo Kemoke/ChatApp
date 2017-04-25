@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
 
 namespace ChatServer.Model
 {
@@ -21,7 +18,7 @@ namespace ChatServer.Model
 
         public virtual List<UserTeam> UserTeams { get; set; }
 
-        public virtual List<Team> Teams => UserTeams.Select(ut => ut.Team).ToList();
+        public List<Team> Teams => UserTeams.Select(ut => ut.Team).ToList();
 
         public virtual Token Token{ get; set; }
     }

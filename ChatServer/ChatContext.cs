@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
-using ChatServer.Model;
+﻿using ChatServer.Model;
 using Microsoft.EntityFrameworkCore;
+using Nancy;
 using Npgsql;
 
 namespace ChatServer
@@ -43,6 +40,8 @@ namespace ChatServer
                     }.ConnectionString;
                     optionsBuilder.UseNpgsql(connectionString);
                     break;
+                default:
+                    throw new ConfigurationException("Invalid database type");
             }
         }
 

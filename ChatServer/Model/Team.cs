@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ChatServer.Model
 {
@@ -14,7 +10,7 @@ namespace ChatServer.Model
         public virtual List<Channel> Channels { get; set; }
         public virtual List<UserTeam> UserTeams { get; set; }
 
-        public virtual List<User> Users => UserTeams.Select(ut => ut.User).ToList();
+        public List<User> Users => UserTeams.Select(ut => ut.User).ToList();
 
         public void AddUser(User user, Role role)
         {
