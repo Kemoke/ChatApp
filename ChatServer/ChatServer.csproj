@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="2.1.1" />
     <PackageReference Include="jwt.dotnetstandard" Version="0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Owin" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.1" />
@@ -19,6 +20,6 @@
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties config_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

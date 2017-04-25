@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 
 namespace ChatServer
@@ -15,6 +17,7 @@ namespace ChatServer
                 .UseStartup<Startup>()
                 .Build();
             host.Start();
+            Thread.Sleep(Timeout.Infinite);
         }
     }
 }

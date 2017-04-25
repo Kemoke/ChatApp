@@ -24,6 +24,10 @@ namespace ChatServer
                 PreserveReferencesHandling = PreserveReferencesHandling.None
             });
             container.Register(config);
+            using (var context = new ChatContext(config))
+            {
+                context.Database.EnsureCreated();
+            }
         }
     }
 }

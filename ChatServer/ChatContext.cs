@@ -22,7 +22,7 @@ namespace ChatServer
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            switch (config.DbName.ToLower())
+            switch (config.DbType.ToLower())
             {
                 case "inmemory":
                     optionsBuilder.UseInMemoryDatabase(config.DbName);
