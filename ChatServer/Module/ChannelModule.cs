@@ -1,5 +1,7 @@
 ﻿using Nancy;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ChatServer.Module
 {
@@ -9,31 +11,31 @@ namespace ChatServer.Module
         {
             Get("/", _ => "This is chat module!!!!");
             //saves message
-            Post("/send_message", parameters => SendMessage(parameters));
+            Post("/send_message", SendMessage);
             //loads conversation
-            Post("/load_messages", parameters => GetMessages(parameters));
+            Post("/load_messages", GetMessages);
             //checks if there are new messages
-            Post("/new_messages", parametes => CheckNewMessages(parametes));
+            Post("/new_messages", CheckNewMessages);
             //creates a new channel
-            Post("/create_channel", parameters => CreateNewChannel(parameters));
+            Post("/create_channel", CreateNewChannel);
         }
 
-        private dynamic CreateNewChannel(dynamic parameters)
+        private async Task<dynamic> CreateNewChannel(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic CheckNewMessages(dynamic parametes)
+        private async Task<dynamic> CheckNewMessages(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic GetMessages(dynamic parameters)
+        private async Task<dynamic> GetMessages(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic SendMessage(dynamic parameters)
+        private async Task<dynamic> SendMessage(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

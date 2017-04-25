@@ -1,5 +1,7 @@
 ﻿using Nancy;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ChatServer.Module
 {
@@ -8,10 +10,10 @@ namespace ChatServer.Module
         public RoleModule() : base("/role")
         {
             Get("/", _ => "This is role module!!!!");
-            Post("/assign_role", parameters => AssignRole(parameters));
+            Post("/assign_role", AssignRole);
         }
 
-        private dynamic AssignRole(object parameters)
+        private async Task<dynamic> AssignRole(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

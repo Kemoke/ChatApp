@@ -1,5 +1,7 @@
 ﻿using Nancy;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ChatServer.Module
 {
@@ -9,28 +11,28 @@ namespace ChatServer.Module
         public UserModule() : base("/user")
         {
             Get("/",  _ => "This si user module!!!!");
-            Post("/authenticate", parameters => Authenticate(parameters));
-            Post("/register", parameters => Register(parameters));
-            Post("/log_out", parameters => LogOut(parameters));
-            Post("/user_info", parameters => GetUserInfo(parameters));
+            Post("/authenticate", Authenticate);
+            Post("/register", Register);
+            Post("/log_out", LogOut);
+            Post("/user_info", GetUserInfo);
         }
 
-        private dynamic GetUserInfo(dynamic parameters)
+        private async Task<dynamic> GetUserInfo(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic LogOut(dynamic parameters)
+        private async Task<dynamic> LogOut(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic Register(dynamic parameters)
+        private async Task<dynamic> Register(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public dynamic Authenticate(dynamic parameters)
+        public async Task<dynamic> Authenticate(dynamic parameters, CancellationToken cancellationToken)
         {
             return null;
         }

@@ -1,5 +1,7 @@
 ﻿using Nancy;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ChatServer.Module
 {
@@ -8,22 +10,22 @@ namespace ChatServer.Module
         public SettingsModule() : base("/settings")
         {
             Get("/", _ => "This is settings Module!!!!");
-            Post("/edit_info", parameters => EditInfo(parameters));
-            Post("/change_password", parameters => ChangePassword(parameters));
-            Post("/change_picture", parameters => ChangePicture(parameters));
+            Post("/edit_info", EditInfo);
+            Post("/change_password", ChangePassword);
+            Post("/change_picture", ChangePicture);
         }
 
-        private dynamic ChangePicture(dynamic parameters)
+        private async Task<dynamic> ChangePicture(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic ChangePassword(dynamic parameters)
+        private async Task<dynamic> ChangePassword(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private dynamic EditInfo(dynamic parameters)
+        private async Task<dynamic> EditInfo(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
