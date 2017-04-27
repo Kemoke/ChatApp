@@ -6,15 +6,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using ChatServer.Model;
 using System.Linq;
+using ChatServer.Response;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatServer.Module
 {
     public class ChannelModule : NancyModule
     {
-        private GlobalConfig config = new GlobalConfig();
+        private readonly GlobalConfig config;
+        private readonly ChatContext context;
 
-        public ChannelModule() : base("/chat")
+        public ChannelModule(GlobalConfig config) : base("/chat")
         {
+            //ovako uzimaj config i context
+            this.config = config;
+            context = new ChatContext(config);
             Get("/", _ => "This is chat module!!!!");
             //saves message
             Post("/send_message", SendMessageAsync);
@@ -32,49 +38,27 @@ namespace ChatServer.Module
 
             if (!checkToken(request.token))
             {
-                return "Log in please";
+                return Response.AsJson(new Error("Log in please"));
             }
-
-            try
+            //sve sto radi sa bazom koristi async metode i await ispred
+            if(await ChannelExistsAsync(request.ChannelName, request.TeamId))
             {
-                if(channelExists(request.ChannelName, request.TeamId))
-                {
-                    return "Channel with that name already exists";
-                } 
-                else
-                {
-                    createChannel(request.ChannelName, request.TeamId);
-                }
-            } 
-            catch(Exception e)
-            {
-                throw e;
+                return Response.AsJson(new Error("Channel with that name already exists"));
             }
-
-            return "Channel successfully created!";
+            var added = new Channel
+            {
+                TeamId = request.TeamId,
+                ChannelName = request.ChannelName
+            };
+            context.Channels.Add(added);
+            await context.SaveChangesAsync(cancellationToken);
+            //uvjek vracaj objekt koji napravis preko apija nazad
+            return Response.AsJson(added);
         }
 
-        private void createChannel(string channelName, int teamId)
+        private async Task<bool> ChannelExistsAsync(string channelName, int teamId)
         {
-            using (var context = new ChatContext(config))
-            {
-                var channel = new Channel();
-
-                channel.TeamId = teamId;
-                channel.ChannelName = channelName;
-
-                context.Channels.Add(channel);
-
-                context.SaveChanges();
-            } 
-        }
-
-        private bool channelExists(string channelName, int teamId)
-        {
-            using (var context = new ChatContext(config))
-            {
-                return context.Channels.Any(c => c.ChannelName == channelName && c.TeamId == teamId);
-            }
+                return await context.Channels.AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId);
         }
 
         private bool checkToken(Token token)
