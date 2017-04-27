@@ -36,7 +36,7 @@ namespace ChatServer.Module
         {
             var request = this.Bind<CreateChannelRequest>();
 
-            if (!checkToken(request.token))
+            if (!checkToken(request.Token))
             {
                 return Response.AsJson(new Error("Log in please"));
             }
