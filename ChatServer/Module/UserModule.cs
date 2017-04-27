@@ -11,28 +11,28 @@ namespace ChatServer.Module
         public UserModule() : base("/user")
         {
             Get("/",  _ => "This si user module!!!!");
-            Post("/authenticate", Authenticate);
-            Post("/register", Register);
-            Post("/log_out", LogOut);
-            Post("/user_info", GetUserInfo);
+            Post("/authenticate", AuthenticateAsync);
+            Post("/register", RegisterAsync);
+            Post("/log_out", LogOutAsync);
+            Post("/user_info", GetUserInfoAsync);
         }
 
-        private async Task<dynamic> GetUserInfo(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> GetUserInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> LogOut(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> LogOutAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> Register(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> RegisterAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<dynamic> Authenticate(dynamic parameters, CancellationToken cancellationToken)
+        public async Task<dynamic> AuthenticateAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             return null;
         }

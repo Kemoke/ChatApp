@@ -20,6 +20,12 @@
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

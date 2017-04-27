@@ -11,31 +11,31 @@ namespace ChatServer.Module
         {
             Get("/", _ => "This is chat module!!!!");
             //saves message
-            Post("/send_message", SendMessage);
+            Post("/send_message", SendMessageAsync);
             //loads conversation
-            Post("/load_messages", GetMessages);
+            Post("/load_messages", GetMessagesAsync);
             //checks if there are new messages
-            Post("/new_messages", CheckNewMessages);
+            Post("/new_messages", CheckNewMessagesAsync);
             //creates a new channel
-            Post("/create_channel", CreateNewChannel);
+            Post("/create_channel", CreateNewChannelAsync);
         }
 
-        private async Task<dynamic> CreateNewChannel(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> CheckNewMessages(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> CheckNewMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> GetMessages(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> GetMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> SendMessage(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

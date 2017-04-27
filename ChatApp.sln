@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp", "ChatApp\ChatApp.csproj", "{CB4D8F26-595D-4ED7-A43E-125F5C2D0B7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServer", "ChatServer\ChatServer.csproj", "{EE6B2A45-EC69-4216-9EEE-249FECF35D35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerTests", "ChatServerTests\ChatServerTests.csproj", "{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,22 @@ Global
 		{EE6B2A45-EC69-4216-9EEE-249FECF35D35}.Release|x64.Build.0 = Release|Any CPU
 		{EE6B2A45-EC69-4216-9EEE-249FECF35D35}.Release|x86.ActiveCfg = Release|Any CPU
 		{EE6B2A45-EC69-4216-9EEE-249FECF35D35}.Release|x86.Build.0 = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|ARM.Build.0 = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|x64.Build.0 = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Debug|x86.Build.0 = Debug|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|ARM.ActiveCfg = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|ARM.Build.0 = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|x64.ActiveCfg = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|x64.Build.0 = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|x86.ActiveCfg = Release|Any CPU
+		{043D3FD5-43A2-4951-8A9C-F82BBA40B37A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

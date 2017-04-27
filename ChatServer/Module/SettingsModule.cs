@@ -10,22 +10,22 @@ namespace ChatServer.Module
         public SettingsModule() : base("/settings")
         {
             Get("/", _ => "This is settings Module!!!!");
-            Post("/edit_info", EditInfo);
-            Post("/change_password", ChangePassword);
-            Post("/change_picture", ChangePicture);
+            Post("/edit_info", EditInfoAsync);
+            Post("/change_password", ChangePasswordAsync);
+            Post("/change_picture", ChangePictureAsync);
         }
 
-        private async Task<dynamic> ChangePicture(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> ChangePictureAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> ChangePassword(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> ChangePasswordAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<dynamic> EditInfo(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> EditInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

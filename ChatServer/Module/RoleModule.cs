@@ -10,10 +10,10 @@ namespace ChatServer.Module
         public RoleModule() : base("/role")
         {
             Get("/", _ => "This is role module!!!!");
-            Post("/assign_role", AssignRole);
+            Post("/assign_role", AssignRoleAsync);
         }
 
-        private async Task<dynamic> AssignRole(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> AssignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

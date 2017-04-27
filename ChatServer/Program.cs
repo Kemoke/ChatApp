@@ -9,7 +9,9 @@ namespace ChatServer
     {
         public static void Main()
         {
+            Console.WriteLine("Loading config");
             var conf = GlobalConfig.LoadConfig();
+            Console.WriteLine($"Starting server at {conf.HostName}");
             var host = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
@@ -17,6 +19,7 @@ namespace ChatServer
                 .UseStartup<Startup>()
                 .Build();
             host.Start();
+            Console.WriteLine($"Server started at {conf.HostName}");
             Thread.Sleep(Timeout.Infinite);
         }
     }
