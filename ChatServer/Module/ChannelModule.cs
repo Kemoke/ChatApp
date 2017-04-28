@@ -36,7 +36,11 @@ namespace ChatServer.Module
         {
             var request = this.Bind<CreateChannelRequest>();
 
+<<<<<<< HEAD
             if (await CheckTokenAsync(request.token))
+=======
+            if (!checkToken(request.Token))
+>>>>>>> origin/master
             {
                 return Response.AsJson(new Error("Log in please"));
             }

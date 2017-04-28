@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    class CreateChannelRequest
+    public class CreateChannelRequest
     {
         public string ChannelName { get; set; }
         public int TeamId { get; set; }
-        public Token token { get; set; }
+        public Token Token { get; set; }
     }
 }
