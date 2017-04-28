@@ -25,7 +25,7 @@ namespace ChatServer.Module
             //saves message
             Post("/send_message", SendMessageAsync);
             //loads conversation
-            Post("/load_messages", GetMessagesAsync);
+            Get("/load_messages/{skip}/{limit}", GetMessagesAsync);
             //checks if there are new messages
             Post("/new_messages", CheckNewMessagesAsync);
             //creates a new channel
@@ -36,7 +36,7 @@ namespace ChatServer.Module
         {
             var request = this.Bind<CreateChannelRequest>();
 
-            if (!checkToken(request.token))
+            if (await CheckTokenAsync(request.token))
             {
                 return Response.AsJson(new Error("Log in please"));
             }
@@ -45,15 +45,17 @@ namespace ChatServer.Module
             {
                 return Response.AsJson(new Error("Channel with that name already exists"));
             }
-            var added = new Channel
+
+            var channel = new Channel
             {
                 TeamId = request.TeamId,
                 ChannelName = request.ChannelName
             };
-            context.Channels.Add(added);
+
+            context.Channels.Add(channel);
             await context.SaveChangesAsync(cancellationToken);
             //uvjek vracaj objekt koji napravis preko apija nazad
-            return Response.AsJson(added);
+            return Response.AsJson(channel);
         }
 
         private async Task<bool> ChannelExistsAsync(string channelName, int teamId)
@@ -61,7 +63,7 @@ namespace ChatServer.Module
                 return await context.Channels.AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId);
         }
 
-        private bool checkToken(Token token)
+        private Task<bool> CheckTokenAsync(Token token)
         {
             throw new NotImplementedException();
         }
@@ -73,7 +75,18 @@ namespace ChatServer.Module
 
         private async Task<dynamic> GetMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<GetMessagesRequest>();
+
+            if (await CheckTokenAsync(request.token))
+            {
+                return Response.AsJson(new Error("Log in please"));
+            }
+
+            var messages = context.Messages.Where(m => m.SenderId == request.senderId && m.TargetId == request.targetId && m.ChannelId == request.channelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
+
+            
+            return Response.AsJson(messages);
+
         }
 
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
