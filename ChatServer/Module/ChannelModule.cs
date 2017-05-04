@@ -35,12 +35,7 @@ namespace ChatServer.Module
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<CreateChannelRequest>();
-
-<<<<<<< HEAD
-            if (await CheckTokenAsync(request.token))
-=======
-            if (!checkToken(request.Token))
->>>>>>> origin/master
+            if (!await CheckTokenAsync(request.Token))
             {
                 return Response.AsJson(new Error("Log in please"));
             }
