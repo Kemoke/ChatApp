@@ -5,9 +5,70 @@
     xmlns:local="using:ChatApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" 
+    Background="#FFB6BBDC"
+    >
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="#FFB6BBDC">
+        <RelativePanel Name="mainPanel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="515" Height="500" >
+            <Grid HorizontalAlignment="Left" Margin="160,381,-296,-419" VerticalAlignment="Top" Height="38" Width="136">
+                <Button  x:Name="button1" Content="Log in" HorizontalAlignment="Left" VerticalAlignment="Top" Height="38" Width="136" Click="button1_Click"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="38" Margin="88,192,-392,-230" VerticalAlignment="Top" Width="304"/>
+            <Grid HorizontalAlignment="Left" Height="38" Margin="88,284,-392,-322" VerticalAlignment="Top" Width="304">
+                <PasswordBox x:Name="password" HorizontalAlignment="Left" Margin="0,0,0,-4" VerticalAlignment="Top" Height="42" Width="304"/>
+            </Grid>
+            <TextBox  x:Name="mail" HorizontalAlignment="Left" Height="38" TextWrapping="Wrap"  Margin="88,192,-392,-212" VerticalAlignment="Top" Width="304"/>
+
+            <Grid HorizontalAlignment="Left" Height="36" Margin="108,154,0,0" VerticalAlignment="Top" Width="116"/>
+            <TextBlock HorizontalAlignment="Left" Margin="102,164,0,0" TextWrapping="Wrap" Text="Mail:" VerticalAlignment="Top" Height="26" Width="116"/>
+            <Grid HorizontalAlignment="Left" Height="26" Margin="102,254,0,0" VerticalAlignment="Top" Width="122"/>
+            <TextBlock HorizontalAlignment="Left" Margin="102,254,0,0" TextWrapping="Wrap" Text="Password: " VerticalAlignment="Top" Height="26" Width="122"/>
+            <Grid HorizontalAlignment="Left" Height="28" Margin="108,344,0,0" VerticalAlignment="Top" Width="116"/>
+            <HyperlinkButton Content="Create an Account" HorizontalAlignment="Left" Margin="102,340,0,0" Width="124" VerticalAlignment="Top" Click="HyperlinkButton_Click"/>
+        </RelativePanel>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <VisualStateGroup x:Name="VisualGroup">
+                <VisualState x:Name="small">
+
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="mainPanel.Margin" Value ="10,10,0,0"/>
+                    </VisualState.Setters>
+
+                </VisualState>
+
+                <VisualState x:Name="compact">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="700" MinWindowHeight="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target = "mainPanel.Margin" Value ="181,50,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="fullscreen">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" MinWindowHeight="600"/>
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target='mainPanel.Margin ' Value="394,114,0,0"/>
+                    </VisualState.Setters>
+
+                </VisualState>
+
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
     </Grid>
+
+
+
 </Page>
+
