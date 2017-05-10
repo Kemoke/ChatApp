@@ -1,0 +1,89 @@
+﻿<Page
+    x:Class="ChatApp.CreateAccount"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ChatApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="#FFB6BBDC">
+
+
+	<Grid Margin="0,0,-98,-95">
+		<Grid.Background>
+			<SolidColorBrush Color="#FFB6BBDC"/>
+		</Grid.Background>
+		<RelativePanel x:Name="accountpanel"  HorizontalAlignment="Left" Margin="88,10,0,0" VerticalAlignment="Top" Height="435" Width="640" >
+			<HyperlinkButton Content="Already have an account?" HorizontalAlignment="Stretch" FontSize="15" Height="44" VerticalAlignment="Top" Margin="10,10,-76,-22" Click="HyperlinkButton_Click"/>
+			<TextBlock x:Name ="messageBlock"    HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" Text="Sign up for free"  VerticalAlignment="Top" Width="264" Margin="68,59,-270,-70" FontFamily="PanRoman" FontSize="33" FontStyle="Italic" FontWeight="Bold" Opacity="0.6"/>
+			<TextBlock x:Name ="mailBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Enter e-mail:" VerticalAlignment="Top" Width="94" Margin="39,133,-71.333,-133" />
+			<TextBox x:Name ="mailText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="293" Margin="39,163,-261,-163"/>
+			<TextBlock x:Name ="usernameBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Enter username:" VerticalAlignment="Top" Width="140" Margin="39,195,-117.333,-195"/>
+			<TextBox x:Name ="usernameText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap"  VerticalAlignment="Top" Width="293" Margin="39,220,-261,-220"/>
+			<TextBlock x:Name ="passwordBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Enter password:" VerticalAlignment="Top" Width="140" Margin="39,257,-117.333,-257"/>
+			<TextBox x:Name ="passwordText"  HorizontalAlignment="Left" Height="32" TextWrapping="Wrap"  VerticalAlignment="Top" Width="293" Margin="39,277,-261,-277" />
+			<TextBlock x:Name ="repeatBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Repeat password:" VerticalAlignment="Top" Width="140" Margin="39,314,-117.333,-314"/>
+			<TextBox x:Name ="repeatText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap"  VerticalAlignment="Top" Width="293" Margin="39,334,-261,-334"/>
+			<Button x:Name ="createButton" Content="Create Account" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="203" Margin="192,393,-330.667,-393"/>
+
+		
+		
+		
+		
+		</RelativePanel>
+
+		
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name ="VisualState">
+				<VisualState x:Name ="small">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth ="0"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target ="accountpanel.Margin" Value ="10,10,0,0"/>
+						<Setter Target ="messageBlock.Margin" Value ="15,59,-270,-70"/>
+						<Setter Target ="mailBlock.Margin" Value ="39,133,-71.333,-133"/>
+						<Setter Target ="mailText.Margin" Value ="39,158,-261,-158"/>
+						<Setter Target ="usernameBlock.Margin" Value ="39,195,-117.333,-195"/>
+						<Setter Target ="usernameText.Margin" Value ="39,220,-261,-220"/>
+						<Setter Target ="passwordBlock.Margin" Value ="39,257,-39.333,-257"/>
+						<Setter Target ="passwordText.Margin" Value ="39,277,-261,-277"/>
+						<Setter Target ="repeatBlock.Margin" Value ="39,314,-39.333,-314"/>
+						<Setter Target ="repeatText.Margin" Value ="39,334,-261,-334"/>
+						<Setter Target="createButton.Margin" Value ="267,393,-405.667,-393"/>
+
+
+
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState x:Name ="medium">
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth ="850"/>
+					    <AdaptiveTrigger MinWindowHeight ="650"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target ="accountpanel.Margin" Value ="10,10,-76,-22"/>
+						<Setter Target ="messageBlock.Margin" Value ="303,50,-335.333,-108"/>
+						<Setter Target ="mailBlock.Margin" Value ="303,107,-71.333,-133"/>
+						<Setter Target ="mailText.Margin" Value ="303,133,-559,-133"/>
+						<Setter Target ="usernameBlock.Margin" Value ="303,185,-381.333,-185"/>
+						<Setter Target ="usernameText.Margin" Value ="303,210,-559,-210"/>
+						<Setter Target ="passwordBlock.Margin" Value ="303,261,-381.333,-261"/>
+						<Setter Target ="passwordText.Margin" Value ="303,297,-559,-297"/>
+						<Setter Target ="repeatBlock.Margin" Value ="303,349,-381.333,-349"/>
+						<Setter Target ="repeatText.Margin" Value ="303,374,-559,-374"/>
+						<Setter Target="createButton.Margin" Value ="336,449,-502.667,-462"/>
+					</VisualState.Setters>
+				</VisualState>
+
+
+			</VisualStateGroup>
+
+		</VisualStateManager.VisualStateGroups>
+
+
+
+
+
+	</Grid>
+</Page>

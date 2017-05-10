@@ -73,7 +73,7 @@ namespace ChatApp
         {
 
 
-           // Frame.Navigate(typeof(CreateAccount));
+           Frame.Navigate(typeof(CreateAccount));
         }
 
 

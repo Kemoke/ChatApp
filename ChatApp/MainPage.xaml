@@ -43,7 +43,7 @@
                     </VisualState.Setters>
 
                 </VisualState>
-
+                
                 <VisualState x:Name="compact">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="700" MinWindowHeight="600" />
@@ -52,7 +52,7 @@
                         <Setter Target = "mainPanel.Margin" Value ="181,50,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="fullscreen">
+                <VisualState x:Name="large">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1000" MinWindowHeight="600"/>
                     </VisualState.StateTriggers>
