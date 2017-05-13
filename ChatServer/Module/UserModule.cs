@@ -61,7 +61,7 @@ namespace ChatServer.Module
             }
 
             //deleteToken
-
+            return Response.AsJson("Logged out");
         }
 
         private Task<bool> CheckTokenAsync(object token)
