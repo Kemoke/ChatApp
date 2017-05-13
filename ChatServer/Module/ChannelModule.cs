@@ -8,6 +8,7 @@ using ChatServer.Model;
 using System.Linq;
 using ChatServer.Response;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace ChatServer.Module
 {
@@ -59,7 +60,7 @@ namespace ChatServer.Module
 
         private async Task<bool> ChannelExistsAsync(string channelName, int teamId)
         {
-                return await context.Channels.AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId);
+            return await context.Channels.AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId);
         }
 
         private Task<bool> CheckTokenAsync(Token token)
@@ -69,19 +70,47 @@ namespace ChatServer.Module
 
         private async Task<dynamic> CheckNewMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            //posaljemo mu ID zadnje poruke, provjerimo da li je to zadnja koja je spasena u bazi, ako nije onda vratimo sve ispred nje.
+
+            var request = this.Bind<CheckNewMessagesRequest>();
+
+            if(await CheckTokenAsync(request.Token))
+            {
+                return Response.AsJson(new Error("Log in please"));
+
+            }
+
+            var messages = new List<Message>();
+            
+            if (context.Messages.Any())
+            {
+                var lastId = context.Messages.Last().Id;
+                if (lastId == request.MessageId)
+                {
+                    return Response.AsJson(messages);
+                }
+            }
+            else
+            {
+                return Response.AsJson(new Error("There are no messages to be dipslayed"));
+            }
+            
+
+            messages = await context.Messages.Where(m => (m.Id > request.MessageId && m.Id == request.ChannelId)).ToListAsync();
+
+            return Response.AsJson(messages);
         }
 
         private async Task<dynamic> GetMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<GetMessagesRequest>();
 
-            if (await CheckTokenAsync(request.token))
+            if (await CheckTokenAsync(request.Token))
             {
                 return Response.AsJson(new Error("Log in please"));
             }
 
-            var messages = context.Messages.Where(m => m.SenderId == request.senderId && m.TargetId == request.targetId && m.ChannelId == request.channelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
+            var messages = context.Messages.Where(m => m.SenderId == request.SenderId && m.TargetId == request.TargetId && m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
 
             
             return Response.AsJson(messages);
@@ -90,7 +119,24 @@ namespace ChatServer.Module
 
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<SendMessageRequest>();
+
+            if(await CheckTokenAsync(request.Token))
+            {
+                return Response.AsJson(new Error("Log in please"));
+            }
+
+            var message = new Message
+            {
+                MessageText = request.MessageText,
+                SenderId = request.SenderId,
+                TargetId = request.TargetId,
+                ChannelId = request.ChannelId
+            };
+
+            context.Add(message);
+            await context.SaveChangesAsync(cancellationToken);
+            return Response.AsJson(message);
         }
     }
 }

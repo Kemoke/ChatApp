@@ -5,9 +5,8 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class CreateChannelRequest : BaseRequest
+    public class GetUserInfoRequest : BaseRequest
     {
-        public string ChannelName { get; set; }
-        public int TeamId { get; set; }
+        public int UserId { get; set; }
     }
 }

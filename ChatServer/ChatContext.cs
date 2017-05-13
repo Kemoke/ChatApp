@@ -13,6 +13,7 @@ namespace ChatServer
         public DbSet<Role> Roles { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserTeam> UserTeams{ get; set; }
 
         public ChatContext(GlobalConfig config)
         {

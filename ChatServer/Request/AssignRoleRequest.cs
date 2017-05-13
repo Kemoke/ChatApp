@@ -5,9 +5,10 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class CreateChannelRequest : BaseRequest
+    public class AssignRoleRequest : BaseRequest
     {
-        public string ChannelName { get; set; }
+        public int RoleId { get; set; }
+        public int UserId { get; set; }
         public int TeamId { get; set; }
     }
 }
