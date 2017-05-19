@@ -1,4 +1,8 @@
-﻿using Nancy;
+﻿using System;
+using JWT;
+using Nancy;
+using Nancy.Bootstrapper;
+using Nancy.Configuration;
 using Nancy.TinyIoc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -13,16 +17,24 @@ namespace ChatServer
         {
             this.config = config;
         }
-        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+
+        public override void Configure(INancyEnvironment environment)
         {
-            base.ConfigureApplicationContainer(container);
-            container.Register(new JsonSerializer
+            base.Configure(environment);
+            environment.Tracing(true, true);
+        }
+
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+            var serializer = new JsonSerializer
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Formatting = Formatting.None,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 PreserveReferencesHandling = PreserveReferencesHandling.None
-            });
+            };
+            container.Register(serializer);
+            JsonWebToken.JsonSerializer = new JwtSerializer();
             container.Register(config);
             using (var context = new ChatContext(config))
             {

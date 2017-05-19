@@ -7,6 +7,7 @@ namespace ChatServer
     {
         public string DbName { get; set; }
         public string DbType { get; set; }
+        public string DbHost { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string HostName { get; set; }

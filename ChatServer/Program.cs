@@ -18,9 +18,8 @@ namespace ChatServer
                 .UseUrls(conf.HostName)
                 .UseStartup<Startup>()
                 .Build();
-            host.Start();
             Console.WriteLine($"Server started at {conf.HostName}");
-            Thread.Sleep(Timeout.Infinite);
+            host.Run();
         }
     }
 }

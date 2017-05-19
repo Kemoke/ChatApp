@@ -19,8 +19,6 @@ namespace ChatServer.Model
 
         public virtual List<UserTeam> UserTeams { get; set; }
 
-        public List<Team> Teams => UserTeams.Select(ut => ut.Team).ToList();
-
-        public virtual Token Token{ get; set; }
+        public List<Team> Teams => UserTeams?.Select(ut => ut.Team).ToList();
     }
 }

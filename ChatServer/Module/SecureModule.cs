@@ -6,7 +6,7 @@ using Nancy;
 
 namespace ChatServer.Module
 {
-    public class SecureModule : NancyModule
+    public abstract class SecureModule : NancyModule
     {
         protected User User;
 

@@ -29,24 +29,32 @@ namespace ChatServer.Module
 
         private async Task<dynamic> LoginAsync(dynamic props, CancellationToken token)
         {
-            var request = this.Bind<LoginRequest>();
-            var user = await context.Users.FirstAsync(u => u.Username == request.Username, token);
-            if (!BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.Password))
+            try
             {
-                return Response.AsJson(new Error("Invalid credentials")).WithStatusCode(HttpStatusCode.Unauthorized);
+                var request = this.Bind<LoginRequest>();
+                var user = await context.Users.FirstAsync(u => u.Username == request.Username, token);
+                if (!BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.Password))
+                {
+                    return Response.AsJson(new Error("Invalid credentials"))
+                        .WithStatusCode(HttpStatusCode.Unauthorized);
+                }
+                user.Password = "";
+                var time = DateTime.Now.AddDays(30).Ticks;
+                var opts = new Dictionary<string, object>
+                {
+                    {"exp", time}
+                };
+                var jwt = JsonWebToken.Encode(opts, user, config.AppKey, JwtHashAlgorithm.HS512);
+                return Response.AsJson(new LoginResponse
+                {
+                    Token = jwt,
+                    User = user
+                });
             }
-            user.Password = "";
-            var time = DateTime.Now.AddDays(30).Ticks;
-            var opts = new Dictionary<string, object>
+            catch (InvalidOperationException)
             {
-                {"exp", time }
-            };
-            var jwt = JsonWebToken.Encode(opts, user, config.AppKey, JwtHashAlgorithm.HS512);
-            return Response.AsJson(new LoginResponse
-            {
-                Token = jwt,
-                User = user
-            });
+                return Response.AsJson(new Error("Invalid credentials"));
+            }
         }
 
         private async Task<dynamic> RegisterAsync(dynamic props, CancellationToken token)

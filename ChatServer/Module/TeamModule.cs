@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace ChatServer.Module
 {
-    public class TeamModule : NancyModule
+    public class TeamModule : SecureModule
     {
-        private readonly GlobalConfig config;
         private readonly ChatContext context;
 
-
-        public TeamModule() : base("/team")
+        public TeamModule(GlobalConfig config, ChatContext context) : base("/team", config)
         {
+            this.context = context;
             Get("/", _ => "This is team module!!!!");
             Post("/create_team", CreateTeamAsync);
         }

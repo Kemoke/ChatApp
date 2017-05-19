@@ -10,19 +10,19 @@ namespace ChatServerTests
     public abstract class HttpTest
     {
         protected readonly Browser Browser;
-        protected readonly GlobalConfig config;
-        protected readonly ChatContext context;
+        protected readonly GlobalConfig Config;
+        protected readonly ChatContext Context;
 
         protected HttpTest()
         {
-            config = new GlobalConfig
+            Config = new GlobalConfig
             {
                 AppKey = "TestSecretKey",
                 DbType = "inmemory",
                 DbName = "ChatApp"
             };
-            var bootstrapper = new Bootstrapper(config);
-            context = new ChatContext(config);
+            var bootstrapper = new Bootstrapper(Config);
+            Context = new ChatContext(Config);
             Browser = new Browser(bootstrapper);
         }
     }

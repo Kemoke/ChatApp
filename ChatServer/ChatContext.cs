@@ -1,5 +1,6 @@
 ﻿using ChatServer.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Nancy;
 using Npgsql;
 
@@ -29,7 +30,7 @@ namespace ChatServer
                     optionsBuilder.UseInMemoryDatabase(config.DbName);
                     break;
                 case "localdb":
-                    optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB");
+                    optionsBuilder.UseSqlServer($"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog={config.DbName}");
                     break;
                 case "pgsql":
                     var connectionString = new NpgsqlConnectionStringBuilder
@@ -37,7 +38,8 @@ namespace ChatServer
                         Database = config.DbName,
                         Username = config.Username,
                         Password = config.Password,
-                        Host = config.HostName
+                        Host = config.DbHost,
+                        Port = 5432
                     }.ConnectionString;
                     optionsBuilder.UseNpgsql(connectionString);
                     break;
@@ -61,10 +63,12 @@ namespace ChatServer
                 .HasForeignKey(m => m.ChannelId);
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Sender)
-                .WithMany();
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Target)
-                .WithMany();
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Team>()
                 .HasMany(t => t.UserTeams)
                 .WithOne(tu => tu.Team)
