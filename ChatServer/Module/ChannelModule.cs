@@ -12,16 +12,14 @@ using System.Collections.Generic;
 
 namespace ChatServer.Module
 {
-    public class ChannelModule : NancyModule
+    public class ChannelModule : SecureModule
     {
-        private readonly GlobalConfig config;
         private readonly ChatContext context;
 
-        public ChannelModule(GlobalConfig config) : base("/chat")
+        public ChannelModule(ChatContext context, GlobalConfig config) : base("/chat", config)
         {
             //ovako uzimaj config i context
-            this.config = config;
-            context = new ChatContext(config);
+            this.context = context;
             Get("/", _ => "This is chat module!!!!");
             //saves message
             Post("/send_message", SendMessageAsync);
@@ -36,10 +34,6 @@ namespace ChatServer.Module
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<CreateChannelRequest>();
-            if (!await CheckTokenAsync(request.Token))
-            {
-                return Response.AsJson(new Error("Log in please"));
-            }
             //sve sto radi sa bazom koristi async metode i await ispred
             if(await ChannelExistsAsync(request.ChannelName, request.TeamId))
             {
@@ -63,28 +57,17 @@ namespace ChatServer.Module
             return await context.Channels.AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId);
         }
 
-        private Task<bool> CheckTokenAsync(Token token)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task<dynamic> CheckNewMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             //posaljemo mu ID zadnje poruke, provjerimo da li je to zadnja koja je spasena u bazi, ako nije onda vratimo sve ispred nje.
 
             var request = this.Bind<CheckNewMessagesRequest>();
 
-            if(await CheckTokenAsync(request.Token))
-            {
-                return Response.AsJson(new Error("Log in please"));
-
-            }
-
             var messages = new List<Message>();
             
-            if (context.Messages.Any())
+            if (await context.Messages.AnyAsync(cancellationToken))
             {
-                var lastId = context.Messages.Last().Id;
+                var lastId = (await context.Messages.LastAsync(cancellationToken)).Id;
                 if (lastId == request.MessageId)
                 {
                     return Response.AsJson(messages);
@@ -96,7 +79,7 @@ namespace ChatServer.Module
             }
             
 
-            messages = await context.Messages.Where(m => (m.Id > request.MessageId && m.Id == request.ChannelId)).ToListAsync();
+            messages = await context.Messages.Where(m => (m.Id > request.MessageId && m.Id == request.ChannelId)).ToListAsync(cancellationToken);
 
             return Response.AsJson(messages);
         }
@@ -105,12 +88,7 @@ namespace ChatServer.Module
         {
             var request = this.Bind<GetMessagesRequest>();
 
-            if (await CheckTokenAsync(request.Token))
-            {
-                return Response.AsJson(new Error("Log in please"));
-            }
-
-            var messages = context.Messages.Where(m => m.SenderId == request.SenderId && m.TargetId == request.TargetId && m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
+            var messages = await context.Messages.Where(m => m.SenderId == request.SenderId && m.TargetId == request.TargetId && m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
 
             
             return Response.AsJson(messages);
@@ -120,11 +98,6 @@ namespace ChatServer.Module
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<SendMessageRequest>();
-
-            if(await CheckTokenAsync(request.Token))
-            {
-                return Response.AsJson(new Error("Log in please"));
-            }
 
             var message = new Message
             {

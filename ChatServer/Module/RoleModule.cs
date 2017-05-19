@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace ChatServer.Module
 {
-    public class RoleModule : NancyModule
+    public class RoleModule : SecureModule
     {
-        private readonly GlobalConfig config;
         private readonly ChatContext context;
 
-        public RoleModule() : base("/role")
+        public RoleModule(ChatContext context, GlobalConfig config) : base("/role", config)
         {
+            this.context = context;
             Get("/", _ => "This is role module!!!!");
             Post("/assign_role", AssignRoleAsync);
         }
@@ -23,12 +23,6 @@ namespace ChatServer.Module
         private async Task<dynamic> AssignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<AssignRoleRequest>();
-
-            if (!await CheckTokenAsync(request.Token))
-            {
-                return Response.AsJson(new Error("Log in please"));
-            }
-
 
             var userRole = new UserTeam
             {
@@ -42,12 +36,6 @@ namespace ChatServer.Module
             await context.SaveChangesAsync(cancellationToken);
 
             return Response.AsJson(userRole);
-        }
-
-
-        private Task<bool> CheckTokenAsync(Token token)
-        {
-            throw new NotImplementedException();
         }
     }
 }
