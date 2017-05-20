@@ -31,7 +31,7 @@ namespace ChatServerTests
                 with.Accept(new MediaRange("application/json"));
             }).Result;
             output.WriteLine(result.Body.AsString());
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(result.StatusCode, HttpStatusCode.OK);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace ChatServerTests
                 with.Accept(new MediaRange("application/json"));
             }).Result;
             output.WriteLine(result.Body.AsString());
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(result.StatusCode, HttpStatusCode.OK);
             var body = result.Body.DeserializeJson<LoginResponse>();
             Assert.Equal(body.User.Username, user.Username);
             Assert.NotNull(body.Token);
