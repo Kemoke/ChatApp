@@ -35,6 +35,26 @@ namespace ChatServerTests
         }
 
         [Fact]
+        public void TestRegisterExists()
+        {
+            var result = Browser.Post("/auth/register", with =>
+            {
+                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
+                with.Accept(new MediaRange("application/json"));
+            }).Result;
+            output.WriteLine(result.Body.AsString());
+            result = Browser.Post("/auth/register", with =>
+            {
+                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
+                with.Accept(new MediaRange("application/json"));
+            }).Result;
+            output.WriteLine(result.Body.AsString());
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            Assert.Equal("Email already exists", response.Message);
+        }
+
+        [Fact]
         public void TestLogin()
         {
             var result = Browser.Post("/auth/register", with =>
@@ -58,6 +78,48 @@ namespace ChatServerTests
             Assert.Equal(body.User.Username, user.Username);
             Assert.NotNull(body.Token);
             Assert.NotEmpty(body.Token);
+        }
+
+        [Fact]
+        public void TestLoginInvalidUsername()
+        {
+            var result = Browser.Post("/auth/login", with =>
+            {
+                with.Body(JsonConvert.SerializeObject(new LoginRequest
+                {
+                    Username = user.Username,
+                    Password = user.Password
+                }), "application/json");
+                with.Accept(new MediaRange("application/json"));
+            }).Result;
+            output.WriteLine(result.Body.AsString());
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            Assert.Equal("Invalid credentials", response.Message);
+        }
+
+        [Fact]
+        public void TestLoginInvalidPassword()
+        {
+            var result = Browser.Post("/auth/register", with =>
+            {
+                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
+                with.Accept(new MediaRange("application/json"));
+            }).Result;
+            output.WriteLine(result.Body.AsString());
+            result = Browser.Post("/auth/login", with =>
+            {
+                with.Body(JsonConvert.SerializeObject(new LoginRequest
+                {
+                    Username = user.Username,
+                    Password = "asda"
+                }), "application/json");
+                with.Accept(new MediaRange("application/json"));
+            }).Result;
+            output.WriteLine(result.Body.AsString());
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            Assert.Equal("Invalid credentials", response.Message);
         }
     }
 }

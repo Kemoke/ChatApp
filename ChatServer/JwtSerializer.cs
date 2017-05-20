@@ -1,5 +1,4 @@
 ﻿using JWT;
-using Nancy.Serialization.JsonNet;
 using Newtonsoft.Json;
 
 namespace ChatServer

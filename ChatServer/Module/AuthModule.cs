@@ -51,9 +51,9 @@ namespace ChatServer.Module
                     User = user
                 });
             }
-            catch (InvalidOperationException)
+            catch (Exception)
             {
-                return Response.AsJson(new Error("Invalid credentials"));
+                return Response.AsJson(new Error("Invalid credentials")).WithStatusCode(HttpStatusCode.Unauthorized);
             }
         }
 
