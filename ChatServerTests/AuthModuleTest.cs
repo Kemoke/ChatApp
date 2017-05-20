@@ -27,7 +27,7 @@ namespace ChatServerTests
         {
             var result = Browser.Post("/auth/register", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new RegisterRequest{User = user}), "application/json");
+                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
                 with.Accept(new MediaRange("application/json"));
             }).Result;
             output.WriteLine(result.Body.AsString());
