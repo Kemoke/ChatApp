@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp", "ChatApp\ChatApp.csproj", "{CB4D8F26-595D-4ED7-A43E-125F5C2D0B7F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EE6B2A45-EC69-4216-9EEE-249FECF35D35} = {EE6B2A45-EC69-4216-9EEE-249FECF35D35}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServer", "ChatServer\ChatServer.csproj", "{EE6B2A45-EC69-4216-9EEE-249FECF35D35}"
 EndProject

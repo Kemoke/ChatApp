@@ -14,7 +14,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
-
+using Windows.Web.Http;
+using ChatApp.Model;
+using ChatApp.Response;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -30,49 +32,32 @@ namespace ChatApp
         public MainPage()
         {
             this.InitializeComponent();
-
-
         }
-
-        String mail1 = "din997@gmail.com";
-
-        String password1 = "martinmartin";
-
-        
-
-
-
-
 
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
 
             if (mail.Text == "" || password.Password == "")
             {
-                var MessageDialog = new MessageDialog("please do not leave blanks");
-
-                await MessageDialog.ShowAsync();
-
-
-            }
-
-
-
-            else if (mail1 != mail.Text && password1 != password.Password)
-            {
-                var messageDialog = new MessageDialog("Password or mail are incorrect");
-
-                mail.Text = "";
-                password.Password = "";
-
+                var messageDialog = new MessageDialog("please do not leave blanks");
                 await messageDialog.ShowAsync();
+                return;
             }
+            var client = new HttpClient();
+            var response = await client.PostAsync("http://localhost:1337/auth/login", 
+                new User { Username = mail.Text, Password = password.Password });
+            if (response.StatusCode != HttpStatusCode.Ok)
+            {
+                var msg = await response.ErrorMessage();
+                var messageDialog = new MessageDialog(msg);
+                await messageDialog.ShowAsync();
+                return;
+            }
+            var user = await response.JsonBody<UserInfo>();
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
-
-
            Frame.Navigate(typeof(CreateAccount));
         }
 
