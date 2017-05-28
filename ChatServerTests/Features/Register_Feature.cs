@@ -24,7 +24,7 @@ namespace ChatServerTests.Features
         }
 
         [Scenario]
-        [Label("Ticket-1")]
+        [Label("Ticket-2")]
         [ScenarioCategory("Security")]
         public void Registration_attempt_when_user_already_exists()
         {

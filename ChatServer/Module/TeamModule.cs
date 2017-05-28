@@ -25,24 +25,33 @@ namespace ChatServer.Module
 
         private async Task<dynamic> CreateTeamAsync(dynamic arg, CancellationToken cancellationToken)
         {
-            var request = this.Bind<CreateTeamRequest>();
-            //neak bude i team name unique
-            if (await TeamExistsAsync(request.Name))
+            try
             {
-                return Response.AsJson(new Error("Channel with that name already exists"));
+                var request = this.Bind<CreateTeamRequest>();
+                //neak bude i team name unique
+                if (await TeamExistsAsync(request.Name))
+                {
+                    return Response.AsJson(new Error("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
+                }
+
+
+                var team = new Team
+                {
+                    Name = request.Name,
+                    // UserId = request.UserId
+                };
+
+                context.Teams.Add(team);
+
+                await context.SaveChangesAsync(cancellationToken);
+
+                return Response.AsJson(team);
             }
-
-
-            var team = new Team
+            catch (Exception e)
             {
-                Name = request.Name,
-                UserId = request.UserId
-            };
-
-            context.Teams.Add(team);
-            await context.SaveChangesAsync(cancellationToken);
-            //uvjek vracaj objekt koji napravis preko apija nazad
-            return Response.AsJson(team);
+                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
+            }
+           
         }
 
         private async Task<bool> TeamExistsAsync(string teamName)

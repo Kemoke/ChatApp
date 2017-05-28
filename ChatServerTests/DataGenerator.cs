@@ -36,9 +36,24 @@ namespace ChatServerTests
             return userGenerator.Generate(count);
         }
 
+        public static IEnumerable<Team> GenerateTeamList(ChatContext context, int count)
+        {
+            var channelGenerator = new Faker<Team>()
+                .RuleFor(t => t.Name, t => t.Name.JobTitle());
+                //.RuleFor(t => t.UserId, t => t.)
+            return channelGenerator.Generate(count);
+        }
+
         public static User GenerateSingleUser(ChatContext context)
         {
             return GenerateUserList(context, 1).First();
         }
+
+        public static Team GenerateSingleTeam(ChatContext context)
+        {
+            return GenerateTeamList(context, 1).First();
+        }
+
+
     }
 }

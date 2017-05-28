@@ -20,7 +20,7 @@ namespace ChatServer.Module
         {
             //ovako uzimaj config i context
             this.context = context;
-            Get("/", _ => "This is chat module!!!!");
+            Get("/", _ => "This is channel module!!!!");
             //saves message
             Post("/send_message", SendMessageAsync);
             //loads conversation
@@ -90,9 +90,7 @@ namespace ChatServer.Module
 
             var messages = await context.Messages.Where(m => m.SenderId == request.SenderId && m.TargetId == request.TargetId && m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
 
-            
             return Response.AsJson(messages);
-
         }
 
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
