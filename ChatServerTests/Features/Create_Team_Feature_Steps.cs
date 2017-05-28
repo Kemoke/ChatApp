@@ -39,8 +39,9 @@ namespace ChatServerTests.Features
             Context = new ChatContext(Config);
 
             Browser = new Browser(bootstrapper);
-
+            
             user = DataGenerator.GenerateSingleUser(Context);
+            
             team = DataGenerator.GenerateSingleTeam(Context);
         }
 
@@ -76,10 +77,11 @@ namespace ChatServerTests.Features
             {
                 with.Body(JsonConvert.SerializeObject(new CreateTeamRequest
                 {
-                    Name = team.Name,
-                    Token = loginResult.Body.DeserializeJson<LoginResponse>().Token
+                    Name = team.Name
+                    
                 }), "application/json");
                 with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
             }).Result;
         }
 
