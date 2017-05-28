@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ChatServer.Model;
+using ChatServer.Request;
+using ChatServer.Response;
+using Microsoft.EntityFrameworkCore;
+using Nancy.ModelBinding;
 
 namespace ChatServer.Module
 {
@@ -20,7 +25,29 @@ namespace ChatServer.Module
 
         private async Task<dynamic> CreateTeamAsync(dynamic arg, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<CreateTeamRequest>();
+            //neak bude i team name unique
+            if (await TeamExistsAsync(request.Name))
+            {
+                return Response.AsJson(new Error("Channel with that name already exists"));
+            }
+
+
+            var team = new Team
+            {
+                Name = request.Name,
+                UserId = request.UserId
+            };
+
+            context.Teams.Add(team);
+            await context.SaveChangesAsync(cancellationToken);
+            //uvjek vracaj objekt koji napravis preko apija nazad
+            return Response.AsJson(team);
+        }
+
+        private async Task<bool> TeamExistsAsync(string teamName)
+        {
+            return await context.Teams.AnyAsync(t => t.Name == teamName);
         }
     }
 }
