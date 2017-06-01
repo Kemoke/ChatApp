@@ -13,6 +13,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Popups;
+using Windows.Web.Http;
+using ChatApp.Model;
+using ChatApp.Response;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,11 +33,33 @@ namespace ChatApp
 
         }
 
+
+
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainPage));
         }
 
-        
+        private async void createButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (mailText.Text == "" || usernameText.Text == "" || passwordText.Password == "" || repeatText.Password == "")
+            {
+                var messageDialog = new MessageDialog("please do not leave blanks");
+                await messageDialog.ShowAsync();
+                return;
+            }
+
+            else if(passwordText.Password != repeatText.Password)
+            {
+                var messageDialog = new MessageDialog("Passwords do not match");
+                await messageDialog.ShowAsync();
+                return;
+            }
+
+            else
+            {
+
+            }
+        }
     }
 }

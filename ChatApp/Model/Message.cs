@@ -7,9 +7,9 @@
         public int TargetId { get; set; }
         public int ChannelId { get; set; }
 
-        public virtual User Sender { get; set; }
-        public virtual User Target { get; set; }
-        public virtual Channel Channel { get; set; }
+        public User Sender { get; set; }
+        public User Target { get; set; }
+        public Channel Channel { get; set; }
     }
 
 }

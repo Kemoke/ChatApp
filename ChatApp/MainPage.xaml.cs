@@ -17,6 +17,7 @@ using Windows.UI.ViewManagement;
 using Windows.Web.Http;
 using ChatApp.Model;
 using ChatApp.Response;
+using ChatApp.Request;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -43,21 +44,24 @@ namespace ChatApp
                 await messageDialog.ShowAsync();
                 return;
             }
-            var client = new HttpClient();
-            var response = await client.PostAsync("http://localhost:1337/auth/login", 
-                new User { Username = mail.Text, Password = password.Password });
-            if (response.StatusCode != HttpStatusCode.Ok)
-            {
-                var msg = await response.ErrorMessage();
-                var messageDialog = new MessageDialog(msg);
-                await messageDialog.ShowAsync();
-                return;
-            }
+            HttpClient client = new HttpClient();
+            var response = await client.PostAsync("http://srv.kemoke.net:2424/auth/login", 
+                new LoginRequest { Username = mail.Text, Password = password.Password.ToString() });
+          //  if (response.StatusCode != HttpStatusCode.Ok)
+           // {
+            //  var msg = await response.ErrorMessage();
+             //  var messageDialog = new MessageDialog(msg);
+              // await messageDialog.ShowAsync();
+               // return;
+            //}
             var user = await response.JsonBody<UserInfo>();
+            Frame.Navigate(typeof(ChatPage));
+
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
+
            Frame.Navigate(typeof(CreateAccount));
         }
 

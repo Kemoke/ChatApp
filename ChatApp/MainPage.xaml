@@ -21,7 +21,7 @@
             <TextBox  x:Name="mail" HorizontalAlignment="Left" Height="38" TextWrapping="Wrap"  Margin="88,192,-392,-212" VerticalAlignment="Top" Width="304"/>
 
             <Grid HorizontalAlignment="Left" Height="36" Margin="108,154,0,0" VerticalAlignment="Top" Width="116"/>
-            <TextBlock HorizontalAlignment="Left" Margin="102,164,0,0" TextWrapping="Wrap" Text="Mail:" VerticalAlignment="Top" Height="26" Width="116"/>
+            <TextBlock HorizontalAlignment="Left" Margin="102,164,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Height="26" Width="116"/>
             <Grid HorizontalAlignment="Left" Height="26" Margin="102,254,0,0" VerticalAlignment="Top" Width="122"/>
             <TextBlock HorizontalAlignment="Left" Margin="102,254,0,0" TextWrapping="Wrap" Text="Password: " VerticalAlignment="Top" Height="26" Width="122"/>
             <Grid HorizontalAlignment="Left" Height="28" Margin="108,344,0,0" VerticalAlignment="Top" Width="116"/>

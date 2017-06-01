@@ -9,7 +9,7 @@ namespace ChatApp.Model
 
         public virtual List<Channel> Channels { get; set; }
         public virtual List<UserTeam> UserTeams { get; set; }
-
+         
         public List<User> Users => UserTeams.Select(ut => ut.User).ToList();
 
         public void AddUser(User user, Role role)
@@ -22,11 +22,16 @@ namespace ChatApp.Model
             };
         }
 
+        
         public void RemoveUser(User user, Role role)
         {
             //
         }
 
+        
+
+      
+        
         public void EditUserRole(User user, Role role)
         {
             var userTeam = UserTeams.Find(u => u.UserId == user.Id && u.TeamId == Id);
