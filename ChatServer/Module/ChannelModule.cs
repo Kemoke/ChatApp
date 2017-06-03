@@ -35,9 +35,15 @@ namespace ChatServer.Module
         {
             var request = this.Bind<CreateChannelRequest>();
             //sve sto radi sa bazom koristi async metode i await ispred
-            if(await ChannelExistsAsync(request.ChannelName, request.TeamId))
+
+            if (await IsUserAdminAsync(request.TeamId, request.UserId))
             {
-                return Response.AsJson(new Error("Channel with that name already exists"));
+                return Response.AsJson(new Error("You are not admin!")).WithStatusCode(HttpStatusCode.BadRequest);
+            }
+
+            if (await ChannelExistsAsync(request.ChannelName, request.TeamId))
+            {
+                return Response.AsJson(new Error("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
             }
 
             var channel = new Channel
@@ -50,6 +56,11 @@ namespace ChatServer.Module
             await context.SaveChangesAsync(cancellationToken);
             //uvjek vracaj objekt koji napravis preko apija nazad
             return Response.AsJson(channel);
+        }
+
+        private async Task<bool> IsUserAdminAsync(int teamId, int userId)
+        {
+            return await context.UserTeams.AnyAsync(ut => ut.UserId == userId && ut.TeamId == teamId && ut.RoleId == 1);
         }
 
         private async Task<bool> ChannelExistsAsync(string channelName, int teamId)

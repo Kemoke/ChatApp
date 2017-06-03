@@ -37,8 +37,7 @@ namespace ChatServer.Module
 
                 var team = new Team
                 {
-                    Name = request.Name,
-                    // UserId = request.UserId
+                    Name = request.Name
                 };
 
                 context.Teams.Add(team);
