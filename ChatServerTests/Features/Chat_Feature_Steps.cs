@@ -106,7 +106,7 @@ namespace ChatServerTests.Features
 
         private void Request_is_sent_to_retrieve_messages()
         {
-            retrievedMessageList = config.Browser.Get("/load_messages/0/9", with =>
+            retrievedMessageList = config.Browser.Get("/load_messages/0/10", with =>
                 {
                     with.Body(JsonConvert.SerializeObject(new GetMessagesRequest()
                     {

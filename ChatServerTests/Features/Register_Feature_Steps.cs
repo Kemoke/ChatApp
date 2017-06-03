@@ -38,7 +38,7 @@ namespace ChatServerTests.Features
         {
             result = config.Browser.Post("/auth/register", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
+                with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
             }).Result;
         }
@@ -52,7 +52,7 @@ namespace ChatServerTests.Features
         {
             result = config.Browser.Post("/auth/register", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
+                with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
             }).Result;
         }
@@ -60,7 +60,7 @@ namespace ChatServerTests.Features
         private void Registration_is_unsusccessful_because_of_existing_email()
         {
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            var response = result.BodyJson<Error>();
             Assert.Equal("Email already exists", response.Message);
         }
     }

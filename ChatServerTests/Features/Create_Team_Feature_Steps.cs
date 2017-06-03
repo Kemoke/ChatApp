@@ -40,37 +40,39 @@ namespace ChatServerTests.Features
         {
             loginResult = config.Browser.Post("/auth/register", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new RegisterRequest {User = user}), "application/json");
+                with.BodyJson(new RegisterRequest {User = user});
                 with.Accept(new MediaRange("application/json"));
             }).Result;
+
             loginResult = config.Browser.Post("/auth/login", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new LoginRequest
+                with.BodyJson(new LoginRequest
                 {
                     Username = user.Username,
                     Password = user.Password
-                }), "application/json");
+                });
                 with.Accept(new MediaRange("application/json"));
+
             }).Result;
+
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
-            var body = loginResult.Body.DeserializeJson<LoginResponse>();
+            var body = loginResult.BodyJson<LoginResponse>();
             Assert.Equal(body.User.Username, user.Username);
             Assert.NotNull(body.Token);
             Assert.NotEmpty(body.Token);
-
         }
 
         private void User_tries_to_create_new_team_providing_team_name()
         {
-            result = config.Browser.Post("/team/create_team", with =>
+            result = config.Browser.Post("/team/", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new CreateTeamRequest
+                with.BodyJson(new CreateTeamRequest
                 {
                     Name = team.Name
                     
-                }), "application/json");
+                });
                 with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
             }).Result;
         }
 
@@ -81,22 +83,22 @@ namespace ChatServerTests.Features
 
         private void Given_there_exists_a_team_in_the_database()
         {
-            result = config.Browser.Post("/team/create_team", with =>
+            result = config.Browser.Post("/team/", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new CreateTeamRequest
+                with.BodyJson(new CreateTeamRequest
                 {
                     Name = team.Name
 
-                }), "application/json");
+                });
                 with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
             }).Result;
         }
 
         private void Team_creation_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            var response = result.BodyJson<Error>();
             Assert.Equal("Channel with that name already exists", response.Message);
         }
     }
