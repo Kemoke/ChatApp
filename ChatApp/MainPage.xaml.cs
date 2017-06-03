@@ -50,6 +50,7 @@ namespace ChatApp
             {
                 var response = await HttpApi.Auth.LoginAsync(new LoginRequest { Username = mail.Text, Password = password.Password });
                 await new MessageDialog(response.Token).ShowAsync();
+                Frame.Navigate(typeof(ChatPage));
             }
             catch (ApiException ex)
             {
@@ -59,6 +60,7 @@ namespace ChatApp
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
+
            Frame.Navigate(typeof(CreateAccount));
         }
 

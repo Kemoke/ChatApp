@@ -17,20 +17,21 @@
 			<HyperlinkButton Content="Already have an account?" HorizontalAlignment="Stretch" FontSize="15" Height="44" VerticalAlignment="Top" Margin="10,10,-76,-22" Click="HyperlinkButton_Click"/>
 			<TextBlock x:Name ="messageBlock"    HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" Text="Sign up for free"  VerticalAlignment="Top" Width="264" Margin="68,59,-270,-70" FontFamily="PanRoman" FontSize="33" FontStyle="Italic" FontWeight="Bold" Opacity="0.6"/>
 			<TextBlock x:Name ="mailBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Enter e-mail:" VerticalAlignment="Top" Width="94" Margin="39,133,-71.333,-133" />
-			<TextBox x:Name ="mailText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Width="293" Margin="39,163,-261,-163"/>
+			<TextBox x:Name ="mailText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" VerticalAlignment="Top"  Width="293" Margin="39,163,-261,-163"/>
 			<TextBlock x:Name ="usernameBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Enter username:" VerticalAlignment="Top" Width="140" Margin="39,195,-117.333,-195"/>
 			<TextBox x:Name ="usernameText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap"  VerticalAlignment="Top" Width="293" Margin="39,220,-261,-220"/>
 			<TextBlock x:Name ="passwordBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Enter password:" VerticalAlignment="Top" Width="140" Margin="39,257,-117.333,-257"/>
-			<TextBox x:Name ="passwordText"  HorizontalAlignment="Left" Height="32" TextWrapping="Wrap"  VerticalAlignment="Top" Width="293" Margin="39,277,-261,-277" />
+			<PasswordBox x:Name ="passwordText"  HorizontalAlignment="Left" Height="32"   VerticalAlignment="Top" Width="293" Margin="39,277,-261,-277" />
 			<TextBlock x:Name ="repeatBlock" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Repeat password:" VerticalAlignment="Top" Width="140" Margin="39,314,-117.333,-314"/>
-			<TextBox x:Name ="repeatText" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap"  VerticalAlignment="Top" Width="293" Margin="39,334,-261,-334"/>
-			<Button x:Name ="createButton" Content="Create Account" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="203" Margin="192,393,-330.667,-393"/>
+			<PasswordBox x:Name ="repeatText" HorizontalAlignment="Left" Height="32"   VerticalAlignment="Top" Width="293" Margin="39,334,-261,-334"/>
+			<Button x:Name ="createButton" Content="Create Account" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="203" Margin="192,393,-330.667,-393" Click="createButton_Click"/>
 
-		
-		
-		
-		
-		</RelativePanel>
+
+            <TextBox x:Name="myBlock" Height="100" Width= "100"/>
+
+
+
+        </RelativePanel>
 
 		
 		<VisualStateManager.VisualStateGroups>
