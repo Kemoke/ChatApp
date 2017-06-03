@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class GetMessagesRequest : BaseRequest
+    public class GetMessagesRequest
     {
         public int ChannelId { get; set; }
         public int SenderId { get; set; }

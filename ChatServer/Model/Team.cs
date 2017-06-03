@@ -5,7 +5,7 @@ namespace ChatServer.Model
 {
     public class Team : Entity
     {
-        public string Name { get; set; }
+        public string Name { get; set; }     
 
         public virtual List<Channel> Channels { get; set; }
         public virtual List<UserTeam> UserTeams { get; set; }
