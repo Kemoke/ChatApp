@@ -49,7 +49,6 @@ namespace ChatApp
             try
             {
                 var response = await HttpApi.Auth.LoginAsync(new LoginRequest { Username = mail.Text, Password = password.Password });
-                await new MessageDialog(response.Token).ShowAsync();
                 Frame.Navigate(typeof(ChatPage));
             }
             catch (ApiException ex)
