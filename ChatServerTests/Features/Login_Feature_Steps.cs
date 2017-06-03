@@ -22,34 +22,23 @@ namespace ChatServerTests.Features
     {
        
         private readonly User user;
-        protected readonly Browser Browser;
-        protected readonly GlobalConfig Config;
-        protected readonly ChatContext Context;
+        protected readonly FeaturesConfig config;
         private BrowserResponse result;
 
         #region Setup/Teardown
         public Login_Feature(ITestOutputHelper output) : base(output)
         {
             
-            Config = new GlobalConfig
-            {
-                AppKey = "TestSecretKey",
-                DbType = "inmemory",
-                DbName = "ChatApp"
-            };
-            var bootstrapper = new Bootstrapper(Config);
-            Context = new ChatContext(Config);
+            config = new FeaturesConfig();
 
-            Browser = new Browser(bootstrapper);
-
-            user = DataGenerator.GenerateSingleUser(Context);
+            user = DataGenerator.GenerateSingleUser(config.Context);
 
         }
         #endregion
 
         private void Given_the_user_is_already_registered()
         {
-            result = Browser.Post("/auth/register", with =>
+            result = config.Browser.Post("/auth/register", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
                 with.Accept(new MediaRange("application/json"));
@@ -59,7 +48,7 @@ namespace ChatServerTests.Features
 
         private void When_the_user_sends_login_request_with_correct_credentials()
         {
-            result = Browser.Post("/auth/login", with =>
+            result = config.Browser.Post("/auth/login", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new LoginRequest
                 {
@@ -81,7 +70,7 @@ namespace ChatServerTests.Features
 
         private void When_the_user_sends_login_request_with_incorrect_username()
         {
-            result = Browser.Post("/auth/login", with =>
+            result = config.Browser.Post("/auth/login", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new LoginRequest
                 {
@@ -101,7 +90,7 @@ namespace ChatServerTests.Features
 
         private void When_the_user_sends_login_request_with_incorrect_password()
         {
-            result = Browser.Post("/auth/login", with =>
+            result = config.Browser.Post("/auth/login", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new LoginRequest
                 {

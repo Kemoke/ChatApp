@@ -6,6 +6,7 @@ using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
 using LightBDD.XUnit2;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Testing;
@@ -19,34 +20,23 @@ namespace ChatServerTests.Features
     public partial class Register_Feature : FeatureFixture
     {
         private readonly User user;
-        protected readonly Browser Browser;
-        protected readonly GlobalConfig Config;
-        protected readonly ChatContext Context;
+        protected readonly FeaturesConfig config;
         private BrowserResponse result;
 
         #region Setup/Teardown
         public Register_Feature(ITestOutputHelper output) : base(output)
         {
 
-            Config = new GlobalConfig
-            {
-                AppKey = "TestSecretKey",
-                DbType = "inmemory",
-                DbName = "ChatApp"
-            };
-            var bootstrapper = new Bootstrapper(Config);
-            Context = new ChatContext(Config);
-
-            Browser = new Browser(bootstrapper);
-
-            user = DataGenerator.GenerateSingleUser(Context);
+            config = new FeaturesConfig();
+            
+            user = DataGenerator.GenerateSingleUser(config.Context);
 
         }
         #endregion
 
         private void Given_the_user_enters_registration_information()
         {
-            result = Browser.Post("/auth/register", with =>
+            result = config.Browser.Post("/auth/register", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
                 with.Accept(new MediaRange("application/json"));
@@ -60,7 +50,7 @@ namespace ChatServerTests.Features
 
         private void Existing_user_in_database()
         {
-            result = Browser.Post("/auth/register", with =>
+            result = config.Browser.Post("/auth/register", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
                 with.Accept(new MediaRange("application/json"));
