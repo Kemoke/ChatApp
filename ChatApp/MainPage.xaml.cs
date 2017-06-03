@@ -15,8 +15,11 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.Web.Http;
+using ChatApp.Api;
 using ChatApp.Model;
+using ChatApp.Request;
 using ChatApp.Response;
+using Refit;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -43,17 +46,15 @@ namespace ChatApp
                 await messageDialog.ShowAsync();
                 return;
             }
-            var client = new HttpClient();
-            var response = await client.PostAsync("http://localhost:1337/auth/login", 
-                new User { Username = mail.Text, Password = password.Password });
-            if (response.StatusCode != HttpStatusCode.Ok)
+            try
             {
-                var msg = await response.ErrorMessage();
-                var messageDialog = new MessageDialog(msg);
-                await messageDialog.ShowAsync();
-                return;
+                var response = await HttpApi.Auth.LoginAsync(new LoginRequest { Username = mail.Text, Password = password.Password });
+                await new MessageDialog(response.Token).ShowAsync();
             }
-            var user = await response.JsonBody<UserInfo>();
+            catch (ApiException ex)
+            {
+                await new MessageDialog(ex.ErrorMessage()).ShowAsync();
+            }
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)

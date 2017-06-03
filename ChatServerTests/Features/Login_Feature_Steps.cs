@@ -22,40 +22,38 @@ namespace ChatServerTests.Features
     {
        
         private readonly User user;
-        protected readonly FeaturesConfig config;
+        protected readonly FeaturesConfig Config;
         private BrowserResponse result;
 
         #region Setup/Teardown
         public Login_Feature(ITestOutputHelper output) : base(output)
         {
             
-            config = new FeaturesConfig();
+            Config = new FeaturesConfig();
 
-            user = DataGenerator.GenerateSingleUser(config.Context);
+            user = DataGenerator.GenerateSingleUser(Config.Context);
 
         }
         #endregion
 
         private void Given_the_user_is_already_registered()
         {
-            result = config.Browser.Post("/auth/register", with =>
+            result = Config.Browser.Post("/auth/register", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user }), "application/json");
-                with.Accept(new MediaRange("application/json"));
+                with.BodyJson(new RegisterRequest { User = user });
             }).Result;
         }
 
 
         private void When_the_user_sends_login_request_with_correct_credentials()
         {
-            result = config.Browser.Post("/auth/login", with =>
+            result = Config.Browser.Post("/auth/login", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new LoginRequest
+                with.BodyJson(new LoginRequest
                 {
                     Username = user.Username,
                     Password = user.Password
-                }), "application/json");
-                with.Accept(new MediaRange("application/json"));
+                });
             }).Result;
         }
 
@@ -70,34 +68,32 @@ namespace ChatServerTests.Features
 
         private void When_the_user_sends_login_request_with_incorrect_username()
         {
-            result = config.Browser.Post("/auth/login", with =>
+            result = Config.Browser.Post("/auth/login", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new LoginRequest
+                with.BodyJson(new LoginRequest
                 {
-                    Username = user.Username,
+                    Username = "invalid username",
                     Password = user.Password
-                }), "application/json");
-                with.Accept(new MediaRange("application/json"));
+                });
             }).Result;
         }
 
         private void Then_the_login_operation_should_be_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
-            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            var response = result.BodyJson<Error>();
             Assert.Equal("Invalid credentials", response.Message);
         }
 
         private void When_the_user_sends_login_request_with_incorrect_password()
         {
-            result = config.Browser.Post("/auth/login", with =>
+            result = Config.Browser.Post("/auth/login", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new LoginRequest
+                with.BodyJson(new LoginRequest
                 {
                     Username = user.Username,
-                    Password = "sdadada",
-                }), "application/json");
-                with.Accept(new MediaRange("application/json"));
+                    Password = "invalid password"
+                });
             }).Result;
         }
     }

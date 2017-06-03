@@ -19,8 +19,46 @@ namespace ChatServer.Module
         public TeamModule(GlobalConfig config, ChatContext context) : base("/team", config)
         {
             this.context = context;
-            Get("/", _ => "This is team module!!!!");
-            Post("/create_team", CreateTeamAsync);
+            Get("/", ListTeamAsync);
+            Get("/{id}", GetTeamAsync);
+            Post("/", CreateTeamAsync);
+            Put("/{id}", EditTeamAsync);
+            Delete("/{id}", DeleteTeamAsync);
+        }
+
+        private async Task<object> DeleteTeamAsync(dynamic props, CancellationToken token)
+        {
+            int id = props.id;
+            context.Teams.Remove(new Team {Id = id});
+            await context.SaveChangesAsync(token);
+            return Response.AsText("Deleted");
+        }
+
+        private async Task<object> EditTeamAsync(dynamic props, CancellationToken token)
+        {
+            int id = props.id;
+            var request = this.Bind<Team>();
+            var team = await context.Teams.FirstAsync(t => t.Id == id, token);
+            team.Name = request.Name;
+            await context.SaveChangesAsync(token);
+            return Response.AsJson(team);
+        }
+
+        private async Task<object> GetTeamAsync(dynamic props, CancellationToken token)
+        {
+            int id = props.id;
+            var team = await context.Teams.Include(t => t.UserTeams)
+                .ThenInclude(t => t.User)
+                .FirstAsync(u => u.Id == id, token);
+            return Response.AsJson(team);
+        }
+
+        private async Task<object> ListTeamAsync(dynamic props, CancellationToken token)
+        {
+            var teams = await context.Teams.Include(t => t.UserTeams)
+                .ThenInclude(t => t.User)
+                .ToListAsync(token);
+            return Response.AsJson(teams);
         }
 
         private async Task<dynamic> CreateTeamAsync(dynamic arg, CancellationToken cancellationToken)

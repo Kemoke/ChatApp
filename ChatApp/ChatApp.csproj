@@ -93,13 +93,13 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\HttpApi.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CreateAccount.xaml.cs">
       <DependentUpon>CreateAccount.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

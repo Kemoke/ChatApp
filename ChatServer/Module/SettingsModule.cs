@@ -15,45 +15,15 @@ namespace ChatServer.Module
         public SettingsModule(ChatContext context, GlobalConfig config) : base("/settings", config)
         {
             this.context = context;
-            Get("/", _ => "This is settings Module!!!!");
-            Post("/edit_info", EditInfoAsync);
-            Post("/change_password", ChangePasswordAsync);
+            Get("/", GetInfoAsync);
+
         }
 
-        private async Task<dynamic> ChangePasswordAsync(dynamic parameters, CancellationToken cancellationToken)
+        private Task<object> GetInfoAsync(object arg1, CancellationToken arg2)
         {
-            var request = this.Bind<ChangePasswordRequest>();
-
-            var user = context.Users.Find(request.UserId);
-            //ovo treba sve fino hashovati :D 
-            if(BCrypt.Net.BCrypt.EnhancedVerify(request.OldPassword, user.Password))
-            {
-                user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.NewPassword);
-                await context.SaveChangesAsync(cancellationToken);
-
-                return Response.AsJson(new Error("Password changed successfully"));
-            }
-            return Response.AsJson(new Error("Wrong input for Old password"));
+            throw new NotImplementedException();
         }
 
-        private async Task<dynamic> EditInfoAsync(dynamic parameters, CancellationToken cancellationToken)
-        {
-            var request = this.Bind<EditUserInfoRequest>();
-
-            User = await context.Users.FindAsync(User.Id);
-
-            User.Company = request.Company;
-            User.Country = request.Country;
-            User.DateOfBirth = request.DateOfBirth;
-            User.FirstName = request.FirstName;
-            User.LastName = request.LastName;
-            User.Gender = request.Gender;
-            User.PictureUrl = request.PictureUrl;
-            User.Username = request.Username;
-
-            await context.SaveChangesAsync(cancellationToken);
-
-            return Response.AsJson(new Error("Data changed successfully"));
-        }
+        
     }
 }

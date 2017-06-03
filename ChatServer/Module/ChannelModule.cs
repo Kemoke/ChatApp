@@ -16,19 +16,46 @@ namespace ChatServer.Module
     {
         private readonly ChatContext context;
 
-        public ChannelModule(ChatContext context, GlobalConfig config) : base("/chat", config)
+        public ChannelModule(ChatContext context, GlobalConfig config) : base("/channel", config)
         {
             //ovako uzimaj config i context
             this.context = context;
-            Get("/", _ => "This is channel module!!!!");
-            //saves message
-            Post("/send_message", SendMessageAsync);
-            //loads conversation
-            Get("/load_messages/{skip}/{limit}", GetMessagesAsync);
-            //checks if there are new messages
-            Post("/new_messages", CheckNewMessagesAsync);
+            //list channels
+            Get("/", ListChannelAsync);
+            //get channel
+            Get("/{id}", GetChannelAsync);
             //creates a new channel
-            Post("/create_channel", CreateNewChannelAsync);
+            Post("/", CreateNewChannelAsync);
+            //edit channel
+            Put("/{id}", EditChannelAsync);
+            //delete channel
+            Delete("/{id}", DeleteChannelAsync);
+            //saves message
+            Post("/send", SendMessageAsync);
+            //loads conversation
+            Get("/messages/{skip}/{limit}", GetMessagesAsync);
+            //checks if there are new messages
+            Get("/messages/new", CheckNewMessagesAsync);
+        }
+
+        private Task<object> GetChannelAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<object> ListChannelAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<object> DeleteChannelAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<object> EditChannelAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)

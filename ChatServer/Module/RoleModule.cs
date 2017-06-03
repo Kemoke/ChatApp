@@ -16,9 +16,20 @@ namespace ChatServer.Module
         public RoleModule(ChatContext context, GlobalConfig config) : base("/role", config)
         {
             this.context = context;
-            Get("/", _ => "This is role module!!!!");
-            Post("/assign_role", AssignRoleAsync);
-            Post("/create_role", CreateRoleAsync);
+            Get("/", ListRoleAsync);
+            Get("/{id}", GetRoleAsync);
+            Post("/assign", AssignRoleAsync);
+            Post("/", CreateRoleAsync);
+        }
+
+        private Task<object> GetRoleAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<object> ListRoleAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<dynamic> AssignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
