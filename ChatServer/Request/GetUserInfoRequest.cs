@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class GetUserInfoRequest : BaseRequest
+    public class GetUserInfoRequest
     {
         public int UserId { get; set; }
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class SendMessageRequest : BaseRequest
+    public class SendMessageRequest
     {
         public string MessageText { get; set; }
         public int SenderId { get; set; }

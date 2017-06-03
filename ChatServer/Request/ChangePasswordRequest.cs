@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class ChangePasswordRequest : BaseRequest
+    public class ChangePasswordRequest
     {
         public int UserId { get; set; }
         public string NewPassword { get; set; }
