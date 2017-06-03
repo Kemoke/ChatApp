@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-[assembly: LightBddScopeAttribute]
+[assembly: LightBddScope]
 
 namespace ChatServerTests.Features
 {
