@@ -16,9 +16,7 @@ namespace ChatServerTests.Features
     {
         private readonly User user;
         private readonly Team team;
-        protected readonly Browser Browser;
-        protected readonly GlobalConfig Config;
-        protected readonly ChatContext Context;
+        private readonly FeaturesConfig config;
         private BrowserResponse result;
         private BrowserResponse loginResult;
 
@@ -29,32 +27,23 @@ namespace ChatServerTests.Features
         public Create_Team_Feature(ITestOutputHelper output) : base(output)
         {
 
-            Config = new GlobalConfig
-            {
-                AppKey = "TestSecretKey",
-                DbType = "inmemory",
-                DbName = "ChatApp"
-            };
-            var bootstrapper = new Bootstrapper(Config);
-            Context = new ChatContext(Config);
-
-            Browser = new Browser(bootstrapper);
+            config = new FeaturesConfig();
             
-            user = DataGenerator.GenerateSingleUser(Context);
+            user = DataGenerator.GenerateSingleUser(config.Context);
             
-            team = DataGenerator.GenerateSingleTeam(Context);
+            team = DataGenerator.GenerateSingleTeam(config.Context);
         }
 
         #endregion
 
         private void Given_the_user_is_logged_in()
         {
-            loginResult = Browser.Post("/auth/register", with =>
+            loginResult = config.Browser.Post("/auth/register", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new RegisterRequest {User = user}), "application/json");
                 with.Accept(new MediaRange("application/json"));
             }).Result;
-            loginResult = Browser.Post("/auth/login", with =>
+            loginResult = config.Browser.Post("/auth/login", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new LoginRequest
                 {
@@ -73,7 +62,7 @@ namespace ChatServerTests.Features
 
         private void User_tries_to_create_new_team_providing_team_name()
         {
-            result = Browser.Post("/team/create_team", with =>
+            result = config.Browser.Post("/team/create_team", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new CreateTeamRequest
                 {
@@ -88,6 +77,27 @@ namespace ChatServerTests.Features
         private void Team_creation_successful()
         {
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        private void Given_there_exists_a_team_in_the_database()
+        {
+            result = config.Browser.Post("/team/create_team", with =>
+            {
+                with.Body(JsonConvert.SerializeObject(new CreateTeamRequest
+                {
+                    Name = team.Name
+
+                }), "application/json");
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+            }).Result;
+        }
+
+        private void Team_creation_unsuccessful()
+        {
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            var response = JsonConvert.DeserializeObject<Error>(result.Body.AsString());
+            Assert.Equal("Channel with that name already exists", response.Message);
         }
     }
 }

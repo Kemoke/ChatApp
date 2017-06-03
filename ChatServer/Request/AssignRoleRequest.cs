@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatServer.Request
 {
-    public class AssignRoleRequest : BaseRequest
+    public class AssignRoleRequest
     {
         public int RoleId { get; set; }
         public int UserId { get; set; }
