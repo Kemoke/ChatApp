@@ -107,18 +107,25 @@ namespace ChatServer.Module
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<SendMessageRequest>();
-
-            var message = new Message
+            try
             {
-                MessageText = request.MessageText,
-                SenderId = request.SenderId,
-                TargetId = request.TargetId,
-                ChannelId = request.ChannelId
-            };
+                var message = new Message
+                {
+                    MessageText = request.MessageText,
+                    SenderId = request.SenderId,
+                    TargetId = request.TargetId,
+                    ChannelId = request.ChannelId
+                };
 
-            context.Add(message);
-            await context.SaveChangesAsync(cancellationToken);
-            return Response.AsJson(message);
+                context.Add(message);
+                await context.SaveChangesAsync(cancellationToken);
+                return Response.AsJson(message);
+            }
+            catch(Exception e)
+            {
+                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
+            }
+            
         }
     }
 }

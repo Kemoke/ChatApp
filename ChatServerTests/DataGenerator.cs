@@ -7,15 +7,15 @@ using ChatServer.Model;
 namespace ChatServerTests
 {
     public static class DataGenerator {
-        public static Channel GenerateSingleChannel(ChatContext context)
+        public static Channel GenerateSingleChannel(ChatContext context, int teamId)
         {
-            return GenerateChannelList(context, 1).First();
+            return GenerateChannelList(context, teamId, 1).First();
         }
 
-        public static IEnumerable<Channel> GenerateChannelList(ChatContext context, int count)
+        public static IEnumerable<Channel> GenerateChannelList(ChatContext context, int teamId, int count)
         {
             var channelGenerator = new Faker<Channel>()
-                .RuleFor(c => c.TeamId, t => t.PickRandom(context.Teams).Id)
+                .RuleFor(c => c.TeamId, teamId)
                 .RuleFor(c => c.ChannelName, t => t.Name.JobTitle());
             return channelGenerator.Generate(count);
         }
@@ -54,6 +54,15 @@ namespace ChatServerTests
             return GenerateTeamList(context, 1).First();
         }
 
-
+        public static IEnumerable<Message> GenerateMessageList(ChatContext context, int count, int channelId, int senderId, int targetId)
+        {
+            var messageGenerator = new Faker<Message>()
+                .RuleFor(m => m.MessageText, t => t.Hacker.Phrase())
+                .RuleFor(m => m.ChannelId, channelId)
+                .RuleFor(m => m.SenderId, senderId)
+                .RuleFor(m => m.TargetId, targetId);
+            
+            return messageGenerator.Generate(count);
+        }
     }
 }
