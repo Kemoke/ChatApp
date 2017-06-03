@@ -9,6 +9,7 @@ using System.Linq;
 using ChatServer.Response;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ChatServer.Module
 {
@@ -127,8 +128,8 @@ namespace ChatServer.Module
             var request = this.Bind<GetMessagesRequest>();
 
             var messages = await context.Messages.Where(m => m.SenderId == request.SenderId && m.TargetId == request.TargetId && m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
-
-            return Response.AsJson(messages);
+            var response = JsonConvert.SerializeObject(messages);
+            return Response.AsText(response, "application/json");
         }
 
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
