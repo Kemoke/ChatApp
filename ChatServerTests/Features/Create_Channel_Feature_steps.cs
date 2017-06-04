@@ -38,7 +38,7 @@ namespace ChatServerTests.Features
 
             user = DataGenerator.GenerateSingleUser(config.Context);
 
-            
+            team = DataGenerator.GenerateSingleTeam(config.Context);
         }
 
         #endregion
@@ -72,7 +72,15 @@ namespace ChatServerTests.Features
 
         private void Given_the_user_creates_team_and_is_admin()
         {
-            team = DataGenerator.GenerateSingleTeam(config.Context);
+            createTeamResult = config.Browser.Post("/team/", with =>
+            {
+                with.BodyJson(new CreateTeamRequest
+                {
+                    Name = team.Name
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
 
             role = DataGenerator.GenerateSigleRole(config.Context, "Admin");
 
