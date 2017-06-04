@@ -39,5 +39,17 @@ namespace ChatServerTests.Features
                 User_tries_to_create_new_channel_providing_channel_name_that_already_exists,
                 Channel_creation_unsuccessful);
         }
+
+        [Scenario]
+        [Label("Ticket-3")]
+        [ScenarioCategory("Channel")]
+        public void List_of_all_channels_for_a_certain_team()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_the_user_is_inside_of_a_team,
+                Users_wants_to_see_list_of_all_channels_inside_of_that_team,
+                List_retrieved_successfuly);
+        }
     }
 }

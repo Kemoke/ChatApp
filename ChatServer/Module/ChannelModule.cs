@@ -39,14 +39,29 @@ namespace ChatServer.Module
             Get("/messages/new", CheckNewMessagesAsync);
         }
 
-        private Task<object> GetChannelAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> GetChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+           try
+            {
+                var channel = await context.Channels.Where(c => c.Id == (int)parameters.id).FirstAsync(cancellationToken);
+
+                return Response.AsJson(channel);
+            }
+            catch(Exception e)
+            {
+                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+            }
+            
         }
 
-        private Task<object> ListChannelAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> ListChannelAsync(object parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<ListChannelRequest>();
+
+            var channelList = await context.Channels.Where(c => c.TeamId == request.TeamId).ToListAsync(cancellationToken);
+
+            var response = JsonConvert.SerializeObject(channelList);
+            return Response.AsText(response, "application/json");
         }
 
         private Task<object> DeleteChannelAsync(object arg1, CancellationToken arg2)
