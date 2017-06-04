@@ -16,7 +16,9 @@ namespace ChatServerTests.Features
     {
         private BrowserResponse loginResult;
         private BrowserResponse infoChangeResult;
+        private BrowserResponse selfInfoResult;
         private BrowserResponse passwordChangeResult;
+        private BrowserResponse failedPasswordChangeResult;
         private readonly FeaturesConfig config;
         private readonly User user;
         private User user2;
@@ -106,6 +108,44 @@ namespace ChatServerTests.Features
         private void Password_change_successful()
         {
             Assert.Equal("Password changed successfully", passwordChangeResult.BodyJson<Error>().Message);
+        }
+
+        private void User_wants_to_change_his_password_and_has_provided_wrong_old_password()
+        {
+            failedPasswordChangeResult = config.Browser.Post("/user/change_password", with =>
+            {
+                with.BodyJson(new ChangePasswordRequest
+                {
+                    UserId = loginResult.BodyJson<LoginResponse>().User.Id,
+                    NewPassword = "newPassword",
+                    OldPassword = "bing"
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+        }
+
+        private void Password_change_unsuccessful()
+        {
+            Assert.Equal(HttpStatusCode.BadRequest, failedPasswordChangeResult.StatusCode);
+            Assert.Equal("Wrong input for old password", failedPasswordChangeResult.BodyJson<Error>().Message);
+        }
+
+        private void User_wants_to_retrieve_info_about_himself()
+        {
+            selfInfoResult = config.Browser.Post("/user/self", with =>
+            {
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+        }
+
+        private void Info_retrieval_successful()
+        {
+            StepExecution.Current.Comment(loginResult.BodyJson<LoginResponse>().User.FirstName);
+            StepExecution.Current.Comment(selfInfoResult.BodyJson<User>().FirstName);
+
+            Assert.Equal(loginResult.BodyJson<LoginResponse>().User.FirstName, selfInfoResult.BodyJson<UserInfo>().FirstName);
         }
     }
 }

@@ -26,11 +26,11 @@ namespace ChatServer.Module
             Post("/change_password", ChangePasswordAsync);
         }
 
-        private Task<object> GetSelfAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> GetSelfAsync(object parameters, CancellationToken cancellationToken)
         {
-            dynamic parameters = new ExpandoObject();
-            parameters.id = User.Id;
-            return GetUserInfoAsync(parameters, arg2);
+            dynamic param = new ExpandoObject();
+            param.id = User.Id;
+            return await Response.AsJson(User);
         }
 
         private Task<object> ListUsersAsync(object arg1, CancellationToken arg2)
@@ -41,6 +41,7 @@ namespace ChatServer.Module
         private async Task<dynamic> GetUserInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var user = await context.Users.FindAsync(parameters.id);
+
             var userInfo = new UserInfo
             {
                 FirstName = user.FirstName,
@@ -72,30 +73,22 @@ namespace ChatServer.Module
 
         private async Task<dynamic> EditInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            try
-            {
-                var request = this.Bind<EditUserInfoRequest>();
+            var request = this.Bind<EditUserInfoRequest>();
 
-                User = await context.Users.FindAsync(User.Id);
+            User = await context.Users.FindAsync(User.Id);
 
-                User.Company = request.Company;
-                User.Country = request.Country;
-                User.DateOfBirth = request.DateOfBirth;
-                User.FirstName = request.FirstName;
-                User.LastName = request.LastName;
-                User.Gender = request.Gender;
-                User.PictureUrl = request.PictureUrl;
-                User.Username = request.Username;
+            User.Company = request.Company;
+            User.Country = request.Country;
+            User.DateOfBirth = request.DateOfBirth;
+            User.FirstName = request.FirstName;
+            User.LastName = request.LastName;
+            User.Gender = request.Gender;
+            User.PictureUrl = request.PictureUrl;
+            User.Username = request.Username;
 
-                await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
-                return Response.AsJson(new Error("Data changed successfully"));
-            }
-            catch(Exception e)
-            {
-                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
-            }
-            
+            return Response.AsJson(new Error("Data changed successfully"));   
         }
     }
 }

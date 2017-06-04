@@ -35,5 +35,27 @@ namespace ChatServerTests.Features
                 User_wants_to_change_his_password,
                 Password_change_successful);
         }
+
+        [Scenario]
+        [Label("Ticket-3")]
+        [ScenarioCategory("Settings")]
+        public void Password_change_attempt_with_wrong_old_password()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                User_wants_to_change_his_password_and_has_provided_wrong_old_password,
+                Password_change_unsuccessful);
+        }
+
+        [Scenario]
+        [Label("Ticket-4")]
+        [ScenarioCategory("Settings")]
+        public void Retriving_information_about_logged_in_user()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                User_wants_to_retrieve_info_about_himself,
+                Info_retrieval_successful);
+        }
     }
 }
