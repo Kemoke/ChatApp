@@ -19,9 +19,9 @@ namespace ChatServer.Module
         private readonly ChatContext context;
         private readonly GlobalConfig config;
 
-        public AuthModule(ChatContext context, GlobalConfig config) : base("/auth")
+        public AuthModule(GlobalConfig config) : base("/auth")
         {
-            this.context = context;
+            this.context = new ChatContext(config);
             this.config = config;
             Post("/login", LoginAsync);
             Post("/register", RegisterAsync);
