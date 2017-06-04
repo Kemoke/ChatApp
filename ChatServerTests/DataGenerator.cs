@@ -64,5 +64,34 @@ namespace ChatServerTests
             
             return messageGenerator.Generate(count);
         }
+
+        public static IEnumerable<Role> GenerateRoleList(ChatContext context, int count, string name)
+        {
+            var roleGenerator = new Faker<Role>()
+                .RuleFor(r => r.Name, name);
+
+            return roleGenerator.Generate(count);
+        }
+
+        public static Role GenerateSigleRole(ChatContext context, string name)
+        {
+            return GenerateRoleList(context, 1, name).First();
+        }
+
+        public static IEnumerable<UserTeam> GenerateUserRoleList(ChatContext context, int count, int teamId, int userId, int roleId)
+        {
+            var userRoleGenerator = new Faker<UserTeam>()
+                .RuleFor(u => u.RoleId, roleId)
+                .RuleFor(u => u.TeamId, teamId)
+                .RuleFor(u => u.UserId, userId);
+
+            return userRoleGenerator.Generate(count);
+        }
+
+        public static UserTeam GenerateSigleUserRole(ChatContext context, int teamId, int userId, int roleId)
+        {
+            return GenerateUserRoleList(context, 1, teamId, userId, roleId).First();
+        }
+
     }
 }

@@ -18,6 +18,8 @@ namespace ChatServerTests.Features
     {
         private readonly User user;
         private Team team;
+        private Role role;
+        private UserTeam userRole;
         private readonly FeaturesConfig config;
         private BrowserResponse createTeamResult;
         private BrowserResponse addRoleResult;
@@ -71,6 +73,11 @@ namespace ChatServerTests.Features
         private void Given_the_user_creates_team_and_is_admin()
         {
             team = DataGenerator.GenerateSingleTeam(config.Context);
+
+            role = DataGenerator.GenerateSigleRole(config.Context, "Admin");
+
+            userRole = DataGenerator.GenerateSigleUserRole(config.Context, team.Id, user.Id, role.Id);
+
         }
         
         private void User_tries_to_create_new_channel_providing_channel_name()
