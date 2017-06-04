@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
+using LightBDD.Framework;
+using LightBDD.Framework.Commenting;
 using LightBDD.XUnit2;
 using Nancy;
 using Nancy.Responses.Negotiation;
@@ -14,15 +17,19 @@ using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Create_Channel_Feature : FeatureFixture
+    public partial class Channel_Feature : FeatureFixture
     {
         private readonly User user;
         private Team team;
         private Role role;
         private UserTeam userRole;
+        private Channel channel;
+        private List<Channel> channels;
         private readonly FeaturesConfig config;
         private BrowserResponse createTeamResult;
         private BrowserResponse addRoleResult;
+        private BrowserResponse editChannelNameResult;
+        private BrowserResponse retrievedChannelListResult;
         private BrowserResponse createChannelResult;
         private BrowserResponse createNewChannelResult;
         private BrowserResponse loginResult;
@@ -31,7 +38,7 @@ namespace ChatServerTests.Features
 
         #region Setup/Teardown
 
-        public Create_Channel_Feature(ITestOutputHelper output) : base(output)
+        public Channel_Feature(ITestOutputHelper output) : base(output)
         {
 
             config = new FeaturesConfig();
@@ -134,17 +141,81 @@ namespace ChatServerTests.Features
 
         private void Given_the_user_is_inside_of_a_team()
         {
-            
+            channels = DataGenerator.GenerateChannelList(config.Context, team.Id, 10).ToList();
+
+            foreach (var c in channels)
+            {
+                createNewChannelResult = config.Browser.Post("/channel/", with =>
+                    {
+                        with.BodyJson(new CreateChannelRequest
+                        {
+                            ChannelName = c.ChannelName,
+                            UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
+                            TeamId = team.Id
+                        });
+                        with.Accept(new MediaRange("application/json"));
+                        with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                    })
+                    .Result;
+            }
+
+            role = DataGenerator.GenerateSigleRole(config.Context, "AnyRole");
+
+            userRole = DataGenerator.GenerateSigleUserRole(config.Context, team.Id, user.Id, role.Id);
         }
 
         private void Users_wants_to_see_list_of_all_channels_inside_of_that_team()
         {
-            
+            retrievedChannelListResult = config.Browser.Get("/channel/", with =>
+                {
+                    with.BodyJson(new ListChannelRequest()
+                    {
+                        TeamId = team.Id
+                    });
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                })
+                .Result;
         }
 
-        private void List_retrieved_successfuly()
+        private void List_retrieved_successfully()
         {
-            
+            Assert.Equal(channels.Count, retrievedChannelListResult.BodyJson<List<Channel>>().Count);
+        }
+
+        private void Users_wants_to_change_channel_name()
+        {
+            channel = DataGenerator.GenerateSingleChannel(config.Context, team.Id);
+
+            createNewChannelResult = config.Browser.Post("/channel/", with =>
+                {
+                    with.BodyJson(new CreateChannelRequest
+                    {
+                        ChannelName = channel.ChannelName,
+                        UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
+                        TeamId = channel.TeamId
+                    });
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                })
+                .Result;
+
+            editChannelNameResult = config.Browser.Put("/channel/"+channel.Id, with =>
+                {
+                    with.BodyJson(new EditChannelInfoRequest
+                    {
+                        ChannelName = "Developer"
+                    });
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                })
+                .Result;
+        }
+
+        private void Channel_name_change_successful()
+        {
+            StepExecution.Current.Comment(editChannelNameResult.BodyJson<Error>().Message);
+            Assert.Equal("Data changed successfully", editChannelNameResult.BodyJson<Error>().Message);
         }
     }
 }

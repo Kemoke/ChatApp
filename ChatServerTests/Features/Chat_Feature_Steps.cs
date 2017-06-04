@@ -44,13 +44,14 @@ namespace ChatServerTests.Features
             user2 = DataGenerator.GenerateSingleUser(config.Context);
 
         }
+
         #endregion
 
         private void Given_the_user_is_logged_in()
         {
             loginResult = config.Browser.Post("/auth/register", with =>
             {
-                with.Body(JsonConvert.SerializeObject(new RegisterRequest { User = user1 }), "application/json");
+                with.Body(JsonConvert.SerializeObject(new RegisterRequest {User = user1}), "application/json");
                 with.Accept(new MediaRange("application/json"));
             }).Result;
             loginResult = config.Browser.Post("/auth/login", with =>
@@ -102,6 +103,23 @@ namespace ChatServerTests.Features
         private void Given_that_messages_for_certain_channel_exist()
         {
             messages = DataGenerator.GenerateMessageList(config.Context, 10, channel.Id, user1.Id, user2.Id).ToList();
+
+            foreach (var m in messages)
+            {
+                var sendMessages = config.Browser.Post("/channel/send", with =>
+                    {
+                        with.BodyJson(new SendMessageRequest
+                        {
+                            MessageText = m.MessageText,
+                            SenderId = m.SenderId,
+                            TargetId = m.TargetId,
+                            ChannelId = m.ChannelId
+                        });
+                        with.Accept(new MediaRange("application/json"));
+                        with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                    })
+                    .Result;
+            }
         }
 
         private void Request_is_sent_to_retrieve_messages()
@@ -124,5 +142,6 @@ namespace ChatServerTests.Features
         {
             Assert.Equal(messages.Count, retrievedMessageList.Body.DeserializeJson<List<Message>>().Count);
         }
+
     }
 }

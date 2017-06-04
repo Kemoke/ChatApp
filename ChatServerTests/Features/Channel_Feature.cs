@@ -12,7 +12,7 @@ namespace ChatServerTests.Features
     [Label("Story-4")]
 
 
-    public partial class Create_Channel_Feature
+    public partial class Channel_Feature
     {
         [Scenario]
         [Label("Ticket-1")]
@@ -43,13 +43,25 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-3")]
         [ScenarioCategory("Channel")]
-        public void List_of_all_channels_for_a_certain_team()
+        public void When_a_user_enters_team_list_of_channels_should_be_displayed()
         {
             Runner.RunScenario(
                 Given_the_user_is_logged_in,
                 Given_the_user_is_inside_of_a_team,
                 Users_wants_to_see_list_of_all_channels_inside_of_that_team,
-                List_retrieved_successfuly);
+                List_retrieved_successfully);
+        }
+
+        [Scenario]
+        [Label("Ticket-4")]
+        [ScenarioCategory("Channel")]
+        public void Edit_channel_info()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_the_user_creates_team_and_is_admin,
+                Users_wants_to_change_channel_name,
+                Channel_name_change_successful);
         }
     }
 }

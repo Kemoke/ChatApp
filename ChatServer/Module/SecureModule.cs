@@ -9,6 +9,7 @@ namespace ChatServer.Module
     public abstract class SecureModule : NancyModule
     {
         protected User User;
+        protected Channel Channel;
 
         protected SecureModule(string path, GlobalConfig config) : base(path)
         {
