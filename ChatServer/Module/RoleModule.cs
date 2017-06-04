@@ -6,6 +6,8 @@ using Nancy.ModelBinding;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ChatServer.Module
 {
@@ -22,14 +24,26 @@ namespace ChatServer.Module
             Post("/", CreateRoleAsync);
         }
 
-        private Task<object> GetRoleAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> GetRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var channel = await context.Roles.FindAsync((int)parameters.id, cancellationToken);
+
+                return Response.AsJson(channel);
+            }
+            catch (Exception e)
+            {
+                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+            }
         }
 
-        private Task<object> ListRoleAsync(object arg1, CancellationToken arg2)
+        private async Task<object> ListRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var roleList = await context.Channels.ToListAsync(cancellationToken);
+
+            var response = JsonConvert.SerializeObject(roleList);
+            return Response.AsText(response, "application/json");
         }
 
         private async Task<dynamic> AssignRoleAsync(dynamic parameters, CancellationToken cancellationToken)

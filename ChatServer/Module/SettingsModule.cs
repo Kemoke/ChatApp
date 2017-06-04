@@ -5,6 +5,7 @@ using Nancy.ModelBinding;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ChatServer.Model;
 
 namespace ChatServer.Module
 {
@@ -19,9 +20,21 @@ namespace ChatServer.Module
 
         }
 
-        private Task<object> GetInfoAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> GetInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = await context.Users.FindAsync(parameters.id);
+            var userInfo = new UserInfo
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Company = user.Company,
+                Country = user.Country,
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
+                PictureUrl = user.PictureUrl
+            };
+
+            return Response.AsJson(userInfo);
         }
 
         

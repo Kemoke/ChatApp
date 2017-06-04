@@ -43,8 +43,7 @@ namespace ChatServer.Module
         {
            try
            {
-               var Id = (int)parameters.id;
-               var channel = await context.Channels.Where(c => c.Id == Id).FirstAsync(cancellationToken);
+               var channel = await context.Channels.FindAsync((int)parameters.id, cancellationToken);
 
                return Response.AsJson(channel);
            }
