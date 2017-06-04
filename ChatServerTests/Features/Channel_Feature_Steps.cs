@@ -101,7 +101,7 @@ namespace ChatServerTests.Features
                 {
                     with.BodyJson(new CreateChannelRequest
                     {
-                        ChannelName = "Developer",
+                        ChannelName = "Client",
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
                         TeamId = team.Id
                     });
@@ -122,7 +122,7 @@ namespace ChatServerTests.Features
                 {
                     with.BodyJson(new CreateChannelRequest
                     {
-                        ChannelName = "Developer",
+                        ChannelName = "Client",
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
                         TeamId = team.Id
                     });
