@@ -1,4 +1,6 @@
-﻿using ChatServer.Model;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
 using LightBDD.Core.Configuration;
@@ -23,9 +25,11 @@ namespace ChatServerTests.Features
         private BrowserResponse selfInfoResult;
         private BrowserResponse passwordChangeResult;
         private BrowserResponse failedPasswordChangeResult;
+        private BrowserResponse allUsersResult;
         private readonly FeaturesConfig config;
         private readonly User user;
         private User user2;
+        private List<User> users;
 
         #region Setup/Teardown
 
@@ -146,6 +150,34 @@ namespace ChatServerTests.Features
         private void Info_retrieval_successful()
         {
             Assert.Equal(loginResult.BodyJson<LoginResponse>().User.Id, selfInfoResult.BodyJson<User>().Id);
+        }
+
+        private void Given_there_are_registered_users_in_database()
+        {
+            users = DataGenerator.GenerateUserList(config.Context, 9).ToList();
+
+            foreach (var u in users)
+            {
+                var registrationResult = config.Browser.Post("/auth/register", with =>
+                {
+                    with.BodyJson(new RegisterRequest { User = u });
+                    with.Accept(new MediaRange("application/json"));
+                }).Result;
+            }
+        }
+
+        private void User_wants_to_retrieve_list_containing_all_users()
+        {
+            allUsersResult = config.Browser.Get("/user/", with =>
+            {
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+        }
+
+        private void List_retrieved_successfully()
+        {
+            Assert.Equal(users.Count + 5, allUsersResult.BodyJson<List<User>>().Count);
         }
     }
 }

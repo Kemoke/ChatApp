@@ -8,7 +8,8 @@ using LightBDD.XUnit2;
 namespace ChatServerTests.Features
 {
     [FeatureDescription(
-        @"As an user I want to be able to change my personal information.")]
+        @"As an user I want to be able to change my personal information.
+          Also I would like to retrieve information about users.")]
     [Label("Story-6")]
 
     public partial class Settings_Feature
@@ -56,6 +57,18 @@ namespace ChatServerTests.Features
                 Given_the_user_is_logged_in,
                 User_wants_to_retrieve_info_about_himself,
                 Info_retrieval_successful);
+        }
+
+        [Scenario]
+        [Label("Ticket-5")]
+        [ScenarioCategory("Settings")]
+        public void Retrieving_all_users()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_there_are_registered_users_in_database,
+                User_wants_to_retrieve_list_containing_all_users,
+                List_retrieved_successfully);
         }
     }
 }
