@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using ChatServer;
 using Nancy.Testing;
+using Xunit;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace ChatServerTests
 {
     public class FeaturesConfig
