@@ -68,13 +68,13 @@ namespace ChatServer.Module
         {
             try
             {
-                var channel = await context.Channels.FindAsync((int)parameters.id); 
+                int id = parameters.id;
 
-                context.Channels.Remove(channel);
+                context.Channels.Remove(new Channel {Id = id});
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Response.AsJson(channel);
+                return Response.AsJson(new Error("Channel Deleted"));
             }
             catch (Exception e)
             {

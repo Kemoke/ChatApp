@@ -7,7 +7,7 @@ namespace ChatServerTests.Features
 {
     [FeatureDescription(
         @"As an admin user I want to be able to create a channel inside of a team")]
-    [Label("Story-4")]
+    [Label("Story-5")]
 
     public partial class Chat_Feature
     {

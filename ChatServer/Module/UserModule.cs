@@ -62,32 +62,40 @@ namespace ChatServer.Module
             var user = context.Users.Find(request.UserId);
             if (!BCrypt.Net.BCrypt.EnhancedVerify(request.OldPassword, user.Password))
             {
-                return Response.AsJson(new Error("Wrong input for Old password"));
+                return Response.AsJson(new Error("Wrong input for old password")).WithStatusCode(HttpStatusCode.BadRequest);
             }
             user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.NewPassword);
             await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsText("Password changed successfully");
+            return Response.AsJson(new Error("Password changed successfully"));
         }
 
         private async Task<dynamic> EditInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var request = this.Bind<EditUserInfoRequest>();
+            try
+            {
+                var request = this.Bind<EditUserInfoRequest>();
 
-            User = await context.Users.FindAsync(User.Id);
+                User = await context.Users.FindAsync(User.Id);
 
-            User.Company = request.Company;
-            User.Country = request.Country;
-            User.DateOfBirth = request.DateOfBirth;
-            User.FirstName = request.FirstName;
-            User.LastName = request.LastName;
-            User.Gender = request.Gender;
-            User.PictureUrl = request.PictureUrl;
-            User.Username = request.Username;
+                User.Company = request.Company;
+                User.Country = request.Country;
+                User.DateOfBirth = request.DateOfBirth;
+                User.FirstName = request.FirstName;
+                User.LastName = request.LastName;
+                User.Gender = request.Gender;
+                User.PictureUrl = request.PictureUrl;
+                User.Username = request.Username;
 
-            await context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsText("Data changed successfully");
+                return Response.AsJson(new Error("Data changed successfully"));
+            }
+            catch(Exception e)
+            {
+                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
+            }
+            
         }
     }
 }

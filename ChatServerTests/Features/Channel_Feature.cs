@@ -63,5 +63,19 @@ namespace ChatServerTests.Features
                 Users_wants_to_change_channel_name,
                 Channel_name_change_successful);
         }
+
+
+        [Scenario]
+        [Label("Ticket-5")]
+        [ScenarioCategory("Channel")]
+        public void Delete_channel()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_the_user_creates_team_and_is_admin,
+                User_tries_to_create_new_channel_providing_channel_name,
+                Users_tries_to_delete_that_channel,
+                Channel_deleteion_successful);
+        }
     }
 }

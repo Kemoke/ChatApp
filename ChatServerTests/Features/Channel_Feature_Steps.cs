@@ -27,6 +27,7 @@ namespace ChatServerTests.Features
         private List<Channel> channels;
         private readonly FeaturesConfig config;
         private BrowserResponse createTeamResult;
+        private BrowserResponse deleteChannelResult;
         private BrowserResponse addRoleResult;
         private BrowserResponse editChannelNameResult;
         private BrowserResponse retrievedChannelListResult;
@@ -216,6 +217,21 @@ namespace ChatServerTests.Features
         {
             StepExecution.Current.Comment(editChannelNameResult.BodyJson<Error>().Message);
             Assert.Equal("Developer", editChannelNameResult.BodyJson<Channel>().ChannelName);
+        }
+
+        private void Users_tries_to_delete_that_channel()
+        {
+            deleteChannelResult = config.Browser.Delete("/channel/" + createChannelResult.BodyJson<Channel>().Id, with =>
+                {
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                })
+                .Result;
+        }
+
+        private void Channel_deleteion_successful()
+        {
+            Assert.Equal("Channel Deleted", deleteChannelResult.BodyJson<Error>().Message);
         }
     }
 }
