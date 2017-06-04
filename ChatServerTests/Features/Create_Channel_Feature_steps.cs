@@ -131,5 +131,20 @@ namespace ChatServerTests.Features
             var response = createNewChannelResult.BodyJson<Error>();
             Assert.Equal("Channel with that name already exists", response.Message);
         }
+
+        private void Given_the_user_is_inside_of_a_team()
+        {
+            
+        }
+
+        private void Users_wants_to_see_list_of_all_channels_inside_of_that_team()
+        {
+            
+        }
+
+        private void List_retrieved_successfuly()
+        {
+            
+        }
     }
 }

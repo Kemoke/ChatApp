@@ -42,19 +42,20 @@ namespace ChatServer.Module
         private async Task<dynamic> GetChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
            try
-            {
-                var channel = await context.Channels.Where(c => c.Id == (int)parameters.id).FirstAsync(cancellationToken);
+           {
+               var Id = (int)parameters.id;
+               var channel = await context.Channels.Where(c => c.Id == Id).FirstAsync(cancellationToken);
 
-                return Response.AsJson(channel);
-            }
-            catch(Exception e)
-            {
-                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
-            }
+               return Response.AsJson(channel);
+           }
+           catch(Exception e)
+           {
+               return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+           }
             
         }
 
-        private async Task<dynamic> ListChannelAsync(object parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> ListChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<ListChannelRequest>();
 
@@ -64,14 +65,43 @@ namespace ChatServer.Module
             return Response.AsText(response, "application/json");
         }
 
-        private Task<object> DeleteChannelAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> DeleteChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var channel = await context.Channels.FindAsync((int)parameters.id); 
+
+                context.Channels.Remove(channel);
+
+                await context.SaveChangesAsync(cancellationToken);
+
+                return Response.AsJson(channel);
+            }
+            catch (Exception e)
+            {
+                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+            }
         }
 
-        private Task<object> EditChannelAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> EditChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var request = this.Bind<EditChannelInfoRequest>();
+
+                var channel = await context.Channels.FindAsync(parameters.Id);
+
+                channel.ChannelName = request.ChannelName;
+
+                await context.SaveChangesAsync(cancellationToken);
+
+                return Response.AsJson("Data changed successfully");
+            }
+            catch (Exception e)
+            {
+                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+            }
+
         }
 
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -172,3 +202,4 @@ namespace ChatServer.Module
         }
     }
 }
+
