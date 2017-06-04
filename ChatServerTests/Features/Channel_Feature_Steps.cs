@@ -200,9 +200,9 @@ namespace ChatServerTests.Features
                 })
                 .Result;
 
-            editChannelNameResult = config.Browser.Put("/channel/"+channel.Id, with =>
+            editChannelNameResult = config.Browser.Put("/channel/"+createNewChannelResult.BodyJson<Channel>().Id, with =>
                 {
-                    with.BodyJson(new EditChannelInfoRequest
+                    with.BodyJson(new Channel
                     {
                         ChannelName = "Developer"
                     });
@@ -215,7 +215,7 @@ namespace ChatServerTests.Features
         private void Channel_name_change_successful()
         {
             StepExecution.Current.Comment(editChannelNameResult.BodyJson<Error>().Message);
-            Assert.Equal("Data changed successfully", editChannelNameResult.BodyJson<Error>().Message);
+            Assert.Equal("Developer", editChannelNameResult.BodyJson<Channel>().ChannelName);
         }
     }
 }

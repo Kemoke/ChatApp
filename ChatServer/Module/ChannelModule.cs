@@ -86,18 +86,15 @@ namespace ChatServer.Module
         {
             try
             {
-                var request = this.Bind<EditChannelInfoRequest>();
+                int id = parameters.id;
 
-                var Id = (int) parameters.Id;
+                var request = this.Bind<Channel>();
+                var channel = await context.Channels.FirstAsync(c => c.Id == id, cancellationToken);
 
-                Channel = context.Channels.Find(Id);
-
-                Channel.ChannelName = request.ChannelName;
-                context.Entry(Channel).State = EntityState.Modified;
-
+                channel.ChannelName = request.ChannelName;
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Response.AsJson(new Error("Data changed successfully"));
+                return Response.AsJson(channel);
             }
             catch (Exception e)
             {
