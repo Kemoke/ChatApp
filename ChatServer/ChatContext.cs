@@ -52,7 +52,7 @@ namespace ChatServer
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Channel>()
-                .HasAlternateKey(c => c.ChannelName);
+                .HasIndex(c => c.ChannelName).IsUnique();
             modelBuilder.Entity<Channel>()
                 .HasOne(c => c.Team)
                 .WithMany(t => t.Channels)
