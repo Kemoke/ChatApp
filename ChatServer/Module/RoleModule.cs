@@ -24,16 +24,43 @@ namespace ChatServer.Module
             Put("/{id}", EditRoleAsync);
             Delete("/{id}", DeleteRoleAsync);
             Post("/assign", AssignRoleAsync);
+            Delete("/unassign", UnassignRoleAsync);
         }
 
-        private Task<object> DeleteRoleAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> UnassignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<UnassignRoleRequest>();
+
+            context.UserTeams.Remove(new UserTeam
+            {
+                TeamId = request.TeamId,
+                UserId = request.UserId,
+                RoleId = request.RoleId
+            });
+
+            await context.SaveChangesAsync(cancellationToken);
+            return Response.AsText("Role Unassigned");
         }
 
-        private Task<object> EditRoleAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> DeleteRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            int id = parameters.id;
+            context.Roles.Remove(new Role { Id = id });
+            await context.SaveChangesAsync(cancellationToken);
+            return Response.AsText("Role Deleted");
+        }
+
+        private async Task<dynamic> EditRoleAsync(dynamic parameters, CancellationToken cancellationToken)
+        {
+            var request = this.Bind<EditRoleRequest>();
+            
+            var role = await context.Roles.FindAsync((int) parameters.id);
+
+            role.Name = request.RoleName;
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return Response.AsJson(new Msg("Data changed successfully"));
         }
 
         private async Task<dynamic> GetRoleAsync(dynamic parameters, CancellationToken cancellationToken)
