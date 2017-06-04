@@ -60,7 +60,7 @@ namespace ChatServerTests.Features
         private void Registration_is_unsusccessful_because_of_existing_email()
         {
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            var response = result.BodyJson<Error>();
+            var response = result.BodyJson<Msg>();
             Assert.Equal("Email already exists", response.Message);
         }
     }

@@ -9,7 +9,6 @@ namespace ChatServer.Module
     public abstract class SecureModule : NancyModule
     {
         protected User User;
-        protected Channel Channel;
 
         protected SecureModule(string path, GlobalConfig config) : base(path)
         {
@@ -23,7 +22,7 @@ namespace ChatServer.Module
                 }
                 catch (SignatureVerificationException)
                 {
-                    return Response.AsJson(new Error("Not authorized")).WithStatusCode(HttpStatusCode.Unauthorized);
+                    return Response.AsJson(new Msg("Not authorized")).WithStatusCode(HttpStatusCode.Unauthorized);
                 }
             };
 

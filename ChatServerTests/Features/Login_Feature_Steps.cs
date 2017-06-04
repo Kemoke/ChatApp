@@ -81,7 +81,7 @@ namespace ChatServerTests.Features
         private void Then_the_login_operation_should_be_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
-            var response = result.BodyJson<Error>();
+            var response = result.BodyJson<Msg>();
             Assert.Equal("Invalid credentials", response.Message);
         }
 

@@ -81,7 +81,7 @@ namespace ChatServer.Module
                 //neak bude i team name unique
                 if (await TeamExistsAsync(request.Name))
                 {
-                    return Response.AsJson(new Error("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
+                    return Response.AsJson(new Msg("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
                 }
 
 
@@ -98,7 +98,7 @@ namespace ChatServer.Module
             }
             catch (Exception e)
             {
-                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
             }
            
         }

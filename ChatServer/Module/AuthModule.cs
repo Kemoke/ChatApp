@@ -35,7 +35,7 @@ namespace ChatServer.Module
                 var user = await context.Users.FirstAsync(u => u.Username == request.Username, token);
                 if (!BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.Password))
                 {
-                    return Response.AsJson(new Error("Invalid credentials"))
+                    return Response.AsJson(new Msg("Invalid credentials"))
                         .WithStatusCode(HttpStatusCode.Unauthorized);
                 }
                 user.Password = "";
@@ -53,7 +53,7 @@ namespace ChatServer.Module
             }
             catch (Exception)
             {
-                return Response.AsJson(new Error("Invalid credentials")).WithStatusCode(HttpStatusCode.Unauthorized);
+                return Response.AsJson(new Msg("Invalid credentials")).WithStatusCode(HttpStatusCode.Unauthorized);
             }
         }
 
@@ -62,7 +62,7 @@ namespace ChatServer.Module
             var request = this.Bind<RegisterRequest>();
             if (await EmailExistsAsync(request.User.Email))
             {
-                return Response.AsJson(new Error("Email already exists")).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg("Email already exists")).WithStatusCode(HttpStatusCode.BadRequest);
             }
             request.User.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.User.Password);
             context.Users.Add(request.User);

@@ -98,7 +98,7 @@ namespace ChatServerTests.Features
         private void Team_creation_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            var response = result.BodyJson<Error>();
+            var response = result.BodyJson<Msg>();
             Assert.Equal("Channel with that name already exists", response.Message);
         }
     }

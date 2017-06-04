@@ -1,10 +1,10 @@
 ﻿namespace ChatServer.Response
 {
-    public class Error
+    public class Msg
     {
         public string Message { get; set; }
 
-        public Error(string message)
+        public Msg(string message)
         {
             Message = message;
         }

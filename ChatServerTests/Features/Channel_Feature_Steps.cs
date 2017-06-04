@@ -136,7 +136,7 @@ namespace ChatServerTests.Features
         private void Channel_creation_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.BadRequest, createNewChannelResult.StatusCode);
-            var response = createNewChannelResult.BodyJson<Error>();
+            var response = createNewChannelResult.BodyJson<Msg>();
             Assert.Equal("Channel with that name already exists", response.Message);
         }
 
@@ -215,7 +215,7 @@ namespace ChatServerTests.Features
 
         private void Channel_name_change_successful()
         {
-            StepExecution.Current.Comment(editChannelNameResult.BodyJson<Error>().Message);
+            StepExecution.Current.Comment(editChannelNameResult.BodyJson<Msg>().Message);
             Assert.Equal("Developer", editChannelNameResult.BodyJson<Channel>().ChannelName);
         }
 
@@ -231,7 +231,7 @@ namespace ChatServerTests.Features
 
         private void Channel_deleteion_successful()
         {
-            Assert.Equal("Channel Deleted", deleteChannelResult.BodyJson<Error>().Message);
+            Assert.Equal("Channel Deleted", deleteChannelResult.BodyJson<Msg>().Message);
         }
     }
 }

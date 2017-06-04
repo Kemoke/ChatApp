@@ -46,7 +46,7 @@ namespace ChatServer.Module
             }
             catch (Exception e)
             {
-                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
             }
         }
 

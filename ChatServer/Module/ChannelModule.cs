@@ -49,7 +49,7 @@ namespace ChatServer.Module
            }
            catch(Exception e)
            {
-               return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+               return Response.AsJson(new Msg("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
            }
             
         }
@@ -74,11 +74,11 @@ namespace ChatServer.Module
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Response.AsJson(new Error("Channel Deleted"));
+                return Response.AsJson(new Msg("Channel Deleted"));
             }
             catch (Exception e)
             {
-                return Response.AsJson(new Error("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
             }
         }
 
@@ -98,7 +98,7 @@ namespace ChatServer.Module
             }
             catch (Exception e)
             {
-                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
             }
 
         }
@@ -110,12 +110,12 @@ namespace ChatServer.Module
 
             if (await IsUserAdminAsync(request.TeamId, request.UserId))
             {
-                return Response.AsJson(new Error("You are not admin!")).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg("You are not admin!")).WithStatusCode(HttpStatusCode.BadRequest);
             }
 
             if (await ChannelExistsAsync(request.ChannelName, request.TeamId))
             {
-                return Response.AsJson(new Error("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
             }
 
             var channel = new Channel
@@ -158,7 +158,7 @@ namespace ChatServer.Module
             }
             else
             {
-                return Response.AsJson(new Error("There are no messages to be dipslayed"));
+                return Response.AsJson(new Msg("There are no messages to be dipslayed"));
             }
             
 
@@ -195,7 +195,7 @@ namespace ChatServer.Module
             }
             catch(Exception e)
             {
-                return Response.AsJson(new Error(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
             }
             
         }

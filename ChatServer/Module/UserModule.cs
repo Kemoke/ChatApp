@@ -26,16 +26,17 @@ namespace ChatServer.Module
             Post("/change_password", ChangePasswordAsync);
         }
 
-        private async Task<dynamic> GetSelfAsync(object parameters, CancellationToken cancellationToken)
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        private async Task<dynamic> GetSelfAsync(dynamic parameters, CancellationToken cancellationToken)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            dynamic param = new ExpandoObject();
-            param.id = User.Id;
-            return await Response.AsJson(User);
+            return Response.AsJson(User);
         }
 
-        private Task<object> ListUsersAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> ListUsersAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var users = await context.Users.ToListAsync(cancellationToken);
+            return Response.AsJson(users);
         }
 
         private async Task<dynamic> GetUserInfoAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -63,12 +64,12 @@ namespace ChatServer.Module
             var user = context.Users.Find(request.UserId);
             if (!BCrypt.Net.BCrypt.EnhancedVerify(request.OldPassword, user.Password))
             {
-                return Response.AsJson(new Error("Wrong input for old password")).WithStatusCode(HttpStatusCode.BadRequest);
+                return Response.AsJson(new Msg("Wrong input for old password")).WithStatusCode(HttpStatusCode.BadRequest);
             }
             user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.NewPassword);
             await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsJson(new Error("Password changed successfully"));
+            return Response.AsJson(new Msg("Password changed successfully"));
         }
 
         private async Task<dynamic> EditInfoAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -88,7 +89,7 @@ namespace ChatServer.Module
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsJson(new Error("Data changed successfully"));   
+            return Response.AsJson(new Msg("Data changed successfully"));   
         }
     }
 }
