@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace ChatApp.Model
 {
@@ -8,20 +9,14 @@ namespace ChatApp.Model
     {
         private int id;
         [Key]
-        public int Id { get
-            {
-                return id;
-            }
-            set
-            {
-                id = value;
-                OnPropertyChanged("Id");
-            }
-            }
+        public int Id {
+            get => id;
+            set { id = value; OnPropertyChanged(); }
+        }
 
-        private void OnPropertyChanged(string v)
+        protected void OnPropertyChanged([CallerMemberName]string propName = null)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(v));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -20,8 +20,20 @@ namespace ChatServer.Module
             this.context = context;
             Get("/", ListRoleAsync);
             Get("/{id}", GetRoleAsync);
-            Post("/assign", AssignRoleAsync);
             Post("/", CreateRoleAsync);
+            Put("/{id}", EditRoleAsync);
+            Delete("/{id}", DeleteRoleAsync);
+            Post("/assign", AssignRoleAsync);
+        }
+
+        private Task<object> DeleteRoleAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<object> EditRoleAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<dynamic> GetRoleAsync(dynamic parameters, CancellationToken cancellationToken)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace ChatServer.Model
 {
@@ -8,9 +9,11 @@ namespace ChatServer.Model
         public string Name { get; set; }     
 
         public virtual List<Channel> Channels { get; set; }
+
+        [JsonIgnore]
         public virtual List<UserTeam> UserTeams { get; set; }
 
-        public List<User> Users => UserTeams.Select(ut => ut.User).ToList();
+        public List<User> Users => UserTeams?.Select(ut => ut.User).ToList();
 
         public void AddUser(User user, Role role)
         {

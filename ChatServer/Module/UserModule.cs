@@ -67,7 +67,7 @@ namespace ChatServer.Module
             user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.NewPassword);
             await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsJson(new Error("Password changed successfully"));
+            return Response.AsText("Password changed successfully");
         }
 
         private async Task<dynamic> EditInfoAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -87,7 +87,7 @@ namespace ChatServer.Module
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsJson(new Error("Data changed successfully"));
+            return Response.AsText("Data changed successfully");
         }
     }
 }

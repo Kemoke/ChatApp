@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace ChatServer.Model
 {
@@ -17,6 +18,7 @@ namespace ChatServer.Model
         public string PictureUrl { get; set; }
         public string Gender { get; set; }
 
+        [JsonIgnore]
         public virtual List<UserTeam> UserTeams { get; set; }
 
         public List<Team> Teams => UserTeams?.Select(ut => ut.Team).ToList();

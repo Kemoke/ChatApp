@@ -2,14 +2,34 @@
 {
     public class Message : Entity
     {
-        public string MessageText { get; set; }
-        public int SenderId { get; set; }
-        public int TargetId { get; set; }
-        public int ChannelId { get; set; }
+        private string messageText;
+        private User sender;
+        private User target;
+        private Channel channel;
 
-        public User Sender { get; set; }
-        public User Target { get; set; }
-        public Channel Channel { get; set; }
+        public string MessageText
+        {
+            get => messageText;
+            set { messageText = value; OnPropertyChanged();}
+        }
+
+        public User Sender
+        {
+            get => sender;
+            set { sender = value; OnPropertyChanged();}
+        }
+
+        public User Target
+        {
+            get => target;
+            set { target = value; OnPropertyChanged();}
+        }
+
+        public Channel Channel
+        {
+            get => channel;
+            set { channel = value; OnPropertyChanged();}
+        }
     }
 
 }

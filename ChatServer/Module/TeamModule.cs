@@ -24,6 +24,18 @@ namespace ChatServer.Module
             Post("/", CreateTeamAsync);
             Put("/{id}", EditTeamAsync);
             Delete("/{id}", DeleteTeamAsync);
+            Post("/user/add", AddUserAsync);
+            Post("/user/{id}/remove", RemoveUserAsync);
+        }
+
+        private Task<object> RemoveUserAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<object> AddUserAsync(object arg1, CancellationToken arg2)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<object> DeleteTeamAsync(dynamic props, CancellationToken token)

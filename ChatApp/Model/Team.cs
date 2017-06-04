@@ -1,41 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ChatApp.Model
 {
     public class Team : Entity
     {
-        public string Name { get; set; }
+        private string name;
+        private ObservableCollection<Channel> channels;
+        private ObservableCollection<User> users;
 
-        public virtual List<Channel> Channels { get; set; }
-        public virtual List<UserTeam> UserTeams { get; set; }
-         
-        public List<User> Users => UserTeams.Select(ut => ut.User).ToList();
-
-        public void AddUser(User user, Role role)
+        public string Name
         {
-            var userTeam = new UserTeam
-            {
-                TeamId = Id,
-                UserId = user.Id,
-                RoleId = role.Id
-            };
+            get => name;
+            set { name = value; OnPropertyChanged();}
         }
 
-        
-        public void RemoveUser(User user, Role role)
+        public ObservableCollection<Channel> Channels
         {
-            //
+            get => channels;
+            set { channels = value; OnPropertyChanged();}
         }
 
-        
-
-      
-        
-        public void EditUserRole(User user, Role role)
+        public ObservableCollection<User> Users
         {
-            var userTeam = UserTeams.Find(u => u.UserId == user.Id && u.TeamId == Id);
-            userTeam.RoleId = role.Id;
+            get => users;
+            set { users = value; OnPropertyChanged();}
         }
     }
 }

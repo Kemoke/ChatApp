@@ -112,10 +112,8 @@
     <Compile Include="Model\Message.cs" />
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\Team.cs" />
-    <Compile Include="Model\Token.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserInfo.cs" />
-    <Compile Include="Model\UserTeam.cs" />
     <Compile Include="MyUserControl1.xaml.cs">
       <DependentUpon>MyUserControl1.xaml</DependentUpon>
     </Compile>
