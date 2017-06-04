@@ -19,17 +19,12 @@ namespace ChatServer.Module
         private readonly ChatContext context;
         private readonly GlobalConfig config;
 
-        public AuthModule(GlobalConfig config) : base("/auth")
+        public AuthModule(ChatContext context, GlobalConfig config) : base("/auth")
         {
-            this.context = new ChatContext(config);
+            this.context = context;
             this.config = config;
             Post("/login", LoginAsync);
             Post("/register", RegisterAsync);
-        }
-
-        ~AuthModule()
-        {
-            context.Dispose();
         }
 
         private async Task<dynamic> LoginAsync(dynamic props, CancellationToken token)
