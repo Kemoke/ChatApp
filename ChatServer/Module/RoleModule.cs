@@ -40,7 +40,8 @@ namespace ChatServer.Module
         {
             try
             {
-                var channel = await context.Roles.FindAsync((int)parameters.id, cancellationToken);
+                int id = parameters.id;
+                var channel = await context.Roles.AsNoTracking().FirstAsync(r => r.Id == id, cancellationToken);
 
                 return Response.AsJson(channel);
             }
@@ -52,7 +53,7 @@ namespace ChatServer.Module
 
         private async Task<object> ListRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var roleList = await context.Channels.ToListAsync(cancellationToken);
+            var roleList = await context.Channels.AsNoTracking().ToListAsync(cancellationToken);
 
             var response = JsonConvert.SerializeObject(roleList);
             return Response.AsText(response, "application/json");

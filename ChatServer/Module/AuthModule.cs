@@ -32,7 +32,7 @@ namespace ChatServer.Module
             try
             {
                 var request = this.Bind<LoginRequest>();
-                var user = await context.Users.FirstAsync(u => u.Username == request.Username, token);
+                var user = await context.Users.AsNoTracking().FirstAsync(u => u.Username == request.Username, token);
                 if (!BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.Password))
                 {
                     return Response.AsJson(new Msg("Invalid credentials"))

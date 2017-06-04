@@ -35,13 +35,14 @@ namespace ChatServer.Module
 
         private async Task<dynamic> ListUsersAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var users = await context.Users.ToListAsync(cancellationToken);
+            var users = await context.Users.AsNoTracking().ToListAsync(cancellationToken);
             return Response.AsJson(users);
         }
 
         private async Task<dynamic> GetUserInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var user = await context.Users.FindAsync(parameters.id);
+            int id = parameters.id;
+            var user = await context.Users.AsNoTracking().FirstAsync(u => u.Id == id, cancellationToken);
 
             var userInfo = new UserInfo
             {
