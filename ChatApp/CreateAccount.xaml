@@ -9,18 +9,20 @@
     Background="#FFB6BBDC">
 
 
-    <Grid>
+    <Grid  >
         <Grid.RowDefinitions>
             <RowDefinition Height="50*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="30*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
             <RowDefinition Height="30*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -28,30 +30,44 @@
             <ColumnDefinition Width="109*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Create account for free!" Grid.Row="0" FontSize="20"  FontFamily="Sitka Display" Margin="0,20,0,4.333"/>
-        <TextBlock Text="Name:" Grid.Row="1" Grid.Column="0" Height="30"/>
-        <TextBox x:Name="nameText" Grid.Column="1" Height="30" Margin="10,51,0,30.333" Grid.RowSpan="3"/>
-        <TextBlock Text="Surname:" Grid.Row="2" Grid.Column="0" Height="30"/>
-        <TextBox x:Name="surnameText" Grid.Row="1" Grid.Column="1" Height="30" Margin="10,30.667,0,30.333" Grid.RowSpan="3"/>
-        <TextBlock Text="E-mail:" Grid.Row="3" Grid.Column="0" Height="30"/>
-        <TextBox x:Name="mailText" Grid.Row="3" Grid.Column="1" Height="30"/>
-        <TextBlock  Text="Choose username" Height="30" Grid.Column="0" Grid.Row="4"/>
-        <TextBox x:Name="usernameText" Height="30" Grid.Column="1" Grid.Row="4" />
-        <TextBlock Text="Choose password:" Grid.Row="5" Grid.Column="0" Height="30"/>
-        <PasswordBox x:Name="passwordText" Grid.Row="5" Grid.Column="1" Height="30"/>
-        <TextBlock Text="Repeat password:" Grid.Row="6" Grid.Column="0" Height="30"/>
-        <PasswordBox x:Name="repeatText" Grid.Row="6" Grid.Column="1" Height="30"/>
-        <TextBlock Text="Gender:" Grid.Row="7" Grid.Column="0" Height="30"/>
-        <ComboBox x:Name="genderBox" Grid.Row="7" Grid.Column="1" Height="30" />
-        <TextBlock Text="Choose country:" Height="30" Grid.Column="0" Grid.Row="8"/>
-        <ComboBox x:Name="countryBox" Height="30" Grid.Column="1" Grid.Row="8"/>
-        <TextBlock Text="Company name:" Height="30" Grid.Column="0" Grid.Row="9"/>
-        <TextBox x:Name="companyText" Height="30" Grid.Column="1" Grid.Row="9"/> 
-
 
         <Grid.Background>
             <SolidColorBrush Color="#FFB6BBDC"/>
         </Grid.Background>
+        <TextBlock Text="Create account for free!" Grid.Row="0" FontSize="20"  FontFamily="Sitka Display" Margin="0,10,0,13.667"/>
+
+        <TextBlock Text="Name:" Grid.Row="1" Grid.Column="0" Height="30" HorizontalAlignment="Left" Margin="0,0.333,0,19.333" Width="204"/>
+        <TextBox x:Name="nameText" Text="text" Grid.Column="1" Height="30" Margin="0,0.333,150,17.333" Grid.Row="1" />
+
+        <TextBlock Text="Surname:" Grid.Row="2" Grid.Column="0" Height="30" HorizontalAlignment="Left" Margin="0,0,0,18" Width="204"/>
+        <TextBox x:Name="surnameText" Text="surname" Grid.Row="2" Grid.Column="1" Height="30" Margin="0,0,150,16"/>
+
+        <TextBlock Text="E-mail:" Grid.Row="3" Grid.Column="0" Height="30" HorizontalAlignment="Left" Margin="0,0,0,18" Width="204"/>
+        <TextBox x:Name="usernameText" Text ="username" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,0,150,16"/>
+
+        <TextBlock  Text="Choose username" Height="30" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" Margin="-5,0,0,18" Width="204"/>
+        <TextBox x:Name="mailText" Text="mail" Height="30" Grid.Column="1" Grid.Row="3" Margin="0,0,150,16" />
+
+        <TextBlock Text="Choose password:" Grid.Row="5" Grid.Column="0" Height="30" HorizontalAlignment="Left" Margin="0,0,0,18" Width="204"/>
+        <PasswordBox x:Name="passwordText" Password="1" Grid.Row="5" Grid.Column="1" Height="30" Margin="0,0,150,17.667"/>
+
+        <TextBlock Text="Repeat password:" Grid.Row="6" Grid.Column="0" Height="30" HorizontalAlignment="Left" Margin="0,0.333,0,19" Width="204"/>
+        <PasswordBox x:Name="repeatText" Password="123" Grid.Row="6" Grid.Column="1" Height="30" Margin="0,0.333,150,17"/>
+
+        <TextBlock Text="Gender:" Grid.Row="7" Grid.Column="0" Height="30" HorizontalAlignment="Left" Margin="0,0,0,19.667"  Width="204"/>
+        <ComboBox x:Name="genderBox" Grid.Row="7" Grid.Column="1" Height="30" Width="286" Grid.RowSpan="2" />
+
+        <TextBlock Text="Date of birth" Height="30" Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" Margin="0,0.333,0,19" Width="204"/>
+        <DatePicker x:Name="datePicker" Height="30" Grid.Column="1" Grid.Row="8" Margin="0,0.333,0,19" Width="286"/>
+
+        <TextBlock Text="Choose country:" Height="30" Grid.Column="0" Grid.Row="9" HorizontalAlignment="Left" Margin="0,0,0,19.667" Width="204"/>
+        <ComboBox x:Name="countryBox" Height="30" Grid.Column="1" Grid.Row="9" Margin="0,0.333,0,0" Width="296" Grid.RowSpan="2"/>
+
+        <TextBlock Text="Company name:" Height="30" Grid.Column="0" Grid.Row="10" HorizontalAlignment="Left" Margin="0,0.333,0,19" Width="204"/>
+        <TextBox x:Name="companyText" Text="company" Height="30" Grid.Column="1" Grid.Row="10" Margin="0,0.333,150,17"/>
+
+        <Button x:Name="button" Content="Submit" Width="114" Height="30" Grid.Column="1" Grid.Row="11" Click="createButton_Click"  Margin="120,46.667,0,0" Grid.RowSpan="2" />
+
 
 
 
