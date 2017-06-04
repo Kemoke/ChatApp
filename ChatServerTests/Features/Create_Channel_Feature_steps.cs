@@ -17,7 +17,7 @@ namespace ChatServerTests.Features
     public partial class Create_Channel_Feature : FeatureFixture
     {
         private readonly User user;
-        private readonly Team team;
+        private Team team;
         private readonly FeaturesConfig config;
         private BrowserResponse createTeamResult;
         private BrowserResponse addRoleResult;
@@ -36,7 +36,7 @@ namespace ChatServerTests.Features
 
             user = DataGenerator.GenerateSingleUser(config.Context);
 
-            team = DataGenerator.GenerateSingleTeam(config.Context);
+            
         }
 
         #endregion
@@ -70,18 +70,7 @@ namespace ChatServerTests.Features
 
         private void Given_the_user_creates_team_and_is_admin()
         {
-            addRoleResult = config.Browser.Post("/role/assign_role", with =>
-            {
-                with.BodyJson(new AssignRoleRequest
-                {
-                    UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                    TeamId = team.Id,
-                    RoleId = 1
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            })
-            .Result;
+            team = DataGenerator.GenerateSingleTeam(config.Context);
         }
         
         private void User_tries_to_create_new_channel_providing_channel_name()
@@ -92,7 +81,7 @@ namespace ChatServerTests.Features
                     {
                         ChannelName = "Developer",
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = 1
+                        TeamId = team.Id
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
@@ -113,7 +102,7 @@ namespace ChatServerTests.Features
                     {
                         ChannelName = "Developer",
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = 1
+                        TeamId = team.Id
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);

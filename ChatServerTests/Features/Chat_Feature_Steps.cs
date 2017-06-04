@@ -78,7 +78,7 @@ namespace ChatServerTests.Features
 
         private void User_sends_message()
         {
-            sendMessageResult = config.Browser.Post("/chat/send_message", with =>
+            sendMessageResult = config.Browser.Post("/channel/send", with =>
                 {
                     with.Body(JsonConvert.SerializeObject(new SendMessageRequest()
                     {
@@ -106,7 +106,7 @@ namespace ChatServerTests.Features
 
         private void Request_is_sent_to_retrieve_messages()
         {
-            retrievedMessageList = config.Browser.Get("/load_messages/0/10", with =>
+            retrievedMessageList = config.Browser.Get("/channel/messages/0/10", with =>
                 {
                     with.Body(JsonConvert.SerializeObject(new GetMessagesRequest()
                     {

@@ -16,11 +16,11 @@ namespace ChatServerTests.Features
         [ScenarioCategory("Chat")]
         public void Successfuly_create_channel()
         {
-            /*Runner.RunScenario(
+            Runner.RunScenario(
                 Given_the_user_is_logged_in,
                 Given_the_team_and_channel_inside_team_exist,
                 User_sends_message,
-                Message_is_sent_successfuly);*/
+                Message_is_sent_successfuly);
         }
 
         [Scenario]
