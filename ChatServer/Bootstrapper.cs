@@ -45,7 +45,7 @@ namespace ChatServer
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
             base.ConfigureRequestContainer(container, context);
-            container.Register<ChatContext>().UsingConstructor(()=> new ChatContext(config));
+            container.Register<ChatContext>().UsingConstructor(()=> new ChatContext(config)).AsMultiInstance();
         }
     }
 }
