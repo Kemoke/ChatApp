@@ -41,5 +41,11 @@ namespace ChatServer
                 context.Database.EnsureCreated();
             }
         }
+
+        protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
+        {
+            base.ConfigureRequestContainer(container, context);
+            container.Register<ChatContext>();
+        }
     }
 }
