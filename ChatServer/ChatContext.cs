@@ -74,11 +74,11 @@ namespace ChatServer
                 .WithOne(tu => tu.Team)
                 .HasForeignKey(tu => tu.TeamId);
             modelBuilder.Entity<Team>()
-                .HasAlternateKey(t => t.Name);
+                .HasIndex(t => t.Name).IsUnique();
             modelBuilder.Entity<User>()
-                .HasAlternateKey(u => u.Username);
+                .HasIndex(u => u.Username).IsUnique();
             modelBuilder.Entity<User>()
-                .HasAlternateKey(u => u.Email);
+                .HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<User>()
                 .HasMany(u => u.UserTeams)
                 .WithOne(ut => ut.User)
@@ -88,7 +88,7 @@ namespace ChatServer
                 .WithMany()
                 .HasForeignKey(ut => ut.RoleId);
             modelBuilder.Entity<Role>()
-                .HasAlternateKey(r => r.Name);
+                .HasIndex(r => r.Name).IsUnique();
         }
     }
 }
