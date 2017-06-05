@@ -28,14 +28,37 @@ namespace ChatServer.Module
             Post("/user/{id}/remove", RemoveUserAsync);
         }
 
-        private Task<object> RemoveUserAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> RemoveUserAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<UnsignRoleRequest>();
+
+            context.UserTeams.Remove(new UserTeam
+            {
+                TeamId = request.TeamId,
+                UserId = request.UserId,
+                RoleId = request.RoleId
+            });
+
+            await context.SaveChangesAsync(cancellationToken);
+            return Response.AsJson(new Msg("User Removed"));
         }
 
-        private Task<object> AddUserAsync(object arg1, CancellationToken arg2)
+        private async Task<dynamic> AddUserAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var request = this.Bind<AssignRoleRequest>();
+
+            var userRole = new UserTeam
+            {
+                RoleId = request.RoleId,
+                TeamId = request.TeamId,
+                UserId = request.UserId
+            };
+
+            context.UserTeams.Add(userRole);
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return Response.AsJson(userRole);
         }
 
         private async Task<object> DeleteTeamAsync(dynamic props, CancellationToken token)
