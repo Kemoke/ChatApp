@@ -1,6 +1,6 @@
 ﻿namespace ChatServer.Request
 {
-    public class UnassignRoleRequest
+    public class UnsignRoleRequest
     {
         public int TeamId { get; set; }
         public int UserId { get; set; }
