@@ -24,22 +24,30 @@ namespace ChatServer.Module
             Put("/{id}", EditRoleAsync);
             Delete("/{id}", DeleteRoleAsync);
             Post("/assign", AssignRoleAsync);
-            Delete("/unassign", UnassignRoleAsync);
+            Delete("/unsign", UnsignRoleAsync);
         }
 
-        private async Task<dynamic> UnassignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> UnsignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var request = this.Bind<UnassignRoleRequest>();
-
-            context.UserTeams.Remove(new UserTeam
+            try
             {
-                TeamId = request.TeamId,
-                UserId = request.UserId,
-                RoleId = request.RoleId
-            });
+                var request = this.Bind<UnsignRoleRequest>();
 
-            await context.SaveChangesAsync(cancellationToken);
-            return Response.AsText("Role Unassigned");
+                context.UserTeams.Remove(new UserTeam
+                {
+                    TeamId = request.TeamId,
+                    UserId = request.UserId,
+                    RoleId = request.RoleId
+                });
+
+                await context.SaveChangesAsync(cancellationToken);
+                return Response.AsJson(new Msg("Role Unsigned"));
+            }
+            catch (Exception e)
+            {
+                return Response.AsJson(new Msg(e.Message));
+            }
+            
         }
 
         private async Task<dynamic> DeleteRoleAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -47,7 +55,7 @@ namespace ChatServer.Module
             int id = parameters.id;
             context.Roles.Remove(new Role { Id = id });
             await context.SaveChangesAsync(cancellationToken);
-            return Response.AsText("Role Deleted");
+            return Response.AsJson(new Msg("Role Deleted"));
         }
 
         private async Task<dynamic> EditRoleAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -60,29 +68,23 @@ namespace ChatServer.Module
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return Response.AsJson(new Msg("Data changed successfully"));
+            return Response.AsJson(role);
         }
 
         private async Task<dynamic> GetRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            try
-            {
                 int id = parameters.id;
                 var channel = await context.Roles.AsNoTracking().FirstAsync(r => r.Id == id, cancellationToken);
 
                 return Response.AsJson(channel);
-            }
-            catch (Exception e)
-            {
-                return Response.AsJson(new Msg("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
-            }
         }
 
-        private async Task<object> ListRoleAsync(dynamic parameters, CancellationToken cancellationToken)
+        private async Task<dynamic> ListRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var roleList = await context.Channels.AsNoTracking().ToListAsync(cancellationToken);
+            var roleList = await context.Roles.AsNoTracking().ToListAsync(cancellationToken);
 
             var response = JsonConvert.SerializeObject(roleList);
+
             return Response.AsText(response, "application/json");
         }
 
