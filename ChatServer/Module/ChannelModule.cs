@@ -41,18 +41,10 @@ namespace ChatServer.Module
 
         private async Task<dynamic> GetChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            try
-            {
-                int id = parameters.id;
-                var channel = await context.Channels.AsNoTracking().FirstAsync(c => c.Id == id, cancellationToken);
+            int id = parameters.id;
+            var channel = await context.Channels.AsNoTracking().FirstAsync(c => c.Id == id, cancellationToken);
 
-                return Response.AsJson(channel);
-            }
-            catch(Exception e)
-            {
-                return Response.AsJson(new Msg("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
-            }
-            
+            return Response.AsJson(channel);
         }
 
         private async Task<dynamic> ListChannelAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -66,41 +58,28 @@ namespace ChatServer.Module
 
         private async Task<dynamic> DeleteChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            try
-            {
-                int id = parameters.id;
+            int id = parameters.id;
 
-                context.Channels.Remove(new Channel {Id = id});
+            context.Channels.Remove(new Channel {Id = id});
 
-                await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
-                return Response.AsJson(new Msg("Channel Deleted"));
-            }
-            catch (Exception e)
-            {
-                return Response.AsJson(new Msg("Something went wrong")).WithStatusCode(HttpStatusCode.BadRequest);
-            }
+            return Response.AsJson(new Msg("Channel Deleted"));
         }
 
         private async Task<dynamic> EditChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            try
-            {
-                int id = parameters.id;
+            
+            int id = parameters.id;
 
-                var request = this.Bind<Channel>();
-                var channel = await context.Channels.FirstAsync(c => c.Id == id, cancellationToken);
+            var request = this.Bind<Channel>();
+            var channel = await context.Channels.FirstAsync(c => c.Id == id, cancellationToken);
 
-                channel.ChannelName = request.ChannelName;
-                await context.SaveChangesAsync(cancellationToken);
+            channel.ChannelName = request.ChannelName;
+            await context.SaveChangesAsync(cancellationToken);
 
-                return Response.AsJson(channel);
-            }
-            catch (Exception e)
-            {
-                return Response.AsJson(new Msg(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
-            }
-
+            return Response.AsJson(channel);
+            
         }
 
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -148,21 +127,13 @@ namespace ChatServer.Module
 
             var messages = new List<Message>();
             
-            if (await context.Messages.AnyAsync(cancellationToken))
+            var lastId = (await context.Messages.AsNoTracking().LastAsync(cancellationToken)).Id;
+            if (lastId == request.MessageId)
             {
-                var lastId = (await context.Messages.AsNoTracking().LastAsync(cancellationToken)).Id;
-                if (lastId == request.MessageId)
-                {
-                    return Response.AsJson(messages);
-                }
-            }
-            else
-            {
-                return Response.AsJson(new Msg("There are no messages to be dipslayed"));
+                return Response.AsJson(messages);
             }
             
-
-            messages = await context.Messages.AsNoTracking().Where(m => (m.Id > request.MessageId && m.Id == request.ChannelId)).ToListAsync(cancellationToken);
+            messages = await context.Messages.AsNoTracking().Where(m => (m.Id > request.MessageId && m.ChannelId == request.ChannelId)).ToListAsync(cancellationToken);
 
             return Response.AsJson(messages);
         }
@@ -178,25 +149,18 @@ namespace ChatServer.Module
         private async Task<dynamic> SendMessageAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<SendMessageRequest>();
-            try
-            {
-                var message = new Message
-                {
-                    MessageText = request.MessageText,
-                    SenderId = request.SenderId,
-                    TargetId = request.TargetId,
-                    ChannelId = request.ChannelId
-                };
-
-                context.Add(message);
-                await context.SaveChangesAsync(cancellationToken);
-                return Response.AsJson(message);
-            }
-            catch(Exception e)
-            {
-                return Response.AsJson(new Msg(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
-            }
             
+            var message = new Message
+            {
+                MessageText = request.MessageText,
+                SenderId = request.SenderId,
+                TargetId = request.TargetId,
+                ChannelId = request.ChannelId
+            };
+
+            context.Add(message);
+            await context.SaveChangesAsync(cancellationToken);
+            return Response.AsJson(message); 
         }
     }
 }

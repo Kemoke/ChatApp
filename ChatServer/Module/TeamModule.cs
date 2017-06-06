@@ -25,19 +25,15 @@ namespace ChatServer.Module
             Put("/{id}", EditTeamAsync);
             Delete("/{id}", DeleteTeamAsync);
             Post("/user/add", AddUserAsync);
-            Post("/user/{id}/remove", RemoveUserAsync);
+            Delete("/user/remove", RemoveUserAsync);
         }
 
         private async Task<dynamic> RemoveUserAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<UnsignRoleRequest>();
-
-            context.UserTeams.Remove(new UserTeam
-            {
-                TeamId = request.TeamId,
-                UserId = request.UserId,
-                RoleId = request.RoleId
-            });
+            var userteam = await context.UserTeams.FirstAsync(
+                ut => ut.TeamId == request.TeamId && ut.UserId == request.UserId, cancellationToken);
+            context.UserTeams.Remove(userteam);
 
             await context.SaveChangesAsync(cancellationToken);
             return Response.AsJson(new Msg("User Removed"));
@@ -61,15 +57,15 @@ namespace ChatServer.Module
             return Response.AsJson(userRole);
         }
 
-        private async Task<object> DeleteTeamAsync(dynamic props, CancellationToken token)
+        private async Task<dynamic> DeleteTeamAsync(dynamic props, CancellationToken token)
         {
             int id = props.id;
             context.Teams.Remove(new Team {Id = id});
             await context.SaveChangesAsync(token);
-            return Response.AsText("Deleted");
+            return Response.AsJson(new Msg("Deleted"));
         }
 
-        private async Task<object> EditTeamAsync(dynamic props, CancellationToken token)
+        private async Task<dynamic> EditTeamAsync(dynamic props, CancellationToken token)
         {
             int id = props.id;
             var request = this.Bind<Team>();
@@ -88,7 +84,7 @@ namespace ChatServer.Module
             return Response.AsJson(team);
         }
 
-        private async Task<object> ListTeamAsync(dynamic props, CancellationToken token)
+        private async Task<dynamic> ListTeamAsync(dynamic props, CancellationToken token)
         {
             var teams = await context.Teams.Include(t => t.UserTeams)
                 .ThenInclude(t => t.User)
@@ -98,8 +94,6 @@ namespace ChatServer.Module
 
         private async Task<dynamic> CreateTeamAsync(dynamic arg, CancellationToken cancellationToken)
         {
-            try
-            {
                 var request = this.Bind<CreateTeamRequest>();
                 //neak bude i team name unique
                 if (await TeamExistsAsync(request.Name))
@@ -118,12 +112,6 @@ namespace ChatServer.Module
                 await context.SaveChangesAsync(cancellationToken);
 
                 return Response.AsJson(team);
-            }
-            catch (Exception e)
-            {
-                return Response.AsJson(new Msg(e.Message)).WithStatusCode(HttpStatusCode.BadRequest);
-            }
-           
         }
 
         private async Task<bool> TeamExistsAsync(string teamName)
