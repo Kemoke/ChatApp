@@ -29,25 +29,13 @@ namespace ChatServer.Module
 
         private async Task<dynamic> UnsignRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            try
-            {
-                var request = this.Bind<UnsignRoleRequest>();
+            var request = this.Bind<UnsignRoleRequest>();
+            var userteam = await context.UserTeams.FirstAsync(
+                ut => ut.TeamId == request.TeamId && ut.UserId == request.UserId, cancellationToken);
+            context.UserTeams.Remove(userteam);
 
-                context.UserTeams.Remove(new UserTeam
-                {
-                    TeamId = request.TeamId,
-                    UserId = request.UserId,
-                    RoleId = request.RoleId
-                });
-
-                await context.SaveChangesAsync(cancellationToken);
-                return Response.AsJson(new Msg("Role Unsigned"));
-            }
-            catch (Exception e)
-            {
-                return Response.AsJson(new Msg(e.Message));
-            }
-            
+            await context.SaveChangesAsync(cancellationToken);
+            return Response.AsJson(new Msg("Role Unassigned"));
         }
 
         private async Task<dynamic> DeleteRoleAsync(dynamic parameters, CancellationToken cancellationToken)

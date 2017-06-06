@@ -202,7 +202,7 @@ namespace ChatServerTests.Features
             Assert.Equal(createTeamResult.BodyJson<Team>().Id, assignRoleResult.BodyJson<UserTeam>().TeamId);
         }
 
-        private void Users_role_is_unsigned()
+        private void Users_role_is_unassigned()
         {
             unsignRoleResult = config.Browser.Delete("/role/unsign", with =>
             {
@@ -218,10 +218,10 @@ namespace ChatServerTests.Features
             }).Result;
         }
 
-        private void Role_unsign_successful()
+        private void Role_unassign_successful()
         {
             StepExecution.Current.Comment(unsignRoleResult.BodyJson<Msg>().Message);
-            Assert.Equal("Role Unsigned", unsignRoleResult.BodyJson<Msg>().Message);   
+            Assert.Equal("Role Unassigned", unsignRoleResult.BodyJson<Msg>().Message);   
         }
     }
 }

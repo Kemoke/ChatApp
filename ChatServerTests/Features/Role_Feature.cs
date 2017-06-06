@@ -85,8 +85,8 @@ namespace ChatServerTests.Features
                 Role_is_being_created,
                 Role_is_assigned_to_a_user_belonging_to_a_certain_team,
                 Role_assignment_successful,
-                Users_role_is_unsigned,
-                Role_unsign_successful);
+                Users_role_is_unassigned,
+                Role_unassign_successful);
         }
     }
 }
