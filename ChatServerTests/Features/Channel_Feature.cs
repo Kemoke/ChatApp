@@ -47,7 +47,7 @@ namespace ChatServerTests.Features
         {
             Runner.RunScenario(
                 Given_the_user_is_logged_in,
-                Given_the_user_is_inside_of_a_team,
+                Given_the_user_is_inside_of_a_team_and_there_exists_list_of_channels_in_database,
                 Users_wants_to_see_list_of_all_channels_inside_of_that_team,
                 List_retrieved_successfully);
         }
@@ -76,6 +76,20 @@ namespace ChatServerTests.Features
                 User_tries_to_create_new_channel_providing_channel_name,
                 Users_tries_to_delete_that_channel,
                 Channel_deleteion_successful);
+        }
+
+
+        [Scenario]
+        [Label("Ticket-6")]
+        [ScenarioCategory("Channel")]
+        public void Get_channel()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_the_user_creates_team_and_is_admin,
+                User_tries_to_create_new_channel_providing_channel_name,
+                Users_tries_to_retrieve_created_channel,
+                Channel_retrieved_successfully);
         }
     }
 }

@@ -15,6 +15,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 [assembly: LightBddScope]
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace ChatServerTests.Features
 {

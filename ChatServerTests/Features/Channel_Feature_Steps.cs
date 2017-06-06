@@ -34,6 +34,7 @@ namespace ChatServerTests.Features
         private BrowserResponse createChannelResult;
         private BrowserResponse createNewChannelResult;
         private BrowserResponse loginResult;
+        private BrowserResponse getChannelResult;
 
 
 
@@ -46,7 +47,7 @@ namespace ChatServerTests.Features
 
             user = DataGenerator.GenerateSingleUser(config.Context);
 
-            team = DataGenerator.GenerateSingleTeam(config.Context);
+            
         }
 
         #endregion
@@ -80,6 +81,8 @@ namespace ChatServerTests.Features
 
         private void Given_the_user_creates_team_and_is_admin()
         {
+            team = DataGenerator.GenerateSingleTeam(config.Context);
+
             createTeamResult = config.Browser.Post("/team/", with =>
             {
                 with.BodyJson(new CreateTeamRequest
@@ -95,25 +98,28 @@ namespace ChatServerTests.Features
             userRole = DataGenerator.GenerateSigleUserRole(config.Context, team.Id, user.Id, role.Id);
 
         }
-        
+
         private void User_tries_to_create_new_channel_providing_channel_name()
         {
+            var channel = DataGenerator.GenerateSingleChannel(config.Context, createTeamResult.BodyJson<Team>().Id);
             createChannelResult = config.Browser.Post("/channel/", with =>
                 {
                     with.BodyJson(new CreateChannelRequest
                     {
-                        ChannelName = "Client",
+                        ChannelName = channel.ChannelName,
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = team.Id
+                        TeamId = channel.TeamId
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
                 })
                 .Result;
         }
-
+       
         private void Channel_creation_successful()
         {
+           
+            //Assert.Equal("dsa", createChannelResult.BodyJson<Msg>().Message);
             Assert.Equal(HttpStatusCode.OK, createChannelResult.StatusCode);
         }
 
@@ -123,9 +129,9 @@ namespace ChatServerTests.Features
                 {
                     with.BodyJson(new CreateChannelRequest
                     {
-                        ChannelName = "Client",
+                        ChannelName = createChannelResult.BodyJson<Channel>().ChannelName,
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = team.Id
+                        TeamId = createChannelResult.BodyJson<Channel>().TeamId
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
@@ -140,8 +146,9 @@ namespace ChatServerTests.Features
             Assert.Equal("Channel with that name already exists", response.Message);
         }
 
-        private void Given_the_user_is_inside_of_a_team()
+        private void Given_the_user_is_inside_of_a_team_and_there_exists_list_of_channels_in_database()
         {
+            team = DataGenerator.GenerateSingleTeam(config.Context);
             channels = DataGenerator.GenerateChannelList(config.Context, team.Id, 10).ToList();
 
             foreach (var c in channels)
@@ -232,6 +239,21 @@ namespace ChatServerTests.Features
         private void Channel_deleteion_successful()
         {
             Assert.Equal("Channel Deleted", deleteChannelResult.BodyJson<Msg>().Message);
+        }
+
+        private void Users_tries_to_retrieve_created_channel()
+        {
+            getChannelResult = config.Browser.Get("/channel/" + createChannelResult.BodyJson<Channel>().Id, with =>
+                {
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+                })
+                .Result;
+        }
+
+        private void Channel_retrieved_successfully()
+        {
+            Assert.Equal(createChannelResult.BodyJson<Channel>().Id, getChannelResult.BodyJson<Channel>().Id);
         }
     }
 }

@@ -30,7 +30,11 @@ namespace ChatServerTests.Features
         private BrowserResponse createChannelResult;
         private BrowserResponse createNewChannelResult;
         private BrowserResponse loginResult;
-
+        private BrowserResponse newMessageList;
+        private BrowserResponse sendMessages;
+        private BrowserResponse retrievedMessageList2;
+        private BrowserResponse sendMessages2;
+        
 
 
         #region Setup/Teardown
@@ -75,6 +79,7 @@ namespace ChatServerTests.Features
             team = DataGenerator.GenerateSingleTeam(config.Context);
 
             channel = DataGenerator.GenerateSingleChannel(config.Context, team.Id);
+            
         }
 
         private void User_sends_message()
@@ -106,7 +111,7 @@ namespace ChatServerTests.Features
 
             foreach (var m in messages)
             {
-                var sendMessages = config.Browser.Post("/channel/send", with =>
+                sendMessages = config.Browser.Post("/channel/send", with =>
                     {
                         with.BodyJson(new SendMessageRequest
                         {
@@ -140,7 +145,53 @@ namespace ChatServerTests.Features
 
         private void Messages_are_retrieved_successfuly()
         {
-            Assert.Equal(messages.Count, retrievedMessageList.Body.DeserializeJson<List<Message>>().Count);
+            Assert.NotEmpty(retrievedMessageList.Body.DeserializeJson<List<Message>>());
+        }
+
+        private void New_messages_were_sent()
+        {
+            foreach (var m in messages)
+            {
+                sendMessages2 = config.Browser.Post("/channel/send", with =>
+                    {
+                        with.BodyJson(new SendMessageRequest
+                        {
+                            MessageText = m.MessageText,
+                            SenderId = m.SenderId,
+                            TargetId = m.TargetId,
+                            ChannelId = sendMessages.BodyJson<Message>().ChannelId
+                        });
+                        with.Accept(new MediaRange("application/json"));
+                        with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+                    })
+                    .Result;
+            }
+        }
+
+        private void Request_is_sent_to_retrieve_new_messages()
+        {
+            newMessageList = config.Browser.Get("/channel/messages/new", with =>
+                {
+                    with.Body(JsonConvert.SerializeObject(new CheckNewMessagesRequest
+                    {
+                        ChannelId = sendMessages.BodyJson<Message>().ChannelId,
+                        MessageId = sendMessages.BodyJson<Message>().Id
+                    }), "application/json");
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+                })
+                .Result;
+        }
+
+        private void New_messages_are_retrieved_successfuly()
+        {
+            Assert.NotEmpty(newMessageList.BodyJson<List<Message>>());
+        }
+
+       
+        private void No_new_messages_are_retrieved()
+        {
+            Assert.Empty(newMessageList.BodyJson<List<Message>>());
         }
 
     }

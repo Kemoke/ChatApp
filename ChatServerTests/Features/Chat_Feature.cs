@@ -24,7 +24,7 @@ namespace ChatServerTests.Features
         }
 
         [Scenario]
-        [Label("Ticket-1")]
+        [Label("Ticket-2")]
         [ScenarioCategory("Chat")]
         public void Upon_opening_user_wants_to_see_messages_for_channel()
         {
@@ -34,6 +34,33 @@ namespace ChatServerTests.Features
                 Given_that_messages_for_certain_channel_exist,
                 Request_is_sent_to_retrieve_messages,
                 Messages_are_retrieved_successfuly);
+        }
+
+        [Scenario]
+        [Label("Ticket-3")]
+        [ScenarioCategory("Chat")]
+        public void User_tries_to_recieve_new_messages()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_the_team_and_channel_inside_team_exist,
+                Given_that_messages_for_certain_channel_exist,
+                New_messages_were_sent,
+                Request_is_sent_to_retrieve_new_messages,
+                New_messages_are_retrieved_successfuly);
+        }
+
+        [Scenario]
+        [Label("Ticket-3")]
+        [ScenarioCategory("Chat")]
+        public void User_tries_to_recieve_new_messages_but_there_are_no_messages_in_channel()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                Given_the_team_and_channel_inside_team_exist,
+                Given_that_messages_for_certain_channel_exist,
+                Request_is_sent_to_retrieve_new_messages,
+                No_new_messages_are_retrieved);
         }
     }
 }
