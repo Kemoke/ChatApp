@@ -29,19 +29,15 @@ namespace ChatServer.Module
 
         private async Task<dynamic> LoginAsync(dynamic props, CancellationToken token)
         {
-            Console.WriteLine("Enter login");
             try
             {
                 var request = this.Bind<LoginRequest>();
-                Console.WriteLine("Bind req");
                 var user = await context.Users.AsNoTracking().FirstAsync(u => u.Username == request.Username, token);
-                Console.WriteLine("get user");
                 if (!BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.Password))
                 {
                     return Response.AsJson(new Msg("Invalid credentials"))
                         .WithStatusCode(HttpStatusCode.Unauthorized);
                 }
-                Console.WriteLine("pass hash complete");
                 user.Password = "";
                 var time = DateTime.Now.AddDays(30).Ticks;
                 var opts = new Dictionary<string, object>
@@ -49,7 +45,6 @@ namespace ChatServer.Module
                     {"exp", time}
                 };
                 var jwt = JsonWebToken.Encode(opts, user, config.AppKey, JwtHashAlgorithm.HS512);
-                Console.WriteLine("jwt encoded");
                 return Response.AsJson(new LoginResponse
                 {
                     Token = jwt,

@@ -40,12 +40,19 @@ namespace ChatServer
             {
                 context.Database.EnsureCreated();
             }
+            pipelines.AfterRequest += ctx =>
+            {
+                ctx.Response
+                    .WithHeader("Access-Control-Allow-Origin", "*")
+                    .WithHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                    .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type, Authorization");
+            };
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
             base.ConfigureRequestContainer(container, context);
-            container.Register<ChatContext>().UsingConstructor(()=> new ChatContext(config)).AsMultiInstance();
+            container.Register<ChatContext>();
         }
     }
 }

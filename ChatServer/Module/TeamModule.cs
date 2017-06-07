@@ -95,7 +95,6 @@ namespace ChatServer.Module
         private async Task<dynamic> CreateTeamAsync(dynamic arg, CancellationToken cancellationToken)
         {
                 var request = this.Bind<CreateTeamRequest>();
-                //neak bude i team name unique
                 if (await TeamExistsAsync(request.Name))
                 {
                     return Response.AsJson(new Msg("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);

@@ -26,11 +26,9 @@ namespace ChatServer.Module
             Post("/change_password", ChangePasswordAsync);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async Task<dynamic> GetSelfAsync(dynamic parameters, CancellationToken cancellationToken)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        private Task<Nancy.Response> GetSelfAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            return Response.AsJson(User);
+            return Task.FromResult(Response.AsJson(User));
         }
 
         private async Task<dynamic> ListUsersAsync(dynamic parameters, CancellationToken cancellationToken)

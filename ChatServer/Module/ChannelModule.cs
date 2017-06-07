@@ -85,9 +85,8 @@ namespace ChatServer.Module
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             var request = this.Bind<CreateChannelRequest>();
-            //sve sto radi sa bazom koristi async metode i await ispred
 
-            if (!(await IsUserAdminAsync(request.TeamId, request.UserId, cancellationToken)))
+            if (!await IsUserAdminAsync(request.TeamId, request.UserId, cancellationToken))
             {
                 return Response.AsJson(new Msg("You are not admin!")).WithStatusCode(HttpStatusCode.BadRequest);
             }
@@ -105,7 +104,6 @@ namespace ChatServer.Module
 
             context.Channels.Add(channel);
             await context.SaveChangesAsync(cancellationToken);
-            //uvjek vracaj objekt koji napravis preko apija nazad
             return Response.AsJson(channel);
         }
 
