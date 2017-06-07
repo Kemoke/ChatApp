@@ -20,7 +20,7 @@ namespace ChatServer.Module
                     User = JsonWebToken.DecodeToObject<User>(jwt, config.AppKey);
                     return null;
                 }
-                catch (SignatureVerificationException e)
+                catch (SignatureVerificationException)
                 {
                     return Response.AsJson(new Msg("Not authorized")).WithStatusCode(HttpStatusCode.Unauthorized);
                 }
