@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ChatServer.Model;
 using ChatServer.Response;
 using JWT;
@@ -20,7 +21,10 @@ namespace ChatServer.Module
                     User = JsonWebToken.DecodeToObject<User>(jwt, config.AppKey);
                     return null;
                 }
-                catch (SignatureVerificationException e)
+                catch (Exception e) when (e is SignatureVerificationException 
+                                        || e is InvalidOperationException
+                                        || e is ArgumentNullException
+                                        || e is ArgumentException)
                 {
                     return Response.AsJson(new Msg("Not authorized")).WithStatusCode(HttpStatusCode.Unauthorized);
                 }

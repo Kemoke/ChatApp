@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ChatServer;
+using System.Threading.Tasks;
 using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
@@ -7,13 +7,12 @@ using LightBDD.XUnit2;
 using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Testing;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Team_Feature : FeatureFixture
+    public partial class TeamFeature : FeatureFixture
     {
         private readonly User user;
         private readonly Team team;
@@ -33,7 +32,7 @@ namespace ChatServerTests.Features
 
         #region Setup/Teardown
 
-        public Team_Feature(ITestOutputHelper output) : base(output)
+        public TeamFeature(ITestOutputHelper output) : base(output)
         {
 
             config = new FeaturesConfig();
@@ -45,15 +44,15 @@ namespace ChatServerTests.Features
 
         #endregion
 
-        private void Given_the_user_is_logged_in()
+        private async Task Given_the_user_is_logged_in()
         {
-            loginResult = config.Browser.Post("/auth/register", with =>
+            loginResult = await config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest {User = user});
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
 
-            loginResult = config.Browser.Post("/auth/login", with =>
+            loginResult = await config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
@@ -62,7 +61,7 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
 
-            }).Result;
+            });
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
             var body = loginResult.BodyJson<LoginResponse>();
@@ -71,9 +70,9 @@ namespace ChatServerTests.Features
             Assert.NotEmpty(body.Token);
         }
 
-        private void User_tries_to_create_new_team_providing_team_name()
+        private async Task User_tries_to_create_new_team_providing_team_name()
         {
-            result = config.Browser.Post("/team/", with =>
+            result = await config.Browser.Post("/team/", with =>
             {
                 with.BodyJson(new CreateTeamRequest
                 {
@@ -82,17 +81,18 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Team_creation_successful()
+        private Task Team_creation_successful()
         {
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            return Task.CompletedTask;
         }
 
-        private void Given_there_exists_a_team_in_the_database()
+        private async Task Given_there_exists_a_team_in_the_database()
         {
-            result = config.Browser.Post("/team/", with =>
+            result = await config.Browser.Post("/team/", with =>
             {
                 with.BodyJson(new CreateTeamRequest
                 {
@@ -101,47 +101,50 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Team_creation_unsuccessful()
+        private Task Team_creation_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var response = result.BodyJson<Msg>();
             Assert.Equal("Channel with that name already exists", response.Message);
+            return Task.CompletedTask;
         }
 
-        private void User_tries_to_retrieve_list_of_teams_in_which_he_is_in()
+        private async Task User_tries_to_retrieve_list_of_teams_in_which_he_is_in()
         {
-            teamListResponse = config.Browser.Get("/team/", with =>
+            teamListResponse = await config.Browser.Get("/team/", with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void List_retrieved_successfully()
+        private Task List_retrieved_successfully()
         {
             Assert.NotEmpty(teamListResponse.BodyJson<List<Team>>());
+            return Task.CompletedTask;
         }
 
-        private void User_tries_to_retrieve_about_the_team()
+        private async Task User_tries_to_retrieve_about_the_team()
         {
-            teamInfoResponse = config.Browser.Get("/team/"+ result.BodyJson<Team>().Id, with =>
+            teamInfoResponse = await config.Browser.Get("/team/"+ result.BodyJson<Team>().Id, with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Info_retrieved_successfully()
+        private Task Info_retrieved_successfully()
         {
             Assert.Equal(result.BodyJson<Team>().Id, teamInfoResponse.BodyJson<Team>().Id);
+            return Task.CompletedTask;
         }
 
-        private void User_tries_to_edit_team_info()
+        private async Task User_tries_to_edit_team_info()
         {
-            editTeamInfoResponse = config.Browser.Put("/team/" + result.BodyJson<Team>().Id, with =>
+            editTeamInfoResponse = await config.Browser.Put("/team/" + result.BodyJson<Team>().Id, with =>
             {
                 with.BodyJson(new Team
                 {
@@ -149,30 +152,31 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Info_edited_successfully()
+        private Task Info_edited_successfully()
         {
             Assert.Equal("IUS", editTeamInfoResponse.BodyJson<Team>().Name);
+            return Task.CompletedTask;
         }
 
-        private void Given_another_user_is_registered()
+        private async Task Given_another_user_is_registered()
         {
             var user2 = DataGenerator.GenerateSingleUser(config.Context);
 
-            registerResult = config.Browser.Post("/auth/register", with =>
+            registerResult = await config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user2 });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
         }
 
-        private void Role_is_being_created()
+        private async Task Role_is_being_created()
         {
             var role = DataGenerator.GenerateSigleRole(config.Context, "Developer");
 
-            createRoleResult = config.Browser.Post("/role/", with =>
+            createRoleResult = await config.Browser.Post("/role/", with =>
             {
                 with.BodyJson(new CreateRoleRequest
                 {
@@ -180,12 +184,12 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void User_tries_to_add_other_user_to_the_team()
+        private async Task User_tries_to_add_other_user_to_the_team()
         {
-            addUserResult = config.Browser.Post("/team/user/add", with =>
+            addUserResult = await config.Browser.Post("/team/user/add", with =>
             {
                 with.BodyJson(new AssignRoleRequest
                 {
@@ -196,19 +200,20 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Adding_user_successful()
+        private Task Adding_user_successful()
         {
             Assert.Equal(registerResult.BodyJson<User>().Id, addUserResult.BodyJson<UserTeam>().UserId);
             Assert.Equal(createRoleResult.BodyJson<Role>().Id, addUserResult.BodyJson<UserTeam>().RoleId);
             Assert.Equal(result.BodyJson<Team>().Id, addUserResult.BodyJson<UserTeam>().TeamId);
+            return Task.CompletedTask;
         }
 
-        private void User_tries_to_remove_another_user_from_team()
+        private async Task User_tries_to_remove_another_user_from_team()
         {
-            removeUserResult = config.Browser.Delete("/team/user/remove", with =>
+            removeUserResult = await config.Browser.Delete("/team/user/remove", with =>
             {
                 with.BodyJson(new UnsignRoleRequest
                 {
@@ -219,26 +224,28 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Remove_user_successful()
+        private Task Remove_user_successful()
         {
             Assert.Equal("User Removed", removeUserResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
 
-        private void User_tries_to_delete_team()
+        private async Task User_tries_to_delete_team()
         {
-            deleteTeamResult = config.Browser.Delete("/team/" + result.BodyJson<Team>().Id, with =>
+            deleteTeamResult = await config.Browser.Delete("/team/" + result.BodyJson<Team>().Id, with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Team_delete_successfully()
+        private Task Team_delete_successfully()
         {
             Assert.Equal("Deleted", deleteTeamResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
     }
 }

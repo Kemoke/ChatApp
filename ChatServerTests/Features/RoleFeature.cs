@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios.Basic;
 using LightBDD.XUnit2;
@@ -11,14 +12,14 @@ namespace ChatServerTests.Features
         @"Every user should have role assigned to it inside of a channel.")]
     [Label("Story-7")]
 
-    public partial class Role_Feature
+    public partial class RoleFeature
     {
         [Scenario]
         [Label("Ticket-1")]
         [ScenarioCategory("Roles")]
-        public void Deleting_role()
+        public Task Deleting_role()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Role_is_being_created,
                 Role_is_then_deleted,
@@ -28,9 +29,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-2")]
         [ScenarioCategory("Roles")]
-        public void Edit_role()
+        public Task Edit_role()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Role_is_being_created,
                 Role_is_then_edited,
@@ -40,9 +41,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-3")]
         [ScenarioCategory("Roles")]
-        public void Get_role()
+        public Task Get_role()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Role_is_being_created,
                 Role_is_being_requested_by_id,
@@ -52,9 +53,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-4")]
         [ScenarioCategory("Roles")]
-        public void Retrieve_list_of_roles()
+        public Task Retrieve_list_of_roles()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_that_several_roles_exist_in_database,
                 User_requests_list_of_roles,
@@ -64,9 +65,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-5")]
         [ScenarioCategory("Roles")]
-        public void Assign_role_to_user()
+        public Task Assign_role_to_user()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_that_team_exists_in_database,
                 Role_is_being_created,
@@ -77,9 +78,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-6")]
         [ScenarioCategory("Roles")]
-        public void Unsign_role_to_user()
+        public Task Unsign_role_to_user()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_that_team_exists_in_database,
                 Role_is_being_created,

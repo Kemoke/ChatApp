@@ -1,4 +1,5 @@
-﻿using LightBDD.Framework;
+﻿using System.Threading.Tasks;
+using LightBDD.Framework;
 using LightBDD.Framework.Scenarios.Basic;
 using LightBDD.XUnit2;
 
@@ -7,14 +8,14 @@ namespace ChatServerTests.Features
     [FeatureDescription(
         @"As a user I want to be able to create a team")]
     [Label("Story-3")]
-    public partial class Team_Feature
+    public partial class TeamFeature
     {
         [Scenario]
         [Label("Ticket-1")]
         [ScenarioCategory("Teams")]
-        public void Successfuly_create_team()
+        public Task Successfuly_create_team()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 User_tries_to_create_new_team_providing_team_name,
@@ -24,9 +25,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-2")]
         [ScenarioCategory("Teams")]
-        public void Wrong_team_name()
+        public Task Wrong_team_name()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,
@@ -38,9 +39,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-3")]
         [ScenarioCategory("Teams")]
-        public void User_wants_to_retrieve_list_of_teams_in_which_he_is_in()
+        public Task User_wants_to_retrieve_list_of_teams_in_which_he_is_in()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,
@@ -51,9 +52,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-4")]
         [ScenarioCategory("Teams")]
-        public void User_wants_to_retrieve_info_about_team()
+        public Task User_wants_to_retrieve_info_about_team()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,
@@ -64,9 +65,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-5")]
         [ScenarioCategory("Teams")]
-        public void User_wants_to_edit_team_info()
+        public Task User_wants_to_edit_team_info()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,
@@ -77,9 +78,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-6")]
         [ScenarioCategory("Teams")]
-        public void User_wants_to_add_other_user_to_team()
+        public Task User_wants_to_add_other_user_to_team()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,
@@ -92,9 +93,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-7")]
         [ScenarioCategory("Teams")]
-        public void User_wants_to_remove_other_user_from_team()
+        public Task User_wants_to_remove_other_user_from_team()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,
@@ -108,9 +109,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-8")]
         [ScenarioCategory("Teams")]
-        public void User_wants_to_delete_channel()
+        public Task User_wants_to_delete_channel()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
 
                 Given_the_user_is_logged_in,
                 Given_there_exists_a_team_in_the_database,

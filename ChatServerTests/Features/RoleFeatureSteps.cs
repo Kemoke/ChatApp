@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
@@ -16,7 +17,7 @@ using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Role_Feature : FeatureFixture
+    public partial class RoleFeature : FeatureFixture
     {
         #region Setup/Teardown
 
@@ -36,7 +37,7 @@ namespace ChatServerTests.Features
         private readonly Team team;
         private Role role;
 
-        public Role_Feature(ITestOutputHelper output) : base(output)
+        public RoleFeature(ITestOutputHelper output) : base(output)
         {
 
             config = new FeaturesConfig();
@@ -48,15 +49,15 @@ namespace ChatServerTests.Features
 
         #endregion
 
-        private void Given_the_user_is_logged_in()
+        private async Task Given_the_user_is_logged_in()
         {
-            loginResult = config.Browser.Post("/auth/register", with =>
+            loginResult = await config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
 
-            loginResult = config.Browser.Post("/auth/login", with =>
+            loginResult = await config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
@@ -65,7 +66,7 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
 
-            }).Result;
+            });
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
             var body = loginResult.BodyJson<LoginResponse>();
@@ -74,10 +75,10 @@ namespace ChatServerTests.Features
             Assert.NotEmpty(body.Token);
         }
 
-        private void Role_is_being_created()
+        private async Task Role_is_being_created()
         {
             role = DataGenerator.GenerateSigleRole(config.Context, "Developer");
-            createRoleResult = config.Browser.Post("/role/", with =>
+            createRoleResult = await config.Browser.Post("/role/", with =>
             {
                 with.BodyJson(new CreateRoleRequest
                 {
@@ -85,26 +86,27 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_is_then_deleted()
+        private async Task Role_is_then_deleted()
         {
-            deleteRoleResult = config.Browser.Delete("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
+            deleteRoleResult = await config.Browser.Delete("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_deletion_successful()
+        private Task Role_deletion_successful()
         {
             Assert.Equal("Role Deleted", deleteRoleResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
 
-        private void Role_is_then_edited()
+        private async Task Role_is_then_edited()
         {
-            editRoleResult = config.Browser.Put("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
+            editRoleResult = await config.Browser.Put("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
             {
                 with.BodyJson(new EditRoleRequest
                 {
@@ -112,35 +114,37 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_edit_successful()
+        private Task Role_edit_successful()
         {
             Assert.Equal("Hello", editRoleResult.BodyJson<Role>().Name);
+            return Task.CompletedTask;
         }
 
-        private void Role_is_being_requested_by_id()
+        private async Task Role_is_being_requested_by_id()
         {
-            getRoleResult = config.Browser.Get("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
+            getRoleResult = await config.Browser.Get("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_request_successful()
+        private Task Role_request_successful()
         {
             Assert.Equal(role.Name, getRoleResult.BodyJson<Role>().Name);
+            return Task.CompletedTask;
         }
 
-        private void Given_that_several_roles_exist_in_database()
+        private async Task Given_that_several_roles_exist_in_database()
         {
             roleList = DataGenerator.GenerateRoleList(config.Context, 10, "Dev").ToList();
 
             foreach (var r in roleList)
             {
-                createRolesResult = config.Browser.Post("/role/", with =>
+                createRolesResult = await config.Browser.Post("/role/", with =>
                 {
                     with.BodyJson(new CreateRoleRequest
                     {
@@ -148,28 +152,29 @@ namespace ChatServerTests.Features
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                }).Result;
+                });
             }
             
         }
 
-        private void User_requests_list_of_roles()
+        private async Task User_requests_list_of_roles()
         {
-            getRoleListResult = config.Browser.Get("/role/", with =>
+            getRoleListResult = await config.Browser.Get("/role/", with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_list_successfully_retrieved()
+        private Task Role_list_successfully_retrieved()
         {
             Assert.NotEmpty(getRoleListResult.BodyJson<List<Role>>());
+            return Task.CompletedTask;
         }
 
-        private void Given_that_team_exists_in_database()
+        private async Task Given_that_team_exists_in_database()
         {
-            createTeamResult = config.Browser.Post("/team/", with =>
+            createTeamResult = await config.Browser.Post("/team/", with =>
             {
                 with.BodyJson(new CreateTeamRequest
                 {
@@ -177,12 +182,12 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_is_assigned_to_a_user_belonging_to_a_certain_team()
+        private async Task Role_is_assigned_to_a_user_belonging_to_a_certain_team()
         {
-            assignRoleResult = config.Browser.Post("/role/assign", with =>
+            assignRoleResult = await config.Browser.Post("/role/assign", with =>
             {
                 with.BodyJson(new AssignRoleRequest
                 {
@@ -193,19 +198,20 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_assignment_successful()
+        private Task Role_assignment_successful()
         {
             Assert.Equal(loginResult.BodyJson<LoginResponse>().User.Id, assignRoleResult.BodyJson<UserTeam>().UserId);
             Assert.Equal(createRoleResult.BodyJson<Role>().Id, assignRoleResult.BodyJson<UserTeam>().RoleId);
             Assert.Equal(createTeamResult.BodyJson<Team>().Id, assignRoleResult.BodyJson<UserTeam>().TeamId);
+            return Task.CompletedTask;
         }
 
-        private void Users_role_is_unassigned()
+        private async Task Users_role_is_unassigned()
         {
-            unsignRoleResult = config.Browser.Delete("/role/unsign", with =>
+            unsignRoleResult = await config.Browser.Delete("/role/unsign", with =>
             {
                 with.BodyJson(new UnsignRoleRequest
                 {
@@ -216,13 +222,14 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Role_unassign_successful()
+        private Task Role_unassign_successful()
         {
             StepExecution.Current.Comment(unsignRoleResult.BodyJson<Msg>().Message);
-            Assert.Equal("Role Unassigned", unsignRoleResult.BodyJson<Msg>().Message);   
+            Assert.Equal("Role Unassigned", unsignRoleResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
     }
 }

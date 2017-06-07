@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios.Basic;
 using LightBDD.XUnit2;
@@ -12,14 +13,14 @@ namespace ChatServerTests.Features
     [Label("Story-4")]
 
 
-    public partial class Channel_Feature
+    public partial class ChannelFeature
     {
         [Scenario]
         [Label("Ticket-1")]
         [ScenarioCategory("Channel")]
-        public void Successfuly_create_channel()
+        public Task Successfuly_create_channel()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_the_user_creates_team_and_is_admin,
                 User_tries_to_create_new_channel_providing_channel_name,
@@ -29,10 +30,10 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Channel")]
-        public void Unsuccessful_channel_creation_caused_by_duplicate_channel_name()
+        [ScenarioCategory("Chanel")]
+        public Task Unsuccessful_channel_creation_caused_by_duplicate_channel_name()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_the_user_creates_team_and_is_admin,
                 User_tries_to_create_new_channel_providing_channel_name,
@@ -43,9 +44,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-3")]
         [ScenarioCategory("Channel")]
-        public void When_a_user_enters_team_list_of_channels_should_be_displayed()
+        public Task When_a_user_enters_team_list_of_channels_should_be_displayed()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_the_user_creates_team_and_is_admin,
                 Given_the_user_is_inside_of_a_team_and_there_exists_list_of_channels_in_database,
@@ -56,9 +57,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-4")]
         [ScenarioCategory("Channel")]
-        public void Edit_channel_info()
+        public Task Edit_channel_info()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_the_user_creates_team_and_is_admin,
                 Users_wants_to_change_channel_name,
@@ -69,9 +70,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-5")]
         [ScenarioCategory("Channel")]
-        public void Delete_channel()
+        public Task Delete_channel()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_the_user_creates_team_and_is_admin,
                 User_tries_to_create_new_channel_providing_channel_name,
@@ -83,9 +84,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-6")]
         [ScenarioCategory("Channel")]
-        public void Get_channel()
+        public Task Get_channel()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_the_user_creates_team_and_is_admin,
                 User_tries_to_create_new_channel_providing_channel_name,
@@ -96,9 +97,9 @@ namespace ChatServerTests.Features
         [Scenario]
         [Label("Ticket-6")]
         [ScenarioCategory("Channel")]
-        public void User_tries_to_create_channel_with_non_admin_account()
+        public Task User_tries_to_create_channel_with_non_admin_account()
         {
-            Runner.RunScenario(
+            return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
                 Given_there_are_several_roles_in_database,
                 User_tries_to_create_new_channel_providing_channel_name_with_non_admin_account,

@@ -1,4 +1,5 @@
-﻿using ChatServer.Model;
+﻿using System.Threading.Tasks;
+using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
 using LightBDD.XUnit2;
@@ -10,15 +11,17 @@ using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Secure_Module_Feature : FeatureFixture
+    public partial class SecureModuleFeature : FeatureFixture
     {
+        private readonly ITestOutputHelper output;
         private BrowserResponse loginResult;
         private BrowserResponse unsignRoleResult;
         private readonly FeaturesConfig config;
         private readonly User user;
         #region Setup/Teardown
-        public Secure_Module_Feature(ITestOutputHelper output) : base(output)
+        public SecureModuleFeature(ITestOutputHelper output) : base(output)
         {
+            this.output = output;
 
             config = new FeaturesConfig();
 
@@ -27,15 +30,15 @@ namespace ChatServerTests.Features
         }
         #endregion
 
-        private void Given_the_user_is_logged_in()
+        private async Task Given_the_user_is_logged_in()
         {
-            loginResult = config.Browser.Post("/auth/register", with =>
+            loginResult = await config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
 
-            loginResult = config.Browser.Post("/auth/login", with =>
+            loginResult = await config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
@@ -43,7 +46,7 @@ namespace ChatServerTests.Features
                     Password = user.Password
                 });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
 
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
@@ -53,9 +56,9 @@ namespace ChatServerTests.Features
             Assert.NotEmpty(body.Token);
         }
 
-        private void User_tries_to_perform_request_without_auhorization_header()
+        private async Task User_tries_to_perform_request_without_auhorization_header()
         {
-            unsignRoleResult = config.Browser.Delete("/role/unsign", with =>
+            unsignRoleResult = await config.Browser.Delete("/role/unsign", with =>
             {
                 with.BodyJson(new UnsignRoleRequest
                 {
@@ -65,12 +68,14 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization","");
-            }).Result;
+            });
         }
 
-        private void Request_failed()
+        private Task Request_failed()
         {
+            Assert.Equal(HttpStatusCode.Unauthorized, unsignRoleResult.StatusCode);
             Assert.Equal("Not authorized", unsignRoleResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
     }
 }

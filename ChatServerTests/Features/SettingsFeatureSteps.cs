@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
-using LightBDD.Core.Configuration;
 using LightBDD.Framework;
 using LightBDD.Framework.Commenting;
-using LightBDD.Framework.Commenting.Configuration;
-using LightBDD.Framework.ExecutionContext;
-using LightBDD.Framework.ExecutionContext.Configuration;
 using LightBDD.XUnit2;
 using Nancy;
 using Nancy.Responses.Negotiation;
@@ -18,7 +15,7 @@ using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Settings_Feature : FeatureFixture
+    public partial class SettingsFeature : FeatureFixture
     {
         private BrowserResponse loginResult;
         private BrowserResponse infoChangeResult;
@@ -34,7 +31,7 @@ namespace ChatServerTests.Features
 
         #region Setup/Teardown
 
-        public Settings_Feature(ITestOutputHelper output) : base(output)
+        public SettingsFeature(ITestOutputHelper output) : base(output)
         {
 
             config = new FeaturesConfig();
@@ -44,15 +41,15 @@ namespace ChatServerTests.Features
 
         #endregion
 
-        private void Given_the_user_is_logged_in()
+        private async Task Given_the_user_is_logged_in()
         {
-            loginResult = config.Browser.Post("/auth/register", with =>
+            loginResult = await config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
 
-            loginResult = config.Browser.Post("/auth/login", with =>
+            loginResult = await config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
@@ -60,7 +57,7 @@ namespace ChatServerTests.Features
                     Password = user.Password
                 });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
 
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
@@ -70,11 +67,11 @@ namespace ChatServerTests.Features
             Assert.NotEmpty(body.Token);
         }
 
-        private void User_wants_to_change_his_personal_info()
+        private async Task User_wants_to_change_his_personal_info()
         {
             user2 = DataGenerator.GenerateSingleUser(config.Context);
 
-            infoChangeResult = config.Browser.Put("/user/", with =>
+            infoChangeResult = await config.Browser.Put("/user/", with =>
             {
                 with.BodyJson(new EditUserInfoRequest
                 {
@@ -89,18 +86,19 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Info_change_successful()
+        private Task Info_change_successful()
         {
             StepExecution.Current.Comment(infoChangeResult.BodyJson<Msg>().Message);
             Assert.Equal("Data changed successfully", infoChangeResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
 
-        private void User_wants_to_change_his_password()
+        private async Task User_wants_to_change_his_password()
         {
-            passwordChangeResult = config.Browser.Post("/user/change_password", with =>
+            passwordChangeResult = await config.Browser.Post("/user/change_password", with =>
             {
                 with.BodyJson(new ChangePasswordRequest
                 {
@@ -110,17 +108,18 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Password_change_successful()
+        private Task Password_change_successful()
         {
             Assert.Equal("Password changed successfully", passwordChangeResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
 
-        private void User_wants_to_change_his_password_and_has_provided_wrong_old_password()
+        private async Task User_wants_to_change_his_password_and_has_provided_wrong_old_password()
         {
-            failedPasswordChangeResult = config.Browser.Post("/user/change_password", with =>
+            failedPasswordChangeResult = await config.Browser.Post("/user/change_password", with =>
             {
                 with.BodyJson(new ChangePasswordRequest
                 {
@@ -130,69 +129,73 @@ namespace ChatServerTests.Features
                 });
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Password_change_unsuccessful()
+        private Task Password_change_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.BadRequest, failedPasswordChangeResult.StatusCode);
             Assert.Equal("Wrong input for old password", failedPasswordChangeResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
         }
 
-        private void User_wants_to_retrieve_info_about_himself()
+        private async Task User_wants_to_retrieve_info_about_himself()
         {
-            selfInfoResult = config.Browser.Get("/user/self", with =>
+            selfInfoResult = await config.Browser.Get("/user/self", with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Self_info_retrieval_successful()
+        private Task Self_info_retrieval_successful()
         {
             Assert.Equal(loginResult.BodyJson<LoginResponse>().User.Id, selfInfoResult.BodyJson<User>().Id);
+            return Task.CompletedTask;
         }
 
-        private void User_wants_to_retrieve_info_about_certain_user()
+        private async Task User_wants_to_retrieve_info_about_certain_user()
         {
-            userInfoResult = config.Browser.Get("/user/"+loginResult.BodyJson<LoginResponse>().User.Id, with =>
+            userInfoResult = await config.Browser.Get("/user/"+loginResult.BodyJson<LoginResponse>().User.Id, with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void Info_retrieval_successful()
+        private Task Info_retrieval_successful()
         {
             Assert.Equal(loginResult.BodyJson<LoginResponse>().User.FirstName, userInfoResult.BodyJson<UserInfo>().FirstName);
+            return Task.CompletedTask;
         }
 
-        private void Given_there_are_registered_users_in_database()
+        private async Task Given_there_are_registered_users_in_database()
         {
             users = DataGenerator.GenerateUserList(config.Context, 9).ToList();
 
             foreach (var u in users)
             {
-                var registrationResult = config.Browser.Post("/auth/register", with =>
+                await config.Browser.Post("/auth/register", with =>
                 {
                     with.BodyJson(new RegisterRequest { User = u });
                     with.Accept(new MediaRange("application/json"));
-                }).Result;
+                });
             }
         }
 
-        private void User_wants_to_retrieve_list_containing_all_users()
+        private async Task User_wants_to_retrieve_list_containing_all_users()
         {
-            allUsersResult = config.Browser.Get("/user/", with =>
+            allUsersResult = await config.Browser.Get("/user/", with =>
             {
                 with.Accept(new MediaRange("application/json"));
                 with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            }).Result;
+            });
         }
 
-        private void List_retrieved_successfully()
+        private Task List_retrieved_successfully()
         {
             Assert.NotEmpty(allUsersResult.BodyJson<List<User>>());
+            return Task.CompletedTask;
         }
     }
 }

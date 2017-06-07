@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ChatServer.Model;
 using ChatServer.Request;
 using ChatServer.Response;
-using LightBDD.Framework;
-using LightBDD.Framework.Commenting;
 using LightBDD.XUnit2;
 using Nancy;
 using Nancy.Responses.Negotiation;
@@ -15,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Chat_Feature : FeatureFixture
+    public partial class ChatFeature : FeatureFixture
     {
         private User user1;
         private User user2;
@@ -39,7 +38,7 @@ namespace ChatServerTests.Features
 
         #region Setup/Teardown
 
-        public Chat_Feature(ITestOutputHelper output) : base(output)
+        public ChatFeature(ITestOutputHelper output) : base(output)
         {
 
             config = new FeaturesConfig();
@@ -51,14 +50,14 @@ namespace ChatServerTests.Features
 
         #endregion
 
-        private void Given_the_user_is_logged_in()
+        private async Task Given_the_user_is_logged_in()
         {
-            loginResult = config.Browser.Post("/auth/register", with =>
+            loginResult = await config.Browser.Post("/auth/register", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new RegisterRequest {User = user1}), "application/json");
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
-            loginResult = config.Browser.Post("/auth/login", with =>
+            });
+            loginResult = await config.Browser.Post("/auth/login", with =>
             {
                 with.Body(JsonConvert.SerializeObject(new LoginRequest
                 {
@@ -66,7 +65,7 @@ namespace ChatServerTests.Features
                     Password = user1.Password
                 }), "application/json");
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
             var body = loginResult.Body.DeserializeJson<LoginResponse>();
             Assert.Equal(body.User.Username, user1.Username);
@@ -74,17 +73,17 @@ namespace ChatServerTests.Features
             Assert.NotEmpty(body.Token);
         }
 
-        private void Given_the_team_and_channel_inside_team_exist()
+        private Task Given_the_team_and_channel_inside_team_exist()
         {
             team = DataGenerator.GenerateSingleTeam(config.Context);
 
             channel = DataGenerator.GenerateSingleChannel(config.Context, team.Id);
-            
+            return Task.CompletedTask;
         }
 
-        private void User_sends_message()
+        private async Task User_sends_message()
         {
-            sendMessageResult = config.Browser.Post("/channel/send", with =>
+            sendMessageResult = await config.Browser.Post("/channel/send", with =>
                 {
                     with.Body(JsonConvert.SerializeObject(new SendMessageRequest()
                     {
@@ -96,22 +95,23 @@ namespace ChatServerTests.Features
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
                 })
-                .Result;
+                ;
         }
 
-        private void Message_is_sent_successfuly()
+        private Task Message_is_sent_successfuly()
         {
             Assert.Equal(HttpStatusCode.OK, sendMessageResult.StatusCode);
+            return Task.CompletedTask;
         }
 
 
-        private void Given_that_messages_for_certain_channel_exist()
+        private async Task Given_that_messages_for_certain_channel_exist()
         {
             messages = DataGenerator.GenerateMessageList(config.Context, 10, channel.Id, user1.Id, user2.Id).ToList();
 
             foreach (var m in messages)
             {
-                sendMessages = config.Browser.Post("/channel/send", with =>
+                sendMessages = await config.Browser.Post("/channel/send", with =>
                     {
                         with.BodyJson(new SendMessageRequest
                         {
@@ -122,14 +122,13 @@ namespace ChatServerTests.Features
                         });
                         with.Accept(new MediaRange("application/json"));
                         with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                    })
-                    .Result;
+                    });
             }
         }
 
-        private void Request_is_sent_to_retrieve_messages()
+        private async Task Request_is_sent_to_retrieve_messages()
         {
-            retrievedMessageList = config.Browser.Get("/channel/messages/0/10", with =>
+            retrievedMessageList = await config.Browser.Get("/channel/messages/0/10", with =>
                 {
                     with.Body(JsonConvert.SerializeObject(new GetMessagesRequest()
                     {
@@ -139,20 +138,20 @@ namespace ChatServerTests.Features
                     }), "application/json");
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
-                })
-                .Result;
+                });
         }
 
-        private void Messages_are_retrieved_successfuly()
+        private Task Messages_are_retrieved_successfuly()
         {
             Assert.NotEmpty(retrievedMessageList.Body.DeserializeJson<List<Message>>());
+            return Task.CompletedTask;
         }
 
-        private void New_messages_were_sent()
+        private async Task New_messages_were_sent()
         {
             foreach (var m in messages)
             {
-                sendMessages2 = config.Browser.Post("/channel/send", with =>
+                sendMessages2 = await config.Browser.Post("/channel/send", with =>
                     {
                         with.BodyJson(new SendMessageRequest
                         {
@@ -163,14 +162,13 @@ namespace ChatServerTests.Features
                         });
                         with.Accept(new MediaRange("application/json"));
                         with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                    })
-                    .Result;
+                    });
             }
         }
 
-        private void Request_is_sent_to_retrieve_new_messages()
+        private async Task Request_is_sent_to_retrieve_new_messages()
         {
-            newMessageList = config.Browser.Get("/channel/messages/new", with =>
+            newMessageList = await config.Browser.Get("/channel/messages/new", with =>
                 {
                     with.Body(JsonConvert.SerializeObject(new CheckNewMessagesRequest
                     {
@@ -179,19 +177,20 @@ namespace ChatServerTests.Features
                     }), "application/json");
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
-                })
-                .Result;
+                });
         }
 
-        private void New_messages_are_retrieved_successfuly()
+        private Task New_messages_are_retrieved_successfuly()
         {
             Assert.NotEmpty(newMessageList.BodyJson<List<Message>>());
+            return Task.CompletedTask;
         }
 
        
-        private void No_new_messages_are_retrieved()
+        private Task No_new_messages_are_retrieved()
         {
             Assert.Empty(newMessageList.BodyJson<List<Message>>());
+            return Task.CompletedTask;
         }
 
     }

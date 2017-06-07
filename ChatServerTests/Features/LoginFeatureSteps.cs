@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using ChatServer;
 using ChatServer.Model;
 using ChatServer.Request;
@@ -15,11 +16,10 @@ using Xunit;
 using Xunit.Abstractions;
 
 [assembly: LightBddScope]
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace ChatServerTests.Features
 {
-    public partial class Login_Feature : FeatureFixture
+    public partial class LoginFeature : FeatureFixture
     {
        
         private readonly User user;
@@ -27,7 +27,7 @@ namespace ChatServerTests.Features
         private BrowserResponse result;
 
         #region Setup/Teardown
-        public Login_Feature(ITestOutputHelper output) : base(output)
+        public LoginFeature(ITestOutputHelper output) : base(output)
         {
             
             Config = new FeaturesConfig();
@@ -37,65 +37,67 @@ namespace ChatServerTests.Features
         }
         #endregion
 
-        private void Given_the_user_is_already_registered()
+        private async Task Given_the_user_is_already_registered()
         {
-            result = Config.Browser.Post("/auth/register", with =>
+            result = await Config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user });
-            }).Result;
+            });
         }
 
 
-        private void When_the_user_sends_login_request_with_correct_credentials()
+        private async Task When_the_user_sends_login_request_with_correct_credentials()
         {
-            result = Config.Browser.Post("/auth/login", with =>
+            result = await Config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
                     Username = user.Username,
                     Password = user.Password
                 });
-            }).Result;
+            });
         }
 
-        private void Then_the_login_operation_should_be_successful()
+        private Task Then_the_login_operation_should_be_successful()
         {
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var body = result.Body.DeserializeJson<LoginResponse>();
             Assert.Equal(body.User.Username, user.Username);
             Assert.NotNull(body.Token);
             Assert.NotEmpty(body.Token);
+            return Task.CompletedTask;
         }
 
-        private void When_the_user_sends_login_request_with_incorrect_username()
+        private async Task When_the_user_sends_login_request_with_incorrect_username()
         {
-            result = Config.Browser.Post("/auth/login", with =>
+            result = await Config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
                     Username = "invalid username",
                     Password = user.Password
                 });
-            }).Result;
+            });
         }
 
-        private void Then_the_login_operation_should_be_unsuccessful()
+        private Task Then_the_login_operation_should_be_unsuccessful()
         {
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
             var response = result.BodyJson<Msg>();
             Assert.Equal("Invalid credentials", response.Message);
+            return Task.CompletedTask;
         }
 
-        private void When_the_user_sends_login_request_with_incorrect_password()
+        private async Task When_the_user_sends_login_request_with_incorrect_password()
         {
-            result = Config.Browser.Post("/auth/login", with =>
+            result = await Config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {
                     Username = user.Username,
                     Password = "invalid password"
                 });
-            }).Result;
+            });
         }
     }
 }

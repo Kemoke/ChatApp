@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using ChatServer;
 using ChatServer.Model;
 using ChatServer.Request;
@@ -17,51 +18,52 @@ using Xunit.Abstractions;
 
 namespace ChatServerTests.Features
 {
-    public partial class Register_Feature : FeatureFixture
+    public partial class RegisterFeature : FeatureFixture
     {
         private readonly User user;
-        protected readonly FeaturesConfig config;
+        protected readonly FeaturesConfig Config;
         private BrowserResponse result;
 
         #region Setup/Teardown
-        public Register_Feature(ITestOutputHelper output) : base(output)
+        public RegisterFeature(ITestOutputHelper output) : base(output)
         {
 
-            config = new FeaturesConfig();
+            Config = new FeaturesConfig();
             
-            user = DataGenerator.GenerateSingleUser(config.Context);
+            user = DataGenerator.GenerateSingleUser(Config.Context);
 
         }
         #endregion
 
-        private void Given_the_user_enters_registration_information()
+        private async Task Given_the_user_enters_registration_information()
         {
-            result = config.Browser.Post("/auth/register", with =>
+            result = await Config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
         }
 
-        private void Registration_is_successful()
+        private async Task Registration_is_successful()
         {
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
-        private void Existing_user_in_database()
+        private async Task Existing_user_in_database()
         {
-            result = config.Browser.Post("/auth/register", with =>
+            result = await Config.Browser.Post("/auth/register", with =>
             {
                 with.BodyJson(new RegisterRequest { User = user });
                 with.Accept(new MediaRange("application/json"));
-            }).Result;
+            });
         }
 
-        private void Registration_is_unsusccessful_because_of_existing_email()
+        private Task Registration_is_unsusccessful_because_of_existing_email()
         {
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var response = result.BodyJson<Msg>();
             Assert.Equal("Email already exists", response.Message);
+            return Task.CompletedTask;
         }
     }
 }
