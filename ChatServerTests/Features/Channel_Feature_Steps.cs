@@ -35,6 +35,9 @@ namespace ChatServerTests.Features
         private BrowserResponse createNewChannelResult;
         private BrowserResponse loginResult;
         private BrowserResponse getChannelResult;
+        private BrowserResponse registerResult;
+        private BrowserResponse assignRoleResult;
+        private BrowserResponse createRoleResult;
 
 
 
@@ -94,8 +97,29 @@ namespace ChatServerTests.Features
             }).Result;
 
             role = DataGenerator.GenerateSigleRole(config.Context, "Admin");
+            createRoleResult = config.Browser.Post("/role/", with =>
+            {
+                with.BodyJson(new CreateRoleRequest
+                {
+                    Name = role.Name
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
 
-            userRole = DataGenerator.GenerateSigleUserRole(config.Context, team.Id, user.Id, role.Id);
+            assignRoleResult = config.Browser.Post("/role/assign", with =>
+            {
+                with.BodyJson(new AssignRoleRequest
+                {
+                    TeamId = createTeamResult.BodyJson<Team>().Id,
+                    RoleId = createRoleResult.BodyJson<Role>().Id,
+                    UserId = loginResult.BodyJson<LoginResponse>().User.Id
+
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+
 
         }
 
@@ -148,8 +172,8 @@ namespace ChatServerTests.Features
 
         private void Given_the_user_is_inside_of_a_team_and_there_exists_list_of_channels_in_database()
         {
-            team = DataGenerator.GenerateSingleTeam(config.Context);
-            channels = DataGenerator.GenerateChannelList(config.Context, team.Id, 10).ToList();
+            
+            channels = DataGenerator.GenerateChannelList(config.Context, createTeamResult.BodyJson<Team>().Id, 10).ToList();
 
             foreach (var c in channels)
             {
@@ -159,7 +183,7 @@ namespace ChatServerTests.Features
                         {
                             ChannelName = c.ChannelName,
                             UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                            TeamId = team.Id
+                            TeamId = createTeamResult.BodyJson<Team>().Id
                         });
                         with.Accept(new MediaRange("application/json"));
                         with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
@@ -176,9 +200,9 @@ namespace ChatServerTests.Features
         {
             retrievedChannelListResult = config.Browser.Get("/channel/", with =>
                 {
-                    with.BodyJson(new ListChannelRequest()
+                    with.BodyJson(new ListChannelRequest
                     {
-                        TeamId = team.Id
+                        TeamId = createTeamResult.BodyJson<Team>().Id
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
@@ -201,7 +225,7 @@ namespace ChatServerTests.Features
                     {
                         ChannelName = channel.ChannelName,
                         UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = channel.TeamId
+                        TeamId = createTeamResult.BodyJson<Team>().Id
                     });
                     with.Accept(new MediaRange("application/json"));
                     with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
@@ -254,6 +278,91 @@ namespace ChatServerTests.Features
         private void Channel_retrieved_successfully()
         {
             Assert.Equal(createChannelResult.BodyJson<Channel>().Id, getChannelResult.BodyJson<Channel>().Id);
+        }
+
+        private void Given_there_are_several_roles_in_database()
+        {
+            role = DataGenerator.GenerateSigleRole(config.Context, "Admin");
+            createRoleResult = config.Browser.Post("/role/", with =>
+            {
+                with.BodyJson(new CreateRoleRequest
+                {
+                    Name = role.Name
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+
+            role = DataGenerator.GenerateSigleRole(config.Context, "Dev");
+            createRoleResult = config.Browser.Post("/role/", with =>
+            {
+                with.BodyJson(new CreateRoleRequest
+                {
+                    Name = role.Name
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+        }
+
+        private void User_tries_to_create_new_channel_providing_channel_name_with_non_admin_account()
+        {
+            team = DataGenerator.GenerateSingleTeam(config.Context);
+            
+
+            createTeamResult = config.Browser.Post("/team/", with =>
+            {
+                with.BodyJson(new CreateTeamRequest
+                {
+                    Name = team.Name
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+
+
+
+            var user2 = DataGenerator.GenerateSingleUser(config.Context);
+
+            registerResult = config.Browser.Post("/auth/register", with =>
+            {
+                with.BodyJson(new RegisterRequest { User = user2 });
+                with.Accept(new MediaRange("application/json"));
+            }).Result;
+
+            assignRoleResult = config.Browser.Post("/role/assign", with =>
+            {
+                with.BodyJson(new AssignRoleRequest
+                {
+                    TeamId = createTeamResult.BodyJson<Team>().Id,
+                    RoleId = createRoleResult.BodyJson<Role>().Id,
+                    UserId = registerResult.BodyJson<User>().Id
+
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+
+
+            var channel = DataGenerator.GenerateSingleChannel(config.Context, createTeamResult.BodyJson<Team>().Id);
+            createChannelResult = config.Browser.Post("/channel/", with =>
+                {
+                    with.BodyJson(new CreateChannelRequest
+                    {
+                        ChannelName = channel.ChannelName,
+                        UserId = registerResult.BodyJson<User>().Id,
+                        TeamId = createTeamResult.BodyJson<Team>().Id
+                    });
+                    with.Accept(new MediaRange("application/json"));
+                    with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+                })
+                .Result;
+            
+        }
+
+        private void Channel_creation_failed()
+        {
+            Assert.Equal("You are not admin!", createChannelResult.BodyJson<Msg>().Message);
         }
     }
 }

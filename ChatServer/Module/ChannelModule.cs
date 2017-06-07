@@ -87,7 +87,7 @@ namespace ChatServer.Module
             var request = this.Bind<CreateChannelRequest>();
             //sve sto radi sa bazom koristi async metode i await ispred
 
-            if (await IsUserAdminAsync(request.TeamId, request.UserId))
+            if (!(await IsUserAdminAsync(request.TeamId, request.UserId, cancellationToken)))
             {
                 return Response.AsJson(new Msg("You are not admin!")).WithStatusCode(HttpStatusCode.BadRequest);
             }
@@ -109,9 +109,11 @@ namespace ChatServer.Module
             return Response.AsJson(channel);
         }
 
-        private async Task<bool> IsUserAdminAsync(int teamId, int userId)
+        private async Task<bool> IsUserAdminAsync(int teamId, int userId, CancellationToken cancellationToken)
         {
-            return await context.UserTeams.AnyAsync(ut => ut.UserId == userId && ut.TeamId == teamId && ut.RoleId == 1);
+            var roleId =  (await context.UserTeams.Where(ut => ut.UserId == userId && ut.TeamId == teamId).FirstAsync()).RoleId;
+
+            return await context.Roles.Where(r => r.Id == roleId && r.Name == "Admin").AnyAsync(cancellationToken);
         }
 
         private async Task<bool> ChannelExistsAsync(string channelName, int teamId)

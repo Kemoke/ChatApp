@@ -25,6 +25,7 @@ namespace ChatServerTests.Features
         private BrowserResponse selfInfoResult;
         private BrowserResponse passwordChangeResult;
         private BrowserResponse failedPasswordChangeResult;
+        private BrowserResponse userInfoResult;
         private BrowserResponse allUsersResult;
         private readonly FeaturesConfig config;
         private readonly User user;
@@ -147,9 +148,23 @@ namespace ChatServerTests.Features
             }).Result;
         }
 
-        private void Info_retrieval_successful()
+        private void Self_info_retrieval_successful()
         {
             Assert.Equal(loginResult.BodyJson<LoginResponse>().User.Id, selfInfoResult.BodyJson<User>().Id);
+        }
+
+        private void User_wants_to_retrieve_info_about_certain_user()
+        {
+            userInfoResult = config.Browser.Get("/user/"+loginResult.BodyJson<LoginResponse>().User.Id, with =>
+            {
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
+            }).Result;
+        }
+
+        private void Info_retrieval_successful()
+        {
+            Assert.Equal(loginResult.BodyJson<LoginResponse>().User.FirstName, userInfoResult.BodyJson<UserInfo>().FirstName);
         }
 
         private void Given_there_are_registered_users_in_database()

@@ -42,6 +42,7 @@ namespace ChatServer.Module
         private async Task<dynamic> GetUserInfoAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             int id = parameters.id;
+
             var user = await context.Users.AsNoTracking().FirstAsync(u => u.Id == id, cancellationToken);
 
             var userInfo = new UserInfo

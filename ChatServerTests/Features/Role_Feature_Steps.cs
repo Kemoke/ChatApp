@@ -30,6 +30,7 @@ namespace ChatServerTests.Features
         private BrowserResponse editRoleResult;
         private BrowserResponse getRoleResult;
         private BrowserResponse getRoleListResult;
+        private BrowserResponse createRolesResult;
         private List<Role> roleList;
         private readonly User user;
         private readonly Team team;
@@ -139,7 +140,7 @@ namespace ChatServerTests.Features
 
             foreach (var r in roleList)
             {
-                getRoleListResult = config.Browser.Post("/role/", with =>
+                createRolesResult = config.Browser.Post("/role/", with =>
                 {
                     with.BodyJson(new CreateRoleRequest
                     {

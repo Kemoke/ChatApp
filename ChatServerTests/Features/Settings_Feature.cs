@@ -56,11 +56,22 @@ namespace ChatServerTests.Features
             Runner.RunScenario(
                 Given_the_user_is_logged_in,
                 User_wants_to_retrieve_info_about_himself,
-                Info_retrieval_successful);
+                Self_info_retrieval_successful);
         }
 
         [Scenario]
         [Label("Ticket-5")]
+        [ScenarioCategory("Settings")]
+        public void Retriving_information_about_user()
+        {
+            Runner.RunScenario(
+                Given_the_user_is_logged_in,
+                User_wants_to_retrieve_info_about_certain_user,
+                Info_retrieval_successful);
+        }
+
+        [Scenario]
+        [Label("Ticket-6")]
         [ScenarioCategory("Settings")]
         public void Retrieving_all_users()
         {
