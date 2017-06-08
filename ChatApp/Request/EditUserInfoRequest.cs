@@ -2,7 +2,7 @@
 
 namespace ChatApp.Request
 {
-    public class EditUserInfoRequest : BaseRequest
+    public class EditUserInfoRequest
     {
         public int UserId { get; set; }
         public string Username { get; set; }

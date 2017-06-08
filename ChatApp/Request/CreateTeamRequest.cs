@@ -1,7 +1,8 @@
 ﻿namespace ChatApp.Request
 {
-    public class GetUserInfoRequest
+    public class CreateTeamRequest
     {
+        public string Name { get; set; }
         public int UserId { get; set; }
     }
 }

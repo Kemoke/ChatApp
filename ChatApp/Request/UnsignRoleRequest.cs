@@ -1,9 +1,9 @@
 ﻿namespace ChatApp.Request
 {
-    public class CreateChannelRequest
+    public class UnsignRoleRequest
     {
-        public string ChannelName { get; set; }
         public int TeamId { get; set; }
         public int UserId { get; set; }
+        public int RoleId { get; set; }
     }
 }

@@ -35,26 +35,23 @@ namespace ChatApp.Api
         Task<UserInfo> RegisterAsync([Body] RegisterRequest body);
     }
 
-    public interface ICrudApi<T>
+    public interface IChannelApi
     {
         [Get("/")]
-        Task<List<T>> GetListAsync();
+        Task<List<Channel>> GetListAsync();
 
         [Get("/{id}")]
-        Task<T> GetAsync(int id);
+        Task<Channel> GetAsync(int id);
 
         [Post("/")]
-        Task<T> SaveAsync([Body] T body);
+        Task<Channel> SaveAsync([Body] Channel body);
 
         [Put("/{id}")]
-        Task<T> EditAsync(int id, [Body] T body);
+        Task<Channel> EditAsync(int id, [Body] Channel body);
 
         [Delete("/{id}")]
         Task<string> DeleteAsync(int id);
-    }
 
-    public interface IChannelApi : ICrudApi<Channel>
-    {
         [Post("/send")]
         Task<Message> SendMessageAsync([Body] SendMessageRequest request);
 
@@ -65,15 +62,40 @@ namespace ChatApp.Api
         Task<List<Message>> GetNewMessagesAsync();
     }
 
-    public interface IRoleApi : ICrudApi<Role>
+    public interface IRoleApi
     {
+        [Get("/")]
+        Task<List<Role>> GetListAsync();
+
+        [Get("/{id}")]
+        Task<Role> GetAsync(int id);
+
+        [Post("/")]
+        Task<Role> SaveAsync([Body] Role body);
+
+        [Put("/{id}")]
+        Task<Role> EditAsync(int id, [Body] Role body);
+
+        [Delete("/{id}")]
+        Task<string> DeleteAsync(int id);
+
         [Post("/assign")]
         Task<Role> AssignRoleAsync([Body] AssignRoleRequest request);
     }
 
-    public interface ITeamApi : ICrudApi<Team>
+    public interface ITeamApi
     {
-        
+        [Get("/")]
+        Task<List<Team>> GetListAsync();
+
+        [Get("/{id}")]
+        Task<Team> GetAsync(int id);
+
+        [Post("/")]
+        Task<Team> SaveAsync([Body] Team body);
+
+        [Put("/{id}")]
+        Task<Team> EditAsync(int id, [Body] Team body);
     }
 
     public interface IUserApi

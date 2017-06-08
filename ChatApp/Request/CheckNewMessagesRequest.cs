@@ -1,6 +1,6 @@
 ﻿namespace ChatApp.Request
 {
-    public class CheckNewMessagesRequest : BaseRequest
+    public class CheckNewMessagesRequest
     {
         public int MessageId { get; set; }
         public int ChannelId { get; set; }
