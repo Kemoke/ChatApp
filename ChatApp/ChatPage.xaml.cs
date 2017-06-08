@@ -24,7 +24,7 @@ namespace ChatApp
     /// </summary>
     public sealed partial class ChatPage : Page
     { 
-        private List<UserTeam> usersTeams;
+       
         
         public ChatPage()
         {

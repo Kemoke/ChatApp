@@ -10,61 +10,33 @@
     >
 
     <Grid Background="#FFB6BBDC">
-        <RelativePanel Name="mainPanel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="515" Height="500" >
-            <Grid HorizontalAlignment="Left" Margin="160,381,-296,-419" VerticalAlignment="Top" Height="38" Width="136">
-                <Button  x:Name="button1" Content="Log in" HorizontalAlignment="Left" VerticalAlignment="Top" Height="38" Width="136" Click="button1_Click"/>
-            </Grid>
-            <Grid HorizontalAlignment="Left" Height="38" Margin="88,192,-392,-230" VerticalAlignment="Top" Width="304"/>
-            <Grid HorizontalAlignment="Left" Height="38" Margin="88,284,-392,-322" VerticalAlignment="Top" Width="304">
-                <PasswordBox x:Name="password" HorizontalAlignment="Left" Margin="0,0,0,-4" VerticalAlignment="Top" Height="42" Width="304"/>
-            </Grid>
-            <TextBox  x:Name="mail" HorizontalAlignment="Left" Height="38" TextWrapping="Wrap"  Margin="88,192,-392,-212" VerticalAlignment="Top" Width="304"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="82*"/>
+            <RowDefinition Height="42*"/>
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="41*"/>
+            <RowDefinition Height="41*"/>
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="14*"/>
+            <RowDefinition Height="42*"/>
+            <RowDefinition Height="12*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="43*"/>
+            <ColumnDefinition Width="77*"/>
+            <ColumnDefinition Width="40*"/>
+        </Grid.ColumnDefinitions>
 
-            <Grid HorizontalAlignment="Left" Height="36" Margin="108,154,0,0" VerticalAlignment="Top" Width="116"/>
-            <TextBlock HorizontalAlignment="Left" Margin="102,164,0,0" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Top" Height="26" Width="116"/>
-            <Grid HorizontalAlignment="Left" Height="26" Margin="102,254,0,0" VerticalAlignment="Top" Width="122"/>
-            <TextBlock HorizontalAlignment="Left" Margin="102,254,0,0" TextWrapping="Wrap" Text="Password: " VerticalAlignment="Top" Height="26" Width="122"/>
-            <Grid HorizontalAlignment="Left" Height="28" Margin="108,344,0,0" VerticalAlignment="Top" Width="116"/>
-            <HyperlinkButton Content="Create an Account" HorizontalAlignment="Left" Margin="102,340,0,0" Width="124" VerticalAlignment="Top" Click="HyperlinkButton_Click"/>
-        </RelativePanel>
 
-        <VisualStateManager.VisualStateGroups>
+        <TextBlock Text="Username: " Grid.Column ="1" Grid.Row="1" Margin="0,2,208,5" RenderTransformOrigin="-0.374,0.629" Width="100"/>
+        <TextBox x:Name="mail" Grid.Column="1" Grid.Row="2" Margin="0,0,0,40" Grid.RowSpan="2"/>
+        <TextBlock Text="Password:" Grid.Row="4" Grid.Column="1" Margin="0,0,240,0"/>
+        <PasswordBox x:Name="password" Grid.Row="5" Grid.Column="1"/>
+        <Button x:Name="button" Content="Log in" Grid.Row="7" Grid.Column="1" Width="150" Click="button1_Click" Margin="73,0,0,0" Height="42"/>
+        <HyperlinkButton x:Name="link" Content="Already have an account?" Grid.Column="0" Grid.Row="0" Width="172" Click="HyperlinkButton_Click" Margin="0,25"/>
 
-            <VisualStateGroup x:Name="VisualGroup">
-                <VisualState x:Name="small">
 
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
 
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="mainPanel.Margin" Value ="10,10,0,0"/>
-                    </VisualState.Setters>
-
-                </VisualState>
-                
-                <VisualState x:Name="compact">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="700" MinWindowHeight="600" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target = "mainPanel.Margin" Value ="181,50,0,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="large">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1000" MinWindowHeight="600"/>
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target='mainPanel.Margin ' Value="394,114,0,0"/>
-                    </VisualState.Setters>
-
-                </VisualState>
-
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
 
     </Grid>
 
