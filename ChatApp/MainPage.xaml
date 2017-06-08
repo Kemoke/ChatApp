@@ -13,10 +13,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="82*"/>
             <RowDefinition Height="42*"/>
-            <RowDefinition Height="43*"/>
+            <RowDefinition Height="30*"/>
             <RowDefinition Height="41*"/>
             <RowDefinition Height="41*"/>
-            <RowDefinition Height="43*"/>
+            <RowDefinition Height="30*"/>
             <RowDefinition Height="14*"/>
             <RowDefinition Height="42*"/>
             <RowDefinition Height="12*"/>
@@ -28,12 +28,13 @@
         </Grid.ColumnDefinitions>
 
 
-        <TextBlock Text="Username: " Grid.Column ="1" Grid.Row="1" Margin="0,2,208,5" RenderTransformOrigin="-0.374,0.629" Width="100"/>
-        <TextBox x:Name="mail" Grid.Column="1" Grid.Row="2" Margin="0,0,0,40" Grid.RowSpan="2"/>
-        <TextBlock Text="Password:" Grid.Row="4" Grid.Column="1" Margin="0,0,240,0"/>
+        <TextBlock Text="Chat App (Log in) " Grid.Row="0" Grid.Column="1" FontSize="20"  FontFamily="Sitka Display" Height="50" Width="150" Margin="73,14,85,24.333"   />
+        <TextBlock Text="Username: " Grid.Column ="1" Grid.Row="1" Margin="0,6.667,0,8.667" RenderTransformOrigin="-0.374,0.629" Height="30" Width="100" HorizontalAlignment="Left"/>
+        <TextBox x:Name="mail" Grid.Column="1" Grid.Row="2" />
+        <TextBlock Text="Password:" Grid.Row="3" Grid.Column="1" Margin="0,44,0,0.333" HorizontalAlignment="Left" Grid.RowSpan="2" Height="30" Width="68"/>
         <PasswordBox x:Name="password" Grid.Row="5" Grid.Column="1"/>
         <Button x:Name="button" Content="Log in" Grid.Row="7" Grid.Column="1" Width="150" Click="button1_Click" Margin="73,0,0,0" Height="42"/>
-        <HyperlinkButton x:Name="link" Content="Already have an account?" Grid.Column="0" Grid.Row="0" Width="172" Click="HyperlinkButton_Click" Margin="0,25"/>
+        <HyperlinkButton x:Name="link" Content="Already have an account?" Grid.Column="0" Grid.Row="0" Click="HyperlinkButton_Click" Margin="0,0,0,27.333" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
 
 
 

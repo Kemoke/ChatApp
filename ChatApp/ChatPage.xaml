@@ -28,19 +28,9 @@
         <Button x:Name="sendButton" Content="Send" Grid.Column="3" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="40" Grid.Row="2" Margin="4,10,0,0" Width="84" Click="Button_Click"/>
 
 
-        <ListView ItemsSource="{x:Bind usersTeams }" Margin="10,8,8,10" Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2">
+        <ListView  Margin="10,8,8,10" Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2">
 
-            <ListView.ItemTemplate>
-               
-                    <DataTemplate x:DataType="data:UserTeam" >
-                    <Grid>
-
-                        <TextBlock FontSize ="19" Text="{x:Bind User}"/>
-                    </Grid>
-                </DataTemplate>
-                
-
-            </ListView.ItemTemplate>
+          
         </ListView>
 
         <ListView ItemsSource ="{x:Bind ViewModel.MessageList}" Grid.Column="2" Height="278" Margin="6,10,10,0" VerticalAlignment="Top" Grid.RowSpan="2">
