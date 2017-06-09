@@ -14,17 +14,17 @@
     </Page.DataContext>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="147*"/>
-            <ColumnDefinition Width="381*"/>
-            <ColumnDefinition Width="93*"/>
+            <ColumnDefinition Width="303*"/>
+            <ColumnDefinition Width="851*"/>
+            <ColumnDefinition Width="126*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="36*"/>
-            <RowDefinition Height="289*"/>
-            <RowDefinition Height="35*"/>
+            <RowDefinition Height="72*"/>
+            <RowDefinition Height="595*"/>
+            <RowDefinition Height="53*"/>
         </Grid.RowDefinitions>
-        
+
         <TextBlock Text="{Binding SelectedChannel.ChannelName}" FontSize="36" Grid.Row="0" Grid.Column="1"/>
 
         <ListView ItemsSource="{Binding Channels}" Grid.Column="0"  
@@ -100,5 +100,11 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <TextBox Name="ChatBox" Grid.Row="2" Grid.Column="1" 
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                 KeyDown="ChatBox_OnKeyDown"/>
+        <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Click="Button_OnClick" Content="Send"/>
     </Grid>
 </Page>

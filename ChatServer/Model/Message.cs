@@ -6,7 +6,7 @@ namespace ChatServer.Model
     {
         public string MessageText { get; set; }
         public int SenderId { get; set; }
-        public int TargetId { get; set; }
+        public int? TargetId { get; set; }
         public int ChannelId { get; set; }
         public DateTime TimeSent { get; set; }
 
