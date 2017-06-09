@@ -18,6 +18,9 @@ namespace ChatServerTests.Features
         private BrowserResponse unsignRoleResult;
         private readonly FeaturesConfig config;
         private readonly User user;
+        private readonly FeatureHelper helper;
+        private BrowserResponse registerResult;
+
         #region Setup/Teardown
         public SecureModuleFeature(ITestOutputHelper output) : base(output)
         {
@@ -27,26 +30,16 @@ namespace ChatServerTests.Features
 
             user = DataGenerator.GenerateSingleUser(config.Context);
 
+            helper = new FeatureHelper(config);
+
         }
         #endregion
 
         private async Task Given_the_user_is_logged_in()
         {
-            loginResult = await config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-                with.Accept(new MediaRange("application/json"));
-            });
+            registerResult = await helper.RegisterResponse(user);
 
-            loginResult = await config.Browser.Post("/auth/login", with =>
-            {
-                with.BodyJson(new LoginRequest
-                {
-                    Username = user.Username,
-                    Password = user.Password
-                });
-                with.Accept(new MediaRange("application/json"));
-            });
+            loginResult = await helper.LoginResponse(user);
 
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
@@ -56,19 +49,9 @@ namespace ChatServerTests.Features
             Assert.NotEmpty(body.Token);
         }
 
-        private async Task User_tries_to_perform_request_without_auhorization_header()
+        private async Task User_tries_to_perform_request_with_wrong_token()
         {
-            unsignRoleResult = await config.Browser.Delete("/role/unsign", with =>
-            {
-                with.BodyJson(new UnsignRoleRequest
-                {
-                    TeamId = 1,
-                    RoleId = 2,
-                    UserId = 3
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization","");
-            });
+            unsignRoleResult = await helper.UnsignRoleResponse(1, 2, 3, "");
         }
 
         private Task Request_failed()

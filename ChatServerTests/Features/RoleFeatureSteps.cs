@@ -19,8 +19,7 @@ namespace ChatServerTests.Features
 {
     public partial class RoleFeature : FeatureFixture
     {
-        #region Setup/Teardown
-
+        private readonly FeatureHelper helper;
         private readonly FeaturesConfig config;
         private BrowserResponse loginResult;
         private BrowserResponse createTeamResult;
@@ -37,6 +36,7 @@ namespace ChatServerTests.Features
         private readonly Team team;
         private Role role;
 
+        #region Setup/Teardown
         public RoleFeature(ITestOutputHelper output) : base(output)
         {
 
@@ -45,28 +45,17 @@ namespace ChatServerTests.Features
             user = DataGenerator.GenerateSingleUser(config.Context);
 
             team = DataGenerator.GenerateSingleTeam(config.Context);
+
+            helper = new FeatureHelper(config);
         }
 
         #endregion
 
         private async Task Given_the_user_is_logged_in()
         {
-            loginResult = await config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-                with.Accept(new MediaRange("application/json"));
-            });
+            loginResult = await helper.RegisterResponse(user);
 
-            loginResult = await config.Browser.Post("/auth/login", with =>
-            {
-                with.BodyJson(new LoginRequest
-                {
-                    Username = user.Username,
-                    Password = user.Password
-                });
-                with.Accept(new MediaRange("application/json"));
-
-            });
+            loginResult = await helper.LoginResponse(user);
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
             var body = loginResult.BodyJson<LoginResponse>();
@@ -78,24 +67,13 @@ namespace ChatServerTests.Features
         private async Task Role_is_being_created()
         {
             role = DataGenerator.GenerateSigleRole(config.Context, "Developer");
-            createRoleResult = await config.Browser.Post("/role/", with =>
-            {
-                with.BodyJson(new CreateRoleRequest
-                {
-                    Name = role.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            createRoleResult = await helper.CreateRoleResponse(role, loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private async Task Role_is_then_deleted()
         {
-            deleteRoleResult = await config.Browser.Delete("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
-            {
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            deleteRoleResult = await helper.DeleteRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Role_deletion_successful()
@@ -106,15 +84,8 @@ namespace ChatServerTests.Features
 
         private async Task Role_is_then_edited()
         {
-            editRoleResult = await config.Browser.Put("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
-            {
-                with.BodyJson(new EditRoleRequest
-                {
-                    RoleName = "Hello"
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            editRoleResult = await helper.EditRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Role_edit_successful()
@@ -125,11 +96,8 @@ namespace ChatServerTests.Features
 
         private async Task Role_is_being_requested_by_id()
         {
-            getRoleResult = await config.Browser.Get("/role/" + createRoleResult.BodyJson<Role>().Id, with =>
-            {
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            getRoleResult = await helper.GetRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Role_request_successful()
@@ -144,26 +112,14 @@ namespace ChatServerTests.Features
 
             foreach (var r in roleList)
             {
-                createRolesResult = await config.Browser.Post("/role/", with =>
-                {
-                    with.BodyJson(new CreateRoleRequest
-                    {
-                        Name = r.Name
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                });
+                createRolesResult = await helper.CreateRoleResponse(r, loginResult.BodyJson<LoginResponse>().Token);
             }
             
         }
 
         private async Task User_requests_list_of_roles()
         {
-            getRoleListResult = await config.Browser.Get("/role/", with =>
-            {
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            getRoleListResult = await helper.GetRoleListResponse(loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Role_list_successfully_retrieved()
@@ -174,31 +130,14 @@ namespace ChatServerTests.Features
 
         private async Task Given_that_team_exists_in_database()
         {
-            createTeamResult = await config.Browser.Post("/team/", with =>
-            {
-                with.BodyJson(new CreateTeamRequest
-                {
-                    Name = team.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            createTeamResult = await helper.CreateTeamResponse(team, loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private async Task Role_is_assigned_to_a_user_belonging_to_a_certain_team()
         {
-            assignRoleResult = await config.Browser.Post("/role/assign", with =>
-            {
-                with.BodyJson(new AssignRoleRequest
-                {
-                    TeamId = createTeamResult.BodyJson<Team>().Id,
-                    RoleId = createRoleResult.BodyJson<Role>().Id,
-                    UserId = loginResult.BodyJson<LoginResponse>().User.Id
-
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            assignRoleResult = await helper.AssignRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                createTeamResult.BodyJson<Team>().Id, loginResult.BodyJson<LoginResponse>().User.Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Role_assignment_successful()
@@ -211,18 +150,9 @@ namespace ChatServerTests.Features
 
         private async Task Users_role_is_unassigned()
         {
-            unsignRoleResult = await config.Browser.Delete("/role/unsign", with =>
-            {
-                with.BodyJson(new UnsignRoleRequest
-                {
-                    TeamId = assignRoleResult.BodyJson<UserTeam>().TeamId,
-                    RoleId = assignRoleResult.BodyJson<UserTeam>().RoleId,
-                    UserId = assignRoleResult.BodyJson<UserTeam>().UserId
-
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            unsignRoleResult = await helper.UnsignRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                createTeamResult.BodyJson<Team>().Id, loginResult.BodyJson<LoginResponse>().User.Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Role_unassign_successful()

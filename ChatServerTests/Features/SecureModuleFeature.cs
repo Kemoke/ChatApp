@@ -18,7 +18,7 @@ namespace ChatServerTests.Features
         {
             return Runner.RunScenarioAsync(
                 Given_the_user_is_logged_in,
-                User_tries_to_perform_request_without_auhorization_header,
+                User_tries_to_perform_request_with_wrong_token,
                 Request_failed);
         }
     }

@@ -17,13 +17,15 @@ namespace ChatServerTests.Features
 {
     public partial class SettingsFeature : FeatureFixture
     {
+        private readonly FeatureHelper helper;
         private BrowserResponse loginResult;
-        private BrowserResponse infoChangeResult;
+        private BrowserResponse userInfoChangeResult;
         private BrowserResponse selfInfoResult;
         private BrowserResponse passwordChangeResult;
         private BrowserResponse failedPasswordChangeResult;
         private BrowserResponse userInfoResult;
         private BrowserResponse allUsersResult;
+        private BrowserResponse registerResult;
         private readonly FeaturesConfig config;
         private readonly User user;
         private User user2;
@@ -33,31 +35,20 @@ namespace ChatServerTests.Features
 
         public SettingsFeature(ITestOutputHelper output) : base(output)
         {
-
             config = new FeaturesConfig();
+
             user = DataGenerator.GenerateSingleUser(config.Context);
-            
+
+            helper = new FeatureHelper(config);
         }
 
         #endregion
 
         private async Task Given_the_user_is_logged_in()
         {
-            loginResult = await config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-                with.Accept(new MediaRange("application/json"));
-            });
+            registerResult = await helper.RegisterResponse(user);
 
-            loginResult = await config.Browser.Post("/auth/login", with =>
-            {
-                with.BodyJson(new LoginRequest
-                {
-                    Username = user.Username,
-                    Password = user.Password
-                });
-                with.Accept(new MediaRange("application/json"));
-            });
+            loginResult = await helper.LoginResponse(user);
 
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
@@ -71,44 +62,20 @@ namespace ChatServerTests.Features
         {
             user2 = DataGenerator.GenerateSingleUser(config.Context);
 
-            infoChangeResult = await config.Browser.Put("/user/", with =>
-            {
-                with.BodyJson(new EditUserInfoRequest
-                {
-                    Username = user2.Username,
-                    FirstName = user2.FirstName,
-                    LastName = user2.LastName,
-                    Company = user2.Company,
-                    Country = user2.Country,
-                    DateOfBirth = user2.DateOfBirth,
-                    PictureUrl = user2.PictureUrl,
-                    Gender = user2.Gender
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            userInfoChangeResult = await helper.UserInfoChangeResponse(user2, loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Info_change_successful()
         {
-            StepExecution.Current.Comment(infoChangeResult.BodyJson<Msg>().Message);
-            Assert.Equal("Data changed successfully", infoChangeResult.BodyJson<Msg>().Message);
+            StepExecution.Current.Comment(userInfoChangeResult.BodyJson<Msg>().Message);
+            Assert.Equal("Data changed successfully", userInfoChangeResult.BodyJson<Msg>().Message);
             return Task.CompletedTask;
         }
 
         private async Task User_wants_to_change_his_password()
         {
-            passwordChangeResult = await config.Browser.Post("/user/change_password", with =>
-            {
-                with.BodyJson(new ChangePasswordRequest
-                {
-                    UserId = loginResult.BodyJson<LoginResponse>().User.Id,
-                    NewPassword = "newPassword",
-                    OldPassword = user.Password
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            passwordChangeResult = await helper.PasswordChangeResponse(loginResult.BodyJson<LoginResponse>().User.Id,
+                user.Password, loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Password_change_successful()
@@ -119,17 +86,8 @@ namespace ChatServerTests.Features
 
         private async Task User_wants_to_change_his_password_and_has_provided_wrong_old_password()
         {
-            failedPasswordChangeResult = await config.Browser.Post("/user/change_password", with =>
-            {
-                with.BodyJson(new ChangePasswordRequest
-                {
-                    UserId = loginResult.BodyJson<LoginResponse>().User.Id,
-                    NewPassword = "newPassword",
-                    OldPassword = "bing"
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            failedPasswordChangeResult = await helper.PasswordChangeResponse(loginResult.BodyJson<LoginResponse>().User.Id,
+                user.Password + "das", loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Password_change_unsuccessful()
@@ -141,11 +99,7 @@ namespace ChatServerTests.Features
 
         private async Task User_wants_to_retrieve_info_about_himself()
         {
-            selfInfoResult = await config.Browser.Get("/user/self", with =>
-            {
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            selfInfoResult = await helper.GetSelfInfoResponse(loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Self_info_retrieval_successful()
@@ -156,11 +110,8 @@ namespace ChatServerTests.Features
 
         private async Task User_wants_to_retrieve_info_about_certain_user()
         {
-            userInfoResult = await config.Browser.Get("/user/"+loginResult.BodyJson<LoginResponse>().User.Id, with =>
-            {
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            userInfoResult = await helper.GetUserInfoResponse(loginResult.BodyJson<LoginResponse>().User.Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Info_retrieval_successful()
@@ -175,21 +126,13 @@ namespace ChatServerTests.Features
 
             foreach (var u in users)
             {
-                await config.Browser.Post("/auth/register", with =>
-                {
-                    with.BodyJson(new RegisterRequest { User = u });
-                    with.Accept(new MediaRange("application/json"));
-                });
+                await helper.RegisterResponse(u);
             }
         }
 
         private async Task User_wants_to_retrieve_list_containing_all_users()
         {
-            allUsersResult = await config.Browser.Get("/user/", with =>
-            {
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            allUsersResult = await helper.GetAllUsersResponse(loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task List_retrieved_successfully()

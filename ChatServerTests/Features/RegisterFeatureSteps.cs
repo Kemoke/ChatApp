@@ -21,27 +21,25 @@ namespace ChatServerTests.Features
     public partial class RegisterFeature : FeatureFixture
     {
         private readonly User user;
-        protected readonly FeaturesConfig Config;
+        protected readonly FeaturesConfig config;
         private BrowserResponse result;
+        private readonly FeatureHelper helper;
 
         #region Setup/Teardown
         public RegisterFeature(ITestOutputHelper output) : base(output)
         {
 
-            Config = new FeaturesConfig();
+            config = new FeaturesConfig();
             
-            user = DataGenerator.GenerateSingleUser(Config.Context);
+            user = DataGenerator.GenerateSingleUser(config.Context);
 
+            helper = new FeatureHelper(config);
         }
         #endregion
 
         private async Task Given_the_user_enters_registration_information()
         {
-            result = await Config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-                with.Accept(new MediaRange("application/json"));
-            });
+            result = await helper.RegisterResponse(user);
         }
 
         private async Task Registration_is_successful()
@@ -51,11 +49,7 @@ namespace ChatServerTests.Features
 
         private async Task Existing_user_in_database()
         {
-            result = await Config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-                with.Accept(new MediaRange("application/json"));
-            });
+            result = await helper.RegisterResponse(user);
         }
 
         private Task Registration_is_unsusccessful_because_of_existing_email()

@@ -23,39 +23,32 @@ namespace ChatServerTests.Features
     {
        
         private readonly User user;
-        protected readonly FeaturesConfig Config;
+        protected readonly FeaturesConfig config;
         private BrowserResponse result;
+        private readonly FeatureHelper helper;
 
         #region Setup/Teardown
         public LoginFeature(ITestOutputHelper output) : base(output)
         {
             
-            Config = new FeaturesConfig();
+            config = new FeaturesConfig();
 
-            user = DataGenerator.GenerateSingleUser(Config.Context);
+            user = DataGenerator.GenerateSingleUser(config.Context);
+
+            helper = new FeatureHelper(config);
 
         }
         #endregion
 
         private async Task Given_the_user_is_already_registered()
         {
-            result = await Config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-            });
+            result = await helper.RegisterResponse(user);
         }
 
 
         private async Task When_the_user_sends_login_request_with_correct_credentials()
         {
-            result = await Config.Browser.Post("/auth/login", with =>
-            {
-                with.BodyJson(new LoginRequest
-                {
-                    Username = user.Username,
-                    Password = user.Password
-                });
-            });
+            result = await helper.LoginResponse(user);
         }
 
         private Task Then_the_login_operation_should_be_successful()
@@ -70,14 +63,9 @@ namespace ChatServerTests.Features
 
         private async Task When_the_user_sends_login_request_with_incorrect_username()
         {
-            result = await Config.Browser.Post("/auth/login", with =>
-            {
-                with.BodyJson(new LoginRequest
-                {
-                    Username = "invalid username",
-                    Password = user.Password
-                });
-            });
+            var user2 = DataGenerator.GenerateSingleUser(config.Context);
+            result = await helper.LoginResponse(user2);
+        
         }
 
         private Task Then_the_login_operation_should_be_unsuccessful()
@@ -90,7 +78,7 @@ namespace ChatServerTests.Features
 
         private async Task When_the_user_sends_login_request_with_incorrect_password()
         {
-            result = await Config.Browser.Post("/auth/login", with =>
+            result = await config.Browser.Post("/auth/login", with =>
             {
                 with.BodyJson(new LoginRequest
                 {

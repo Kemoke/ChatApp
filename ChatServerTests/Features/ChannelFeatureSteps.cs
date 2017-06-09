@@ -27,6 +27,7 @@ namespace ChatServerTests.Features
         private Channel channel;
         private List<Channel> channels;
         private readonly FeaturesConfig config;
+        private readonly FeatureHelper helper;
         private BrowserResponse createTeamResult;
         private BrowserResponse deleteChannelResult;
         private BrowserResponse addRoleResult;
@@ -51,6 +52,7 @@ namespace ChatServerTests.Features
 
             user = DataGenerator.GenerateSingleUser(config.Context);
 
+            helper = new FeatureHelper(config);
             
         }
 
@@ -58,21 +60,9 @@ namespace ChatServerTests.Features
 
         private async Task Given_the_user_is_logged_in()
         {
-            loginResult = await config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user });
-                with.Accept(new MediaRange("application/json"));
-            });
+            registerResult = await helper.RegisterResponse(user);
 
-            loginResult = await config.Browser.Post("/auth/login", with =>
-            {
-                with.BodyJson(new LoginRequest
-                {
-                    Username = user.Username,
-                    Password = user.Password
-                });
-                with.Accept(new MediaRange("application/json"));
-            });
+            loginResult = await helper.LoginResponse(user);
 
             Assert.Equal(HttpStatusCode.OK, loginResult.StatusCode);
             var body = loginResult.BodyJson<LoginResponse>();
@@ -86,55 +76,24 @@ namespace ChatServerTests.Features
         {
             team = DataGenerator.GenerateSingleTeam(config.Context);
 
-            createTeamResult = await config.Browser.Post("/team/", with =>
-            {
-                with.BodyJson(new CreateTeamRequest
-                {
-                    Name = team.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            createTeamResult = await helper.CreateTeamResponse(team, loginResult.BodyJson<LoginResponse>().Token);
 
             role = DataGenerator.GenerateSigleRole(config.Context, "Admin");
-            createRoleResult = await config.Browser.Post("/role/", with =>
-            {
-                with.BodyJson(new CreateRoleRequest
-                {
-                    Name = role.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            createRoleResult = await helper.CreateRoleResponse(role, loginResult.BodyJson<LoginResponse>().Token);
 
-            assignRoleResult = await config.Browser.Post("/role/assign", with =>
-            {
-                with.BodyJson(new AssignRoleRequest
-                {
-                    TeamId = createTeamResult.BodyJson<Team>().Id,
-                    RoleId = createRoleResult.BodyJson<Role>().Id,
-                    UserId = loginResult.BodyJson<LoginResponse>().User.Id
-
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            assignRoleResult = await helper.AssignRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                createTeamResult.BodyJson<Team>().Id, loginResult.BodyJson<LoginResponse>().User.Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
+
 
         private async Task User_tries_to_create_new_channel_providing_channel_name()
         {
             var channel = DataGenerator.GenerateSingleChannel(config.Context, createTeamResult.BodyJson<Team>().Id);
-            createChannelResult = await config.Browser.Post("/channel/", with =>
-                {
-                    with.BodyJson(new CreateChannelRequest
-                    {
-                        ChannelName = channel.ChannelName,
-                        UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = channel.TeamId
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
-                });
+            
+            createChannelResult = await helper.CreateChannelResponse(channel,
+                loginResult.BodyJson<LoginResponse>().User.Id,
+                loginResult.BodyJson<LoginResponse>().Token);
         }
        
         private Task Channel_creation_successful()
@@ -146,17 +105,8 @@ namespace ChatServerTests.Features
 
         private async Task User_tries_to_create_new_channel_providing_channel_name_that_already_exists()
         {
-            createNewChannelResult = await config.Browser.Post("/channel/", with =>
-                {
-                    with.BodyJson(new CreateChannelRequest
-                    {
-                        ChannelName = createChannelResult.BodyJson<Channel>().ChannelName,
-                        UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = createChannelResult.BodyJson<Channel>().TeamId
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                });
+            createNewChannelResult = await helper.CreateChannelResponse(createChannelResult.BodyJson<Channel>(),
+                loginResult.Body.DeserializeJson<LoginResponse>().User.Id, loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private Task Channel_creation_unsuccessful()
@@ -174,17 +124,9 @@ namespace ChatServerTests.Features
 
             foreach (var c in channels)
             {
-                createNewChannelResult = await config.Browser.Post("/channel/", with =>
-                    {
-                        with.BodyJson(new CreateChannelRequest
-                        {
-                            ChannelName = c.ChannelName,
-                            UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                            TeamId = createTeamResult.BodyJson<Team>().Id
-                        });
-                        with.Accept(new MediaRange("application/json"));
-                        with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                    });
+                createNewChannelResult = await helper.CreateChannelResponse(c,
+                    loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
+                    loginResult.BodyJson<LoginResponse>().Token);
             }
 
             role = DataGenerator.GenerateSigleRole(config.Context, "AnyRole");
@@ -194,15 +136,9 @@ namespace ChatServerTests.Features
 
         private async Task Users_wants_to_see_list_of_all_channels_inside_of_that_team()
         {
-            retrievedChannelListResult = await config.Browser.Get("/channel/", with =>
-                {
-                    with.BodyJson(new ListChannelRequest
-                    {
-                        TeamId = createTeamResult.BodyJson<Team>().Id
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                });
+            retrievedChannelListResult = await helper.RetrieveChannelListResponse(createTeamResult.BodyJson<Team>().Id,
+                loginResult.BodyJson<LoginResponse>().Token);
+
         }
 
         private Task List_retrieved_successfully()
@@ -213,29 +149,16 @@ namespace ChatServerTests.Features
 
         private async Task Users_wants_to_change_channel_name()
         {
-            channel = DataGenerator.GenerateSingleChannel(config.Context, team.Id);
+            channel = DataGenerator.GenerateSingleChannel(config.Context, createTeamResult.BodyJson<Team>().Id);
 
-            createNewChannelResult = await config.Browser.Post("/channel/", with =>
-                {
-                    with.BodyJson(new CreateChannelRequest
-                    {
-                        ChannelName = channel.ChannelName,
-                        UserId = loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
-                        TeamId = createTeamResult.BodyJson<Team>().Id
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                });
+            createNewChannelResult = await helper.CreateChannelResponse(channel,
+                loginResult.Body.DeserializeJson<LoginResponse>().User.Id,
+                loginResult.Body.DeserializeJson<LoginResponse>().Token);
 
-            editChannelNameResult = await config.Browser.Put("/channel/"+createNewChannelResult.BodyJson<Channel>().Id, with =>
-                {
-                    with.BodyJson(new Channel
-                    {
-                        ChannelName = "Developer"
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                });
+
+            editChannelNameResult = await helper.EditChannelResponse(createNewChannelResult.BodyJson<Channel>().Id,
+                "Developer", loginResult.Body.DeserializeJson<LoginResponse>().Token);
+
         }
 
         private Task Channel_name_change_successful()
@@ -246,11 +169,8 @@ namespace ChatServerTests.Features
 
         private async Task Users_tries_to_delete_that_channel()
         {
-            deleteChannelResult = await config.Browser.Delete("/channel/" + createChannelResult.BodyJson<Channel>().Id, with =>
-                {
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-                });
+            deleteChannelResult = await helper.DeleteChannelResponse(createChannelResult.BodyJson<Channel>().Id,
+                loginResult.Body.DeserializeJson<LoginResponse>().Token);
         }
 
         private Task Channel_deleteion_successful()
@@ -261,11 +181,8 @@ namespace ChatServerTests.Features
 
         private async Task Users_tries_to_retrieve_created_channel()
         {
-            getChannelResult = await config.Browser.Get("/channel/" + createChannelResult.BodyJson<Channel>().Id, with =>
-                {
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
-                });
+            getChannelResult = await helper.GetChannelResponse(createChannelResult.BodyJson<Channel>().Id,
+                loginResult.Body.DeserializeJson<LoginResponse>().Token);
         }
 
         private Task Channel_retrieved_successfully()
@@ -277,80 +194,34 @@ namespace ChatServerTests.Features
         private async Task Given_there_are_several_roles_in_database()
         {
             role = DataGenerator.GenerateSigleRole(config.Context, "Admin");
-            createRoleResult = await config.Browser.Post("/role/", with =>
-            {
-                with.BodyJson(new CreateRoleRequest
-                {
-                    Name = role.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            createRoleResult = await helper.CreateRoleResponse(role, loginResult.BodyJson<LoginResponse>().Token);
 
             role = DataGenerator.GenerateSigleRole(config.Context, "Dev");
-            createRoleResult = await config.Browser.Post("/role/", with =>
-            {
-                with.BodyJson(new CreateRoleRequest
-                {
-                    Name = role.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+            createRoleResult = await helper.CreateRoleResponse(role, loginResult.BodyJson<LoginResponse>().Token);
         }
 
         private async Task User_tries_to_create_new_channel_providing_channel_name_with_non_admin_account()
         {
             team = DataGenerator.GenerateSingleTeam(config.Context);
-            
 
-            createTeamResult = await config.Browser.Post("/team/", with =>
-            {
-                with.BodyJson(new CreateTeamRequest
-                {
-                    Name = team.Name
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
+
+            createTeamResult = await helper.CreateTeamResponse(team, loginResult.BodyJson<LoginResponse>().Token);
 
 
 
             var user2 = DataGenerator.GenerateSingleUser(config.Context);
 
-            registerResult = await config.Browser.Post("/auth/register", with =>
-            {
-                with.BodyJson(new RegisterRequest { User = user2 });
-                with.Accept(new MediaRange("application/json"));
-            });
+            registerResult = await helper.RegisterResponse(user2);
 
-            assignRoleResult = await config.Browser.Post("/role/assign", with =>
-            {
-                with.BodyJson(new AssignRoleRequest
-                {
-                    TeamId = createTeamResult.BodyJson<Team>().Id,
-                    RoleId = createRoleResult.BodyJson<Role>().Id,
-                    UserId = registerResult.BodyJson<User>().Id
-
-                });
-                with.Accept(new MediaRange("application/json"));
-                with.Header("Authorization", loginResult.BodyJson<LoginResponse>().Token);
-            });
-
+            assignRoleResult = await helper.AssignRoleResponse(createRoleResult.BodyJson<Role>().Id,
+                createTeamResult.BodyJson<Team>().Id, registerResult.BodyJson<User>().Id,
+                loginResult.BodyJson<LoginResponse>().Token);
+            
 
             var channel = DataGenerator.GenerateSingleChannel(config.Context, createTeamResult.BodyJson<Team>().Id);
-            createChannelResult = await config.Browser.Post("/channel/", with =>
-                {
-                    with.BodyJson(new CreateChannelRequest
-                    {
-                        ChannelName = channel.ChannelName,
-                        UserId = registerResult.BodyJson<User>().Id,
-                        TeamId = createTeamResult.BodyJson<Team>().Id
-                    });
-                    with.Accept(new MediaRange("application/json"));
-                    with.Header("Authorization", loginResult.Body.DeserializeJson<LoginResponse>().Token);
-                });
-            
+            createChannelResult = await helper.CreateChannelResponse(channel, registerResult.BodyJson<User>().Id,
+                loginResult.BodyJson<LoginResponse>().Token);
+
         }
 
         private Task Channel_creation_failed()
