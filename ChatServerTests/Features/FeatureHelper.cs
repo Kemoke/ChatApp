@@ -305,5 +305,77 @@ namespace ChatServerTests.Features
                 with.Header("Authorization", token);
             });
         }
+
+        public async Task<BrowserResponse> GetTeamListResponse(dynamic token)
+        {
+            return await config.Browser.Get("/team/", with =>
+            {
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", token);
+            });
+        }
+
+        public async Task<BrowserResponse> GetTeamInfoResponse(int teamId, dynamic token)
+        {
+            return await config.Browser.Get("/team/" + teamId, with =>
+            {
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", token);
+            });
+        }
+
+        public async Task<BrowserResponse> EditTeamInfoResponse(int teamId, dynamic token)
+        {
+            return await config.Browser.Put("/team/" + teamId, with =>
+            {
+                with.BodyJson(new Team
+                {
+                    Name = "IUS"
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", token);
+            });
+        }
+
+        public async Task<BrowserResponse> RemoveUserResponse(int teamId, int roleId, int userId, dynamic token)
+        {
+            return await config.Browser.Delete("/team/user/remove", with =>
+            {
+                with.BodyJson(new UnsignRoleRequest
+                {
+                    TeamId = teamId,
+                    RoleId = roleId,
+                    UserId = userId
+
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", token);
+            });
+        }
+
+        public async Task<BrowserResponse> AddUserResponse(int teamId, int roleId, int userId, dynamic token)
+        {
+            return await config.Browser.Post("/team/user/add", with =>
+            {
+                with.BodyJson(new AssignRoleRequest
+                {
+                    TeamId = teamId,
+                    RoleId = roleId,
+                    UserId = userId
+
+                });
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", token);
+            });
+        }
+
+        public async Task<BrowserResponse> DeleteTeamResponse(int teamId, dynamic token)
+        {
+            return await config.Browser.Delete("/team/" + teamId, with =>
+            {
+                with.Accept(new MediaRange("application/json"));
+                with.Header("Authorization", token);
+            });
+        }
     }
 }
