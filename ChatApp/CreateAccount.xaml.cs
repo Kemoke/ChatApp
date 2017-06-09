@@ -1,22 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
-using Windows.Web.Http;
 using ChatApp.Model;
-using ChatApp.Response;
 using ChatApp.Api;
 using ChatApp.Request;
 using Refit;
@@ -170,36 +157,34 @@ namespace ChatApp
                 return;
             }
 
-            else if(passwordText.Password != repeatText.Password)
+            if(passwordText.Password != repeatText.Password)
             {
                 var messageDialog = new MessageDialog("Passwords do not match");
                 await messageDialog.ShowAsync();
                 return;
             }
 
-            else
+            var user = new User
             {
-                User user = new User();
-                user.FirstName = nameText.Text;
-                user.LastName = surnameText.Text;
-                user.Username = usernameText.Text;
-                user.Password = passwordText.Password;
-                user.Email = mailText.Text;
-                user.Company = companyText.Text;
-                user.DateOfBirth = datePicker.Date.DateTime;
-                user.Country = countryBox.SelectedItem.ToString();
-                user.Gender = genderBox.SelectedItem.ToString();
+                FirstName = nameText.Text,
+                LastName = surnameText.Text,
+                Username = usernameText.Text,
+                Password = passwordText.Password,
+                Email = mailText.Text,
+                Company = companyText.Text,
+                DateOfBirth = datePicker.Date.DateTime,
+                Country = countryBox.SelectedItem.ToString(),
+                Gender = genderBox.SelectedItem.ToString()
+            };
 
-                try
-                {
-                    var response = await HttpApi.Auth.RegisterAsync(new RegisterRequest { User = user});
-                    Frame.Navigate(typeof(ChatPage));
-                }
-                catch (ApiException ex)
-                {
-                    await new MessageDialog(ex.ErrorMessage()).ShowAsync();
-                }
-
+            try
+            {
+                var response = await HttpApi.Auth.RegisterAsync(new RegisterRequest { User = user});
+                Frame.Navigate(typeof(MainPage));
+            }
+            catch (ApiException ex)
+            {
+                await new MessageDialog(ex.ErrorMessage()).ShowAsync();
             }
         }
     }

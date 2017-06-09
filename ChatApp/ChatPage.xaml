@@ -25,11 +25,11 @@
             <RowDefinition Height="35*"/>
         </Grid.RowDefinitions>
         
-        <TextBlock Text="{Binding SelectedChannel.ChannelName}" FontSize="24" Grid.Row="0" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedChannel.ChannelName}" FontSize="36" Grid.Row="0" Grid.Column="1"/>
 
         <ListView ItemsSource="{Binding Channels}" Grid.Column="0"  
                   Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
-                  SelectedItem="{Binding SelectedChannel}">
+                  SelectedItem="{Binding SelectedChannel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Template">
@@ -66,19 +66,33 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="m:Channel">
-                    
+                    <TextBlock Text="{Binding ChannelName}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
 
-        <ListView ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1" Margin="5,5,5,5" 
+        <ListView ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1"
                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter ContentMargin="0" Padding="0" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="m:Message">
-                    <Border BorderThickness="1">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Width="50" TextAlignment="Center" Text="{Binding TimeSent.TimeOfDay}"/>
+                    <Border BorderThickness="1" Background="GhostWhite" BorderBrush="Gainsboro" >
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Width="60" TextAlignment="Center" Text="{Binding TimeSent.TimeOfDay}"/>
                             <TextBlock Margin="10,0,10,0" FontWeight="Bold" Text="{Binding Sender.Username}"/>
                             <TextBlock Text="{Binding MessageText}"/>
                         </StackPanel>

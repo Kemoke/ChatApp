@@ -127,13 +127,12 @@ namespace ChatServer.Module
 
             var messages = new List<Message>();
             
-            var lastId = (await context.Messages.AsNoTracking().LastAsync(cancellationToken)).Id;
-            if (lastId == request.MessageId)
+            var last = await context.Messages.AsNoTracking().Where(c => c.ChannelId == request.ChannelId).LastOrDefaultAsync(cancellationToken);
+            var lastId = last is null ? 0 : last.Id;
+            if (lastId != request.MessageId)
             {
-                return Response.AsJson(messages);
+                messages = await context.Messages.AsNoTracking().Include(m => m.Sender).Where(m => (m.Id > request.MessageId && m.ChannelId == request.ChannelId)).ToListAsync(cancellationToken);
             }
-            
-            messages = await context.Messages.AsNoTracking().Include(m => m.Sender).Where(m => (m.Id > request.MessageId && m.ChannelId == request.ChannelId)).ToListAsync(cancellationToken);
 
             return Response.AsJson(messages);
         }

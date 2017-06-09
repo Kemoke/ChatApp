@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
@@ -37,16 +38,7 @@ namespace ChatApp.ViewModel
 
         public ChatViewModel()
         {
-            SelectedChannel.PropertyChanged += async (sender, args) =>
-            {
-                var request = new GetMessagesRequest
-                {
-                    ChannelId = SelectedChannel.Id
-                };
-                Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50));
-                if(messageLoop.Status != TaskStatus.Running)
-                    messageLoop.Start();
-            };
+            PropertyChanged += OnPropertyChanged;
             messageLoop = new Task(async () =>
             {
                 while (true)
@@ -55,19 +47,35 @@ namespace ChatApp.ViewModel
                     await Task.Delay(5000);
                 }
             });
-            LoadData().Start();
+            LoadData().ConfigureAwait(false);
+        }
+
+        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "SelectedChannel")
+            {
+                var request = new GetMessagesRequest
+                {
+                    ChannelId = SelectedChannel.Id
+                };
+                Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
+                if (messageLoop.Status != TaskStatus.Running)
+                    messageLoop.Start();
+            }
         }
 
         private async Task MessageLoop()
         {
             if (selectedChannel != null)
             {
+                var last = Messages.LastOrDefault();
+                var lastId = last is null ? 0 : last.Id;
                 var request = new CheckNewMessagesRequest
                 {
                     ChannelId = SelectedChannel.Id,
-                    MessageId = Messages.Last().Id
+                    MessageId = lastId
                 };
-                var response = await HttpApi.Channel.GetNewMessagesAsync(request);
+                var response = await HttpApi.Channel.GetNewMessagesAsync(request, HttpApi.AuthToken);
                 foreach (var message in response)
                 {
                     Messages.Add(message);
@@ -80,7 +88,7 @@ namespace ChatApp.ViewModel
             try
             {
                 var response =
-                    await HttpApi.Channel.GetListAsync(new ListChannelRequest { TeamId = HttpApi.SelectedTeam.Id });
+                    await HttpApi.Channel.GetListAsync(new ListChannelRequest { TeamId = HttpApi.SelectedTeam.Id }, HttpApi.AuthToken);
                 Channels = new ObservableCollection<Channel>(response);
             }
             catch (ApiException ex)
