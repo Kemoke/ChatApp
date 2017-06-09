@@ -68,18 +68,22 @@ namespace ChatServer.Module
         }
 
         private async Task<dynamic> EditChannelAsync(dynamic parameters, CancellationToken cancellationToken)
-        {
-            
+    {
             int id = parameters.id;
 
             var request = this.Bind<Channel>();
             var channel = await context.Channels.FirstAsync(c => c.Id == id, cancellationToken);
 
+            if (await ChannelExistsAsync(request.ChannelName, channel.TeamId))
+            {
+                return Response.AsJson(new Msg("Channel with that name already exists"))
+                    .WithStatusCode(HttpStatusCode.BadRequest);
+            }
+
             channel.ChannelName = request.ChannelName;
             await context.SaveChangesAsync(cancellationToken);
 
             return Response.AsJson(channel);
-            
         }
 
         private async Task<dynamic> CreateNewChannelAsync(dynamic parameters, CancellationToken cancellationToken)
