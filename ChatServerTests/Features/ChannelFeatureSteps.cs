@@ -229,5 +229,18 @@ namespace ChatServerTests.Features
             Assert.Equal("You are not admin!", createChannelResult.BodyJson<Msg>().Message);
             return Task.CompletedTask;
         }
+
+        private async Task Users_wants_to_change_channel_name_providing_channel_name_that_already_exists()
+        {
+            editChannelNameResult = await helper.EditChannelResponse(createChannelResult.BodyJson<Channel>().Id,
+                createChannelResult.BodyJson<Channel>().ChannelName,
+                loginResult.BodyJson<LoginResponse>().Token);
+        }
+
+        private Task Channel_name_change_unccessful()
+        {
+            Assert.Equal("Channel with that name already exists", editChannelNameResult.BodyJson<Msg>().Message);
+            return Task.CompletedTask;
+        }
     }
 }

@@ -95,7 +95,7 @@ namespace ChatServerTests.Features
         }
 
         [Scenario]
-        [Label("Ticket-6")]
+        [Label("Ticket-7")]
         [ScenarioCategory("Channel")]
         public Task User_tries_to_create_channel_with_non_admin_account()
         {
@@ -104,6 +104,19 @@ namespace ChatServerTests.Features
                 Given_there_are_several_roles_in_database,
                 User_tries_to_create_new_channel_providing_channel_name_with_non_admin_account,
                 Channel_creation_failed);
+        }
+
+        [Scenario]
+        [Label("Ticket-7")]
+        [ScenarioCategory("Channel")]
+        public Task User_tries_to_change_channel_name_providing_name_that_already_exists()
+        {
+            return Runner.RunScenarioAsync(
+                Given_the_user_is_logged_in,
+                Given_the_user_creates_team_and_is_admin,
+                User_tries_to_create_new_channel_providing_channel_name,
+                Users_wants_to_change_channel_name_providing_channel_name_that_already_exists,
+                Channel_name_change_unccessful);
         }
     }
 }
