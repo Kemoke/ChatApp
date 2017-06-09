@@ -133,7 +133,7 @@ namespace ChatServer.Module
             {
                 messages = await context.Messages.AsNoTracking().Include(m => m.Sender)
                     .Where(m => m.Id > request.MessageId && m.ChannelId == request.ChannelId)
-                    .OrderByDescending(m => m.Id)
+                    .OrderBy(m => m.Id)
                     .ToListAsync(cancellationToken);
             }
 
@@ -148,7 +148,7 @@ namespace ChatServer.Module
                 .Where(m => m.TargetId == request.TargetId || m.ChannelId == request.ChannelId)
                 .Skip((int)parameters.skip)
                 .Take((int)parameters.limit)
-                .OrderByDescending(m => m.Id)
+                .OrderBy(m => m.Id)
                 .ToListAsync(cancellationToken);
             return Response.AsJson(messages);
         }

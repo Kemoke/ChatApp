@@ -42,7 +42,7 @@ namespace ChatApp.Model
             set { timeSent = value; OnPropertyChanged();}
         }
 
-        public string Time => TimeSent.ToString("t");
+        public string Time => TimeSent.ToLocalTime().ToString("t");
     }
 
 }
