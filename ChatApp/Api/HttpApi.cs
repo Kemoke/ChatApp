@@ -46,7 +46,7 @@ namespace ChatApp.Api
         Task<Channel> GetAsync(int id, [Header("Authorization")] string token);
 
         [Post("/")]
-        Task<Channel> SaveAsync([Body] Channel body, [Header("Authorization")] string token);
+        Task<Channel> SaveAsync([Body] CreateChannelRequest body, [Header("Authorization")] string token);
 
         [Put("/{id}")]
         Task<Channel> EditAsync(int id, [Body] Channel body, [Header("Authorization")] string token);

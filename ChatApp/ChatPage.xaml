@@ -71,7 +71,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <ListView ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1"
+        <ListView Name="MessageView" ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1"
                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -101,7 +101,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
+        <Button Click="NewChannelButton_Click" Grid.Row="2" Grid.Column="0"
+                Content="Add new channel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         <TextBox Name="ChatBox" Grid.Row="2" Grid.Column="1" 
                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                  KeyDown="ChatBox_OnKeyDown"/>

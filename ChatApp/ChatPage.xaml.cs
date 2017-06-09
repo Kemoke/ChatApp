@@ -28,11 +28,21 @@ namespace ChatApp
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ChatPage : Page
-    { 
-       
+    {
+        private readonly ChatViewModel viewModel;
         public ChatPage()
         {
             InitializeComponent();
+            viewModel = (ChatViewModel) DataContext;
+            viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Messages")
+            {
+                MessageView.ScrollIntoView(viewModel.Messages.LastOrDefault());
+            }
         }
 
         private void ChatBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
@@ -46,7 +56,6 @@ namespace ChatApp
 
         private async void Button_OnClick(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ChatViewModel) DataContext;
             var request = new SendMessageRequest
             {
                 ChannelId = viewModel.SelectedChannel.Id,
@@ -57,6 +66,17 @@ namespace ChatApp
             ChatBox.Text = "";
             var response = await HttpApi.Channel.SendMessageAsync(request, HttpApi.AuthToken);
             viewModel.Messages.Add(response);
+        }
+
+        private async void NewChannelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Channel channel = null;
+            var dialog = new AddChannelDialog(ref channel);
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                viewModel.Channels.Add(channel);
+            }
         }
     }
 }
