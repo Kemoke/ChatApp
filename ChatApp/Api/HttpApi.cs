@@ -18,6 +18,8 @@ namespace ChatApp.Api
     public static class HttpApi
     {
         public static string AuthToken { get; set; }
+        public static User LoggedInUser { get; set; }
+        public static Team SelectedTeam { get; set; }
         private const string ApiUrl = "http://srv.kemoke.net:2424/";
         public static IAuthApi Auth => RestService.For<IAuthApi>(ApiUrl+"auth");
         public static IChannelApi Channel => RestService.For<IChannelApi>(ApiUrl+"chat");
@@ -38,7 +40,7 @@ namespace ChatApp.Api
     public interface IChannelApi
     {
         [Get("/")]
-        Task<List<Channel>> GetListAsync();
+        Task<List<Channel>> GetListAsync([Body] ListChannelRequest request);
 
         [Get("/{id}")]
         Task<Channel> GetAsync(int id);
@@ -56,10 +58,10 @@ namespace ChatApp.Api
         Task<Message> SendMessageAsync([Body] SendMessageRequest request);
 
         [Get("/messages/{skip}/{limit}")]
-        Task<List<Message>> GetMessagesAsync(int skip, int limit);
+        Task<List<Message>> GetMessagesAsync([Body] GetMessagesRequest request, int skip, int limit);
 
         [Get("/messages/new")]
-        Task<List<Message>> GetNewMessagesAsync();
+        Task<List<Message>> GetNewMessagesAsync([Body] CheckNewMessagesRequest request);
     }
 
     public interface IRoleApi

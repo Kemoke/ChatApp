@@ -5,46 +5,86 @@
     xmlns:local="using:ChatApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data ="using:ChatApp.Model" 
+    xmlns:m ="using:ChatApp.Model" 
+    xmlns:vm="using:ChatApp.ViewModel"
     xmlns:C4FTK="using:Coding4Fun.Toolkit.Controls" 
     mc:Ignorable="d">
-
+    <Page.DataContext>
+        <vm:ChatViewModel/>
+    </Page.DataContext>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="147*"/>
             <ColumnDefinition Width="381*"/>
             <ColumnDefinition Width="93*"/>
-            <ColumnDefinition Width="19*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="36*"/>
+            <RowDefinition Height="289*"/>
+            <RowDefinition Height="35*"/>
         </Grid.RowDefinitions>
+        
+        <TextBlock Text="{Binding SelectedChannel.ChannelName}" FontSize="24" Grid.Row="0" Grid.Column="1"/>
 
-        <C4FTK:ChatBubbleTextBox x:Name="messageBox" Grid.Column="2"  Grid.Row="2" TextWrapping="Wrap" Text="hello world"  VerticalAlignment="Top" Height="72" Margin="0,0,1,0"/>
-        <Button x:Name="sendButton" Content="Send" Grid.Column="3" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="40" Grid.Row="2" Margin="4,10,0,0" Width="84" Click="Button_Click"/>
-
-
-        <ListView  Margin="10,8,8,10" Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2">
-
-          
-        </ListView>
-
-        <ListView ItemsSource ="{x:Bind ViewModel.MessageList}" Grid.Column="2" Height="278" Margin="6,10,10,0" VerticalAlignment="Top" Grid.RowSpan="2">
+        <ListView ItemsSource="{Binding Channels}" Grid.Column="0"  
+                  Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
+                  SelectedItem="{Binding SelectedChannel}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter
+                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                    SelectionCheckMarkVisualEnabled="True"
+                                    CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                    CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                    DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                    DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                    FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                    FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                    PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                    PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+                                    PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                    SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
+                                    SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                    SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                                    PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                                    SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
+                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                    ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    ContentMargin="{TemplateBinding Padding}"
+                                    CheckMode="Inline"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
-
-                <DataTemplate x:DataType="local:MEssage">
-                    <C4FTK:ChatBubble  HorizontalAlignment="Right"  Foreground="White" Content ="{x:Bind message8 }"  ChatBubbleDirection="LowerRight" ></C4FTK:ChatBubble>
+                <DataTemplate x:DataType="m:Channel">
+                    
                 </DataTemplate>
-
             </ListView.ItemTemplate>
 
         </ListView>
-        
 
-
+        <ListView ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1" Margin="5,5,5,5" 
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="m:Message">
+                    <Border BorderThickness="1">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Width="50" TextAlignment="Center" Text="{Binding TimeSent.TimeOfDay}"/>
+                            <TextBlock Margin="10,0,10,0" FontWeight="Bold" Text="{Binding Sender.Username}"/>
+                            <TextBlock Text="{Binding MessageText}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

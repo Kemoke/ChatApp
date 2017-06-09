@@ -133,7 +133,7 @@ namespace ChatServer.Module
                 return Response.AsJson(messages);
             }
             
-            messages = await context.Messages.AsNoTracking().Where(m => (m.Id > request.MessageId && m.ChannelId == request.ChannelId)).ToListAsync(cancellationToken);
+            messages = await context.Messages.AsNoTracking().Include(m => m.Sender).Where(m => (m.Id > request.MessageId && m.ChannelId == request.ChannelId)).ToListAsync(cancellationToken);
 
             return Response.AsJson(messages);
         }
@@ -142,7 +142,7 @@ namespace ChatServer.Module
         {
             var request = this.Bind<GetMessagesRequest>();
 
-            var messages = await context.Messages.AsNoTracking().Where(m => m.SenderId == request.SenderId && m.TargetId == request.TargetId && m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
+            var messages = await context.Messages.AsNoTracking().Include(m => m.Sender).Where(m => m.TargetId == request.TargetId || m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
             return Response.AsJson(messages);
         }
 
@@ -155,11 +155,13 @@ namespace ChatServer.Module
                 MessageText = request.MessageText,
                 SenderId = request.SenderId,
                 TargetId = request.TargetId,
-                ChannelId = request.ChannelId
+                ChannelId = request.ChannelId,
+                TimeSent = DateTime.Now
             };
 
             context.Add(message);
             await context.SaveChangesAsync(cancellationToken);
+            message.Sender = User;
             return Response.AsJson(message); 
         }
     }

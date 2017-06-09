@@ -28,43 +28,11 @@ namespace ChatApp
         
         public ChatPage()
         {
-             
-            this.InitializeComponent();
-
-            this.ViewModel= new MessageViewModel(); 
+            InitializeComponent();
         }
-        public MessageViewModel ViewModel = new MessageViewModel(); 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
-            {
-
-                if (messageBox.Text != "")
-                {
-
-                    ViewModel.MessageList.Add(new MEssage { message8 = messageBox.Text });
-
-                }
-
-                messageBox.Text = ""; 
-
-
-                
-            }
-
-           
-
-            
         }
-
-       
     }
-
-   
-
-    
-
-
-
 }

@@ -1,4 +1,8 @@
-﻿namespace ChatApp.Model
+﻿using System;
+using Windows.UI.Xaml;
+using ChatApp.Api;
+
+namespace ChatApp.Model
 {
     public class Message : Entity
     {
@@ -6,6 +10,7 @@
         private User sender;
         private User target;
         private Channel channel;
+        private DateTime timeSent;
 
         public string MessageText
         {
@@ -29,6 +34,12 @@
         {
             get => channel;
             set { channel = value; OnPropertyChanged();}
+        }
+
+        public DateTime TimeSent
+        {
+            get => timeSent;
+            set { timeSent = value; OnPropertyChanged();}
         }
     }
 
