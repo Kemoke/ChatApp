@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
@@ -16,7 +18,7 @@ namespace ChatApp.ViewModel
         private ObservableCollection<Channel> channels;
         private ObservableCollection<Message> messages;
         private Channel selectedChannel;
-        private readonly Task messageLoop;
+        private DispatcherTimer timer;
 
         public ObservableCollection<Channel> Channels
         {
@@ -39,34 +41,8 @@ namespace ChatApp.ViewModel
         public ChatViewModel()
         {
             PropertyChanged += OnPropertyChanged;
-            messageLoop = new Task(async () =>
-            {
-                while (true)
-                {
-                    await MessageLoop();
-                    await Task.Delay(5000);
-                }
-            });
-            LoadData().ConfigureAwait(false);
-        }
-
-        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if (args.PropertyName == "SelectedChannel")
-            {
-                var request = new GetMessagesRequest
-                {
-                    ChannelId = SelectedChannel.Id
-                };
-                Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
-                if (messageLoop.Status != TaskStatus.Running)
-                    messageLoop.Start();
-            }
-        }
-
-        private async Task MessageLoop()
-        {
-            if (selectedChannel != null)
+            timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 5)};
+            timer.Tick += async (sender, o) =>
             {
                 var last = Messages.LastOrDefault();
                 var lastId = last is null ? 0 : last.Id;
@@ -80,6 +56,21 @@ namespace ChatApp.ViewModel
                 {
                     Messages.Add(message);
                 }
+            };
+            LoadData().ConfigureAwait(false);
+        }
+
+        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "SelectedChannel")
+            {
+                var request = new GetMessagesRequest
+                {
+                    ChannelId = SelectedChannel.Id
+                };
+                timer.Stop();
+                Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
+                timer.Start();
             }
         }
 

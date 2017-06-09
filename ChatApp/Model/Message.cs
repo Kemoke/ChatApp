@@ -41,6 +41,8 @@ namespace ChatApp.Model
             get => timeSent;
             set { timeSent = value; OnPropertyChanged();}
         }
+
+        public string Time => TimeSent.ToString("t");
     }
 
 }

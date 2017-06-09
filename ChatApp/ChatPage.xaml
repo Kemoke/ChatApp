@@ -92,7 +92,8 @@
                 <DataTemplate x:DataType="m:Message">
                     <Border BorderThickness="1" Background="GhostWhite" BorderBrush="Gainsboro" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Width="60" TextAlignment="Center" Text="{Binding TimeSent.TimeOfDay}"/>
+                            <TextBlock Width="60" TextAlignment="Center" 
+                                       Text="{x:Bind Time}"/>
                             <TextBlock Margin="10,0,10,0" FontWeight="Bold" Text="{Binding Sender.Username}"/>
                             <TextBlock Text="{Binding MessageText}"/>
                         </StackPanel>

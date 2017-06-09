@@ -37,8 +37,11 @@ namespace ChatApp
 
         private void ChatBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == VirtualKey.Enter)
-                Button_OnClick(null, null);
+            if (e.Key == VirtualKey.Enter)
+            {
+                Button_OnClick(sender, e);
+                e.Handled = true;
+            }
         }
 
         private async void Button_OnClick(object sender, RoutedEventArgs e)
@@ -49,7 +52,9 @@ namespace ChatApp
                 ChannelId = viewModel.SelectedChannel.Id,
                 MessageText = ChatBox.Text,
                 SenderId = HttpApi.LoggedInUser.Id,
+                TargetId = HttpApi.LoggedInUser.Id
             };
+            ChatBox.Text = "";
             var response = await HttpApi.Channel.SendMessageAsync(request, HttpApi.AuthToken);
             viewModel.Messages.Add(response);
         }

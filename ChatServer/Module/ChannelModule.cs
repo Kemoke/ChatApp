@@ -131,7 +131,10 @@ namespace ChatServer.Module
             var lastId = last is null ? 0 : last.Id;
             if (lastId != request.MessageId)
             {
-                messages = await context.Messages.AsNoTracking().Include(m => m.Sender).Where(m => (m.Id > request.MessageId && m.ChannelId == request.ChannelId)).ToListAsync(cancellationToken);
+                messages = await context.Messages.AsNoTracking().Include(m => m.Sender)
+                    .Where(m => m.Id > request.MessageId && m.ChannelId == request.ChannelId)
+                    .OrderByDescending(m => m.Id)
+                    .ToListAsync(cancellationToken);
             }
 
             return Response.AsJson(messages);
@@ -141,7 +144,12 @@ namespace ChatServer.Module
         {
             var request = this.Bind<GetMessagesRequest>();
 
-            var messages = await context.Messages.AsNoTracking().Include(m => m.Sender).Where(m => m.TargetId == request.TargetId || m.ChannelId == request.ChannelId).Skip((int)parameters.skip).Take((int)parameters.limit).ToListAsync(cancellationToken);
+            var messages = await context.Messages.AsNoTracking().Include(m => m.Sender)
+                .Where(m => m.TargetId == request.TargetId || m.ChannelId == request.ChannelId)
+                .Skip((int)parameters.skip)
+                .Take((int)parameters.limit)
+                .OrderByDescending(m => m.Id)
+                .ToListAsync(cancellationToken);
             return Response.AsJson(messages);
         }
 
