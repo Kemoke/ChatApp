@@ -1,10 +1,12 @@
 ﻿using System;
+using ChatServer.Response;
 using ChatServer.WebSockets;
 using JWT;
 using Microsoft.Extensions.DependencyInjection;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Configuration;
+using Nancy.Responses;
 using Nancy.TinyIoc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -61,6 +63,7 @@ namespace ChatServer
                     .WithHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
                     .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type, Authorization");
             };
+            pipelines.OnError += (ctx, ex) => new Msg(ex.StackTrace);
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)

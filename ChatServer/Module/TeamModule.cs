@@ -78,7 +78,7 @@ namespace ChatServer.Module
         private async Task<object> GetTeamAsync(dynamic props, CancellationToken token)
         {
             int id = props.id;
-            var team = await context.Teams.Include(t => t.UserTeams)
+            var team = await context.Teams.AsNoTracking().Include(t => t.UserTeams)
                 .ThenInclude(t => t.User)
                 .FirstAsync(u => u.Id == id, token);
             return Response.AsJson(team);
@@ -86,7 +86,7 @@ namespace ChatServer.Module
 
         private async Task<dynamic> ListTeamAsync(dynamic props, CancellationToken token)
         {
-            var teams = await context.Teams.Include(t => t.UserTeams)
+            var teams = await context.Teams.AsNoTracking().Include(t => t.UserTeams)
                 .ThenInclude(t => t.User)
                 .ToListAsync(token);
             return Response.AsJson(teams);

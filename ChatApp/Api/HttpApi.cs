@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.UI.Popups;
 using ChatApp.Model;
 using ChatApp.Request;
 using ChatApp.Response;
@@ -13,6 +15,11 @@ namespace ChatApp.Api
         public static string ErrorMessage(this ApiException ex)
         {
             return ex.GetContentAs<Error>().Message;
+        }
+
+        public static IAsyncOperation<IUICommand> ShowErrorDialog(this ApiException ex)
+        {
+            return new MessageDialog(ex.ErrorMessage()).ShowAsync();
         }
     }
     public static class HttpApi

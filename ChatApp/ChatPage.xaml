@@ -69,8 +69,8 @@
                     <Grid RightTapped="Channel_RightClick">
                         <FlyoutBase.AttachedFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="Edit Channel"/>
-                                <MenuFlyoutItem Text="Delete Channel"/>
+                                <MenuFlyoutItem Text="Edit Channel" Click="Menu_EditChannel"/>
+                                <MenuFlyoutItem Text="Delete Channel" Click="Menu_DeleteChannel"/>
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
                         <TextBlock Text="{Binding ChannelName}"/>

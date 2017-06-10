@@ -15,10 +15,13 @@ using Windows.UI.Xaml.Navigation;
 using System.Windows.Input;
 using ChatApp.Model;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Windows.System;
 using ChatApp.Api;
 using ChatApp.Request;
 using ChatApp.ViewModel;
+using Refit;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,11 +40,20 @@ namespace ChatApp
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
-        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Messages")
             {
+                await Task.Delay(100);
                 MessageView.ScrollIntoView(viewModel.Messages.LastOrDefault());
+                viewModel.Messages.CollectionChanged += async (o, args) =>
+                {
+                    if (args.Action == NotifyCollectionChangedAction.Add)
+                    {
+                        await Task.Delay(100);
+                        MessageView.ScrollIntoView(viewModel.Messages.LastOrDefault());
+                    }
+                };
             }
         }
 
@@ -64,19 +76,20 @@ namespace ChatApp
                 TargetId = HttpApi.LoggedInUser.Id
             };
             ChatBox.Text = "";
-            var response = await HttpApi.Channel.SendMessageAsync(request, HttpApi.AuthToken);
-            //viewModel.Messages.Add(response);
+            try
+            {
+                var response = await HttpApi.Channel.SendMessageAsync(request, HttpApi.AuthToken);
+            }
+            catch (ApiException ex)
+            {
+                await ex.ShowErrorDialog();
+            }
         }
 
         private async void NewChannelButton_Click(object sender, RoutedEventArgs e)
         {
-            Channel channel = null;
-            var dialog = new AddChannelDialog(ref channel);
+            var dialog = new AddChannelDialog(channel => viewModel.Channels.Add(channel));
             var result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary)
-            {
-                viewModel.Channels.Add(channel);
-            }
         }
 
         private void Channel_RightClick(object sender, RightTappedRoutedEventArgs e)
@@ -84,6 +97,25 @@ namespace ChatApp
             var item = (Grid)sender;
             var flyoutBase = FlyoutBase.GetAttachedFlyout(item);
             flyoutBase.ShowAt(item);
+        }
+
+        private void Menu_EditChannel(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async void Menu_DeleteChannel(object sender, RoutedEventArgs e)
+        {
+            var item = (Channel)((FrameworkElement)e.OriginalSource).DataContext;
+            try
+            {
+                await HttpApi.Channel.DeleteAsync(item.Id, HttpApi.AuthToken);
+                viewModel.Channels.Remove(item);
+            }
+            catch (ApiException ex)
+            {
+                await ex.ShowErrorDialog();
+            }
         }
     }
 }

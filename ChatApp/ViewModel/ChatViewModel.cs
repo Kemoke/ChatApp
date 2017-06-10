@@ -88,7 +88,6 @@ namespace ChatApp.ViewModel
                 {
                     ChannelId = SelectedChannel.Id
                 };
-                //timer.Stop();
                 var message = JsonConvert.SerializeObject(new NotificationMessage
                 {
                     NewId = SelectedChannel.Id,
@@ -98,8 +97,15 @@ namespace ChatApp.ViewModel
                 writer.WriteString(message);
                 await writer.StoreAsync();
                 oldChannelId = SelectedChannel.Id;
-                Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
-                //timer.Start();
+                try
+                {
+                    Messages = new ObservableCollection<Message>(
+                        await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
+                }
+                catch (ApiException ex)
+                {
+                    await ex.ShowErrorDialog();
+                }
             }
         }
 
@@ -118,7 +124,7 @@ namespace ChatApp.ViewModel
             }
             catch (ApiException ex)
             {
-                await new MessageDialog(ex.ErrorMessage()).ShowAsync();
+                await ex.ShowErrorDialog();
             }
         }
     }

@@ -184,7 +184,7 @@ namespace ChatApp
             }
             catch (ApiException ex)
             {
-                await new MessageDialog(ex.ErrorMessage()).ShowAsync();
+                await ex.ShowErrorDialog();
             }
         }
     }

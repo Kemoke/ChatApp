@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -22,10 +23,10 @@ namespace ChatApp
 {
     public sealed partial class AddChannelDialog : ContentDialog
     {
-        public Channel CreatedChannel;
-        public AddChannelDialog(ref Channel created)
+        private readonly Action<Channel> callback;
+        public AddChannelDialog(Action<Channel> callback)
         {
-            CreatedChannel = created;
+            this.callback = callback;
             this.InitializeComponent();
         }
 
@@ -37,7 +38,8 @@ namespace ChatApp
                 TeamId = HttpApi.SelectedTeam.Id,
                 UserId = HttpApi.LoggedInUser.Id
             };
-            CreatedChannel = await HttpApi.Channel.SaveAsync(request, HttpApi.AuthToken);
+            var channel = await HttpApi.Channel.SaveAsync(request, HttpApi.AuthToken);
+            callback(channel);
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
