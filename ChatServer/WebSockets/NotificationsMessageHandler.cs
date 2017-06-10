@@ -37,7 +37,15 @@ namespace ChatServer.WebSockets
                         invalidSockets.Add(sockId);
                         continue;
                     }
-                    await SendMessageAsync(sockId, message);
+                    try
+                    {
+                        await SendMessageAsync(sockId, message);
+                    }
+                    catch (WebSocketException e)
+                    {
+                        invalidSockets.Add(sockId);
+                        await WebSocketConnectionManager.RemoveSocketAsync(sockId);
+                    }
                 }
                 room.RemoveAll(s => invalidSockets.Any(t => t == s));
             }

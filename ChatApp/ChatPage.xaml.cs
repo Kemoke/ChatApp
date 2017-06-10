@@ -78,5 +78,12 @@ namespace ChatApp
                 viewModel.Channels.Add(channel);
             }
         }
+
+        private void Channel_RightClick(object sender, RightTappedRoutedEventArgs e)
+        {
+            var item = (Grid)sender;
+            var flyoutBase = FlyoutBase.GetAttachedFlyout(item);
+            flyoutBase.ShowAt(item);
+        }
     }
 }
