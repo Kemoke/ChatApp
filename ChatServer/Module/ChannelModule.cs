@@ -9,6 +9,7 @@ using System.Linq;
 using ChatServer.Response;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using ChatServer.WebSockets;
 using Newtonsoft.Json;
 
 namespace ChatServer.Module
@@ -16,11 +17,13 @@ namespace ChatServer.Module
     public class ChannelModule : SecureModule
     {
         private readonly ChatContext context;
+        private readonly NotificationsMessageHandler notificationHandler;
 
-        public ChannelModule(ChatContext context, GlobalConfig config) : base("/channel", config)
+        public ChannelModule(ChatContext context, GlobalConfig config, NotificationsMessageHandler notificationHandler) : base("/channel", config)
         {
             //ovako uzimaj config i context
             this.context = context;
+            this.notificationHandler = notificationHandler;
             //list channels
             Get("/", ListChannelAsync);
             //get channel
@@ -173,6 +176,8 @@ namespace ChatServer.Module
             context.Add(message);
             await context.SaveChangesAsync(cancellationToken);
             message.Sender = User;
+            var response = JsonConvert.SerializeObject(message);
+            await notificationHandler.SendToRoom(response, request.ChannelId);
             return Response.AsJson(message); 
         }
     }

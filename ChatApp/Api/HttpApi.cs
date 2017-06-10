@@ -20,7 +20,7 @@ namespace ChatApp.Api
         public static string AuthToken { get; set; }
         public static User LoggedInUser { get; set; }
         public static Team SelectedTeam { get; set; }
-        private const string ApiUrl = "http://srv.kemoke.net:2424/";
+        public const string ApiUrl = "http://srv.kemoke.net:2424/";
         public static IAuthApi Auth => RestService.For<IAuthApi>(ApiUrl+"auth");
         public static IChannelApi Channel => RestService.For<IChannelApi>(ApiUrl+"channel");
         public static IRoleApi Role => RestService.For<IRoleApi>(ApiUrl+"role");

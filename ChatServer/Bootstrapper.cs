@@ -1,5 +1,7 @@
 ﻿using System;
+using ChatServer.WebSockets;
 using JWT;
+using Microsoft.Extensions.DependencyInjection;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Configuration;
@@ -12,10 +14,12 @@ namespace ChatServer
     public class Bootstrapper : DefaultNancyBootstrapper
     {
         private readonly GlobalConfig config;
+        private readonly IServiceProvider provider;
 
-        public Bootstrapper(GlobalConfig config)
+        public Bootstrapper(GlobalConfig config, IServiceProvider provider)
         {
             this.config = config;
+            this.provider = provider;
         }
 
         public override void Configure(INancyEnvironment environment)
@@ -34,6 +38,7 @@ namespace ChatServer
                 PreserveReferencesHandling = PreserveReferencesHandling.None
             };
             container.Register(serializer);
+            container.Register((c, p)=> provider.GetService<NotificationsMessageHandler>());
             JsonWebToken.JsonSerializer = new JwtSerializer();
             container.Register(config);
             using (var context = new ChatContext(config))

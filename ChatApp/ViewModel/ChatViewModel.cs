@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
+using Newtonsoft.Json;
 using Refit;
 
 namespace ChatApp.ViewModel
@@ -19,6 +24,8 @@ namespace ChatApp.ViewModel
         private ObservableCollection<Message> messages;
         private Channel selectedChannel;
         private DispatcherTimer timer;
+        private MessageWebSocket messageSocket;
+        private int oldChannelId;
 
         public ObservableCollection<Channel> Channels
         {
@@ -57,7 +64,17 @@ namespace ChatApp.ViewModel
                     Messages.Add(message);
                 }
             };
+            oldChannelId = -1;
             LoadData().ConfigureAwait(false);
+        }
+
+        private void MessageSocket_MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
+        {
+            var msgReader = args.GetDataReader();
+            msgReader.UnicodeEncoding = UnicodeEncoding.Utf8;
+            var msg = msgReader.ReadString(msgReader.UnconsumedBufferLength);
+            var message = JsonConvert.DeserializeObject<Message>(msg);
+            Messages.Add(message);
         }
 
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -68,14 +85,28 @@ namespace ChatApp.ViewModel
                 {
                     ChannelId = SelectedChannel.Id
                 };
-                timer.Stop();
+                //timer.Stop();
+                using (var writer = new DataWriter(messageSocket.OutputStream))
+                {
+                    var message = JsonConvert.SerializeObject(new NotificationMessage
+                    {
+                        NewId = SelectedChannel.Id,
+                        OldId = oldChannelId,
+                        Token = HttpApi.AuthToken
+                    });
+                    writer.WriteString(message);
+                }
                 Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
-                timer.Start();
+                //timer.Start();
             }
         }
 
         private async Task LoadData()
         {
+            messageSocket = new MessageWebSocket();
+            messageSocket.Control.MessageType = SocketMessageType.Utf8;
+            messageSocket.MessageReceived += MessageSocket_MessageReceived;
+            await messageSocket.ConnectAsync(new Uri(HttpApi.ApiUrl));
             try
             {
                 var response =
