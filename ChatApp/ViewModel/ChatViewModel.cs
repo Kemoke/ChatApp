@@ -26,6 +26,7 @@ namespace ChatApp.ViewModel
         private DispatcherTimer timer;
         private MessageWebSocket messageSocket;
         private int oldChannelId;
+        private DataWriter writer;
 
         public ObservableCollection<Channel> Channels
         {
@@ -68,13 +69,14 @@ namespace ChatApp.ViewModel
             LoadData().ConfigureAwait(false);
         }
 
-        private void MessageSocket_MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
+        private async void MessageSocket_MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
         {
             var msgReader = args.GetDataReader();
             msgReader.UnicodeEncoding = UnicodeEncoding.Utf8;
             var msg = msgReader.ReadString(msgReader.UnconsumedBufferLength);
             var message = JsonConvert.DeserializeObject<Message>(msg);
-            Messages.Add(message);
+            await Application.Current.Resources.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => Messages.Add(message));
         }
 
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -86,16 +88,15 @@ namespace ChatApp.ViewModel
                     ChannelId = SelectedChannel.Id
                 };
                 //timer.Stop();
-                using (var writer = new DataWriter(messageSocket.OutputStream))
+                var message = JsonConvert.SerializeObject(new NotificationMessage
                 {
-                    var message = JsonConvert.SerializeObject(new NotificationMessage
-                    {
-                        NewId = SelectedChannel.Id,
-                        OldId = oldChannelId,
-                        Token = HttpApi.AuthToken
-                    });
-                    writer.WriteString(message);
-                }
+                    NewId = SelectedChannel.Id,
+                    OldId = oldChannelId,
+                    Token = HttpApi.AuthToken
+                });
+                writer.WriteString(message);
+                await writer.StoreAsync();
+                oldChannelId = SelectedChannel.Id;
                 Messages = new ObservableCollection<Message>(await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
                 //timer.Start();
             }
@@ -107,6 +108,7 @@ namespace ChatApp.ViewModel
             messageSocket.Control.MessageType = SocketMessageType.Utf8;
             messageSocket.MessageReceived += MessageSocket_MessageReceived;
             await messageSocket.ConnectAsync(new Uri("ws://srv.kemoke.net:2424/notifications"));
+            writer = new DataWriter(messageSocket.OutputStream);
             try
             {
                 var response =
