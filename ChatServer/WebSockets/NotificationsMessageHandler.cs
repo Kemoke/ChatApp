@@ -48,6 +48,7 @@ namespace ChatServer.WebSockets
             try
             {
                 var data = Encoding.UTF8.GetString(buffer);
+                data = data.Replace("}}", "}");
                 Console.Out.WriteLine(data);
                 var json = JsonConvert.DeserializeObject<NotificationMessage>(data);
                 JsonWebToken.DecodeToObject<User>(json.Token, config.AppKey);
