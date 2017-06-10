@@ -34,9 +34,16 @@ namespace ChatServer.WebSockets
         {
             sockets.TryRemove(id, out WebSocket socket);
 
-            await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
-                statusDescription: "Closed by the WebSocketManager",
-                cancellationToken: CancellationToken.None);
+            try
+            {
+                await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
+                    statusDescription: "Closed by the WebSocketManager",
+                    cancellationToken: CancellationToken.None);
+            }
+            catch (WebSocketException e)
+            {
+                Console.WriteLine("Invalid socket removed "+id);
+            }
         }
 
         private static string CreateConnectionId()
