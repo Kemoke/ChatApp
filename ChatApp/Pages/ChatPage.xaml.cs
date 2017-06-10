@@ -1,31 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using System.Windows.Input;
-using ChatApp.Model;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
-using Windows.System;
 using ChatApp.Api;
+using ChatApp.Dialog;
+using ChatApp.Model;
 using ChatApp.Request;
 using ChatApp.ViewModel;
 using Refit;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace ChatApp
+namespace ChatApp.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -36,7 +27,7 @@ namespace ChatApp
         public ChatPage()
         {
             InitializeComponent();
-            viewModel = (ChatViewModel) DataContext;
+            viewModel = (ChatViewModel)DataContext;
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
@@ -88,8 +79,7 @@ namespace ChatApp
 
         private async void NewChannelButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new AddChannelDialog(channel => viewModel.Channels.Add(channel));
-            var result = await dialog.ShowAsync();
+            await new AddChannelDialog(channel => viewModel.Channels.Add(channel)).ShowAsync();
         }
 
         private void Channel_RightClick(object sender, RightTappedRoutedEventArgs e)
@@ -99,9 +89,14 @@ namespace ChatApp
             flyoutBase.ShowAt(item);
         }
 
-        private void Menu_EditChannel(object sender, RoutedEventArgs e)
+        private async void Menu_EditChannel(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var item = (Channel)((FrameworkElement)e.OriginalSource).DataContext;
+            await new EditChannelDialog(item, channel =>
+            {
+                var index = viewModel.Channels.IndexOf(item);
+                viewModel.Channels[index] = channel;
+            }).ShowAsync();
         }
 
         private async void Menu_DeleteChannel(object sender, RoutedEventArgs e)
