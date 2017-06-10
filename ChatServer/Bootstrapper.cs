@@ -63,7 +63,11 @@ namespace ChatServer
                     .WithHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
                     .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type, Authorization");
             };
-            pipelines.OnError += (ctx, ex) => new Msg(ex.StackTrace);
+            pipelines.OnError += (ctx, ex) =>
+            {
+                var response = JsonConvert.SerializeObject(new Msg(ex.StackTrace));
+                return new TextResponse(HttpStatusCode.InternalServerError, response);
+            };
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
