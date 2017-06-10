@@ -18,6 +18,7 @@ namespace ChatServer.WebSockets
         public virtual async Task OnConnected(WebSocket socket)
         {
             WebSocketConnectionManager.AddSocket(socket);
+            Console.WriteLine(WebSocketConnectionManager.GetId(socket));
         }
 
         public virtual async Task OnDisconnected(WebSocket socket)

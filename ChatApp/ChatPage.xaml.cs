@@ -65,7 +65,7 @@ namespace ChatApp
             };
             ChatBox.Text = "";
             var response = await HttpApi.Channel.SendMessageAsync(request, HttpApi.AuthToken);
-            viewModel.Messages.Add(response);
+            //viewModel.Messages.Add(response);
         }
 
         private async void NewChannelButton_Click(object sender, RoutedEventArgs e)

@@ -106,7 +106,7 @@ namespace ChatApp.ViewModel
             messageSocket = new MessageWebSocket();
             messageSocket.Control.MessageType = SocketMessageType.Utf8;
             messageSocket.MessageReceived += MessageSocket_MessageReceived;
-            await messageSocket.ConnectAsync(new Uri(HttpApi.ApiUrl));
+            await messageSocket.ConnectAsync(new Uri("ws://srv.kemoke.net:2424/notifications"));
             try
             {
                 var response =

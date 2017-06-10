@@ -21,11 +21,14 @@ namespace ChatServer.WebSockets
 
         public async Task SendToRoom(string message, int id)
         {
+            Console.WriteLine(id);
             var exists = rooms.TryGetValue(id, out List<string> room);
+            Console.WriteLine(message);
             if (exists)
             {
                 foreach (var sockId in room)
                 {
+                    Console.WriteLine(sockId);
                     await SendMessageAsync(sockId, message);
                 }
             }
@@ -50,22 +53,28 @@ namespace ChatServer.WebSockets
                 var newId = json.NewId;
                 var oldId = json.OldId;
                 var exists = rooms.TryGetValue(oldId, out var oldRoom);
+                Console.WriteLine("Get old room");
                 if (exists)
                     oldRoom.Remove(WebSocketConnectionManager.GetId(socket));
+                Console.Out.WriteLine("After old room");
                 exists = rooms.TryGetValue(newId, out var room);
+                Console.Out.WriteLine("Get new room");
                 if (!exists)
                 {
+                    Console.Out.WriteLine("Room not existing");
                     room = new List<string>();
                     rooms[newId] = room;
                 }
+                Console.Out.WriteLine("Setup client");
                 if (!room.Exists(s => s == WebSocketConnectionManager.GetId(socket)))
                 {
+                    Console.Out.WriteLine("Client not in room");
                     room.Add(WebSocketConnectionManager.GetId(socket));
                 }
             }
-            catch
+            catch(Exception e)
             {
-                //
+                Console.WriteLine(e.Message);
             }
         }
     }
