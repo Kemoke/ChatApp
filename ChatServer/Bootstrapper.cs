@@ -22,6 +22,12 @@ namespace ChatServer
             this.provider = provider;
         }
 
+        public Bootstrapper(GlobalConfig config)
+        {
+            this.config = config;
+            this.provider = null;
+        }
+
         public override void Configure(INancyEnvironment environment)
         {
             base.Configure(environment);
@@ -38,7 +44,10 @@ namespace ChatServer
                 PreserveReferencesHandling = PreserveReferencesHandling.None
             };
             container.Register(serializer);
-            container.Register((c, p)=> provider.GetService<NotificationsMessageHandler>());
+            if (provider != null)
+            {
+                container.Register((c, p) => provider.GetService<NotificationsMessageHandler>());
+            }
             JsonWebToken.JsonSerializer = new JwtSerializer();
             container.Register(config);
             using (var context = new ChatContext(config))

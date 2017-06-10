@@ -14,12 +14,13 @@ namespace ChatServer
             app.MapWebSocketManager("/notifications", serviceProvider.GetService<NotificationsMessageHandler>());
             app.UseOwin(x => x.UseNancy(new NancyOptions
             {
-                Bootstrapper = new Bootstrapper(GlobalConfig.LoadConfig(), serviceProvider)
+                Bootstrapper = new Bootstrapper(serviceProvider.GetService<GlobalConfig>(), serviceProvider)
             }));
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(GlobalConfig.LoadConfig());
             services.AddWebSocketManager();
         }
     }
