@@ -58,28 +58,21 @@ namespace ChatServer.WebSockets
             {
                 var data = Encoding.UTF8.GetString(buffer);
                 data = data.Replace("}}", "}");
-                Console.Out.WriteLine(data);
                 var json = JsonConvert.DeserializeObject<NotificationMessage>(data);
                 JsonWebToken.DecodeToObject<User>(json.Token, config.AppKey);
                 var newId = json.NewId;
                 var oldId = json.OldId;
                 var exists = rooms.TryGetValue(oldId, out var oldRoom);
-                Console.WriteLine("Get old room");
                 if (exists)
                     oldRoom.Remove(WebSocketConnectionManager.GetId(socket));
-                Console.Out.WriteLine("After old room");
                 exists = rooms.TryGetValue(newId, out var room);
-                Console.Out.WriteLine("Get new room");
                 if (!exists)
                 {
-                    Console.Out.WriteLine("Room not existing");
                     room = new List<string>();
                     rooms[newId] = room;
                 }
-                Console.Out.WriteLine("Setup client");
                 if (!room.Exists(s => s == WebSocketConnectionManager.GetId(socket)))
                 {
-                    Console.Out.WriteLine("Client not in room");
                     room.Add(WebSocketConnectionManager.GetId(socket));
                 }
             }
