@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -75,7 +76,7 @@ namespace ChatApp.ViewModel
             msgReader.UnicodeEncoding = UnicodeEncoding.Utf8;
             var msg = msgReader.ReadString(msgReader.UnconsumedBufferLength);
             var message = JsonConvert.DeserializeObject<Message>(msg);
-            await Application.Current.Resources.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => Messages.Add(message));
         }
 

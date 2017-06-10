@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,14 +24,22 @@ namespace ChatServer.WebSockets
         {
             Console.WriteLine(id);
             var exists = rooms.TryGetValue(id, out List<string> room);
+            var invalidSockets = new List<string>();
             Console.WriteLine(message);
             if (exists)
             {
                 foreach (var sockId in room)
                 {
                     Console.WriteLine(sockId);
+                    var socket = WebSocketConnectionManager.GetSocketById(sockId);
+                    if (socket == null)
+                    {
+                        invalidSockets.Add(sockId);
+                        continue;
+                    }
                     await SendMessageAsync(sockId, message);
                 }
+                room.RemoveAll(s => invalidSockets.Any(t => t == s));
             }
         }
 
