@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
+using Refit;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,8 +38,15 @@ namespace ChatApp.Dialog
                 TeamId = HttpApi.SelectedTeam.Id,
                 UserId = HttpApi.LoggedInUser.Id
             };
-            var channel = await HttpApi.Channel.SaveAsync(request, HttpApi.AuthToken);
-            callback(channel);
+            try
+            {
+                var channel = await HttpApi.Channel.SaveAsync(request, HttpApi.AuthToken);
+                callback(channel);
+            }
+            catch (ApiException ex)
+            {
+                await ex.ShowErrorDialog();
+            }
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
