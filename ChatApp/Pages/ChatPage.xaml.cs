@@ -59,8 +59,6 @@ namespace ChatApp.Pages
 
         private async void Button_OnClick(object sender, RoutedEventArgs e)
         {
-
-            
                 var request = new SendMessageRequest
                 {
                     ChannelId = viewModel.SelectedChannel.Id,
