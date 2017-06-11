@@ -1,7 +1,10 @@
 ﻿using System;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
@@ -19,9 +22,10 @@ namespace ChatApp.Pages
         public LoginPage()
         {
             this.InitializeComponent();
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
         }
 
-        private async void button1_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
 
             if (Mail.Text == "" || Password.Password == "")
@@ -32,7 +36,10 @@ namespace ChatApp.Pages
             }
             try
             {
-                var response = await HttpApi.Auth.LoginAsync(new LoginRequest { Username = Mail.Text, Password = Password.Password });
+                ProgressIndicator.IsActive = true;
+                var response =
+                    await HttpApi.Auth.LoginAsync(
+                        new LoginRequest {Username = Mail.Text, Password = Password.Password});
                 HttpApi.AuthToken = response.Token;
                 HttpApi.LoggedInUser = response.User;
                 /*HttpApi.SelectedTeam = new Team
@@ -47,12 +54,25 @@ namespace ChatApp.Pages
             {
                 await ex.ShowErrorDialog();
             }
+            finally
+            {
+                ProgressIndicator.IsActive = false;
+            }
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
 
             Frame.Navigate(typeof(CreateAccountPage));
+        }
+
+        private void LoginPage_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                LoginButton_Click(sender, e);
+                e.Handled = true;
+            }
         }
     }
 }

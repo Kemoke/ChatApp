@@ -30,7 +30,7 @@ namespace ChatApp.Dialog
             InitializeComponent();
             this.target = target;
             this.callback = callback;
-            ChannelNameBox.Text = target.ChannelName;
+            ChannelNameBox.Loaded += (sender, args) => ChannelNameBox.Text = target.ChannelName;;
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

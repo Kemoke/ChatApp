@@ -11,6 +11,21 @@
     <Page.DataContext>
         <viewModel:ChatViewModel/>
     </Page.DataContext>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.Content>
+                <Grid Height="50" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <TextBlock FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" Text="{Binding TeamName}"/>
+                </Grid>
+            </CommandBar.Content>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="Add new channel" Click="NewChannelButton_Click"/>
+                <AppBarButton Icon="AddFriend" Label="Add a user"/>
+                <AppBarButton Icon="BlockContact" Label="Remove a user"/>
+                <AppBarButton Icon="ContactInfo" Label="User list"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="303*"/>
@@ -19,15 +34,15 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="72*"/>
-            <RowDefinition Height="595*"/>
             <RowDefinition Height="53*"/>
+            <RowDefinition Height="627*"/>
+            <RowDefinition Height="40*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding SelectedChannel.ChannelName}" FontSize="36" Grid.Row="0" Grid.Column="1"/>
-        <ListView ItemsSource="{Binding Channels}" Grid.Column="0"  
-                  Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
-                  SelectedItem="{Binding SelectedChannel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <TextBlock Text="{Binding SelectedChannel.ChannelName}" FontSize="32" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+        <ListView ItemsSource="{Binding Channels}" Grid.Column="0" BorderThickness="0,0,1,0"
+                  Grid.Row="0" Grid.RowSpan="3" SelectionMode="Single" BorderBrush="Gainsboro"
+                  SelectedItem="{Binding SelectedChannel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Template">
@@ -64,20 +79,21 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:Channel">
-                    <Grid RightTapped="Channel_RightClick">
+                    <Grid RightTapped="Channel_RightClick" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <FlyoutBase.AttachedFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Edit Channel" Click="Menu_EditChannel"/>
                                 <MenuFlyoutItem Text="Delete Channel" Click="Menu_DeleteChannel"/>
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
-                        <TextBlock Text="{Binding ChannelName}"/>
+                        <TextBlock Text="{Binding ChannelName}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         <ListView Name="MessageView" ItemsSource="{Binding Messages}" Grid.Row="1" Grid.Column="1"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
+                  BorderThickness="0,1,0,0" BorderBrush="Gainsboro"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2" SelectionChanged="MessageView_SelectionChanged">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Padding" Value="0"/>
@@ -87,7 +103,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
-                                <ListViewItemPresenter ContentMargin="0" Padding="0" />
+                                <ListViewItemPresenter ContentMargin="0" Padding="0" BorderThickness="0,0,0,1" BorderBrush="Gainsboro" />
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
@@ -95,8 +111,7 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:Message">
-                    <Border BorderThickness="1" Background="GhostWhite" BorderBrush="Gainsboro" 
-                    >
+                    <Border >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Width="60" TextAlignment="Center" 
                                        Text="{x:Bind Time}"/>
@@ -106,12 +121,9 @@
                     </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
         <ProgressRing Grid.Column="1" Grid.Row="1" Name="LoadingRing" Width="50" Height="50"
-                      Visibility="Collapsed" VerticalAlignment="Top" Margin="10,10,10,10"/>
-        <Button Click="NewChannelButton_Click" Grid.Row="2" Grid.Column="0"
-                Content="Add new channel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                      Visibility="Collapsed" VerticalAlignment="Top" HorizontalAlignment="Center"/>
         <TextBox Name="ChatBox" Grid.Row="2" Grid.Column="1" 
                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                  KeyDown="ChatBox_OnKeyDown"/>

@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,9 +36,10 @@ namespace ChatApp.Pages
         {
             this.InitializeComponent();
             viewModel = (HomeViewModel)DataContext;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
         }
 
-       
+
 
         private void Team_RightClick(object sender, RightTappedRoutedEventArgs e)
         {

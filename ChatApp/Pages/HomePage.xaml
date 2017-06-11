@@ -12,7 +12,14 @@
     <Page.DataContext>
         <viewModel:HomeViewModel/>
     </Page.DataContext>
-    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="Add new team"/>
+                <AppBarButton Icon="Setting" Label="User Settings"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="303*"/>

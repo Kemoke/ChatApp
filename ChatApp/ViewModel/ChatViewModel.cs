@@ -41,6 +41,8 @@ namespace ChatApp.ViewModel
             set => SetProperty(out selectedChannel, value);
         }
 
+        public string TeamName => HttpApi.SelectedTeam.Name;
+
         public ChatViewModel()
         {
             PropertyChanged += OnPropertyChanged;
@@ -62,6 +64,8 @@ namespace ChatApp.ViewModel
         {
             if (args.PropertyName == "SelectedChannel")
             {
+                if (SelectedChannel == null)
+                    return;
                 var request = new GetMessagesRequest
                 {
                     ChannelId = SelectedChannel.Id

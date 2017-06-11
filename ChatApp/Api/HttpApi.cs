@@ -28,11 +28,24 @@ namespace ChatApp.Api
         public static User LoggedInUser { get; set; }
         public static Team SelectedTeam { get; set; }
         public const string ApiUrl = "http://srv.kemoke.net:2424/";
-        public static IAuthApi Auth => RestService.For<IAuthApi>(ApiUrl+"auth");
-        public static IChannelApi Channel => RestService.For<IChannelApi>(ApiUrl+"channel");
-        public static IRoleApi Role => RestService.For<IRoleApi>(ApiUrl+"role");
-        public static ITeamApi Team => RestService.For<ITeamApi>(ApiUrl+"team");
-        public static IUserApi User => RestService.For<IUserApi>(ApiUrl+"user");
+        public static IAuthApi Auth { get; private set; }
+
+        public static IChannelApi Channel { get; private set; }
+
+        public static IRoleApi Role { get; private set; }
+
+        public static ITeamApi Team { get; private set; }
+
+        public static IUserApi User { get; private set; }
+
+        public static void Init()
+        {
+            Auth = RestService.For<IAuthApi>(ApiUrl + "auth");
+            Channel = RestService.For<IChannelApi>(ApiUrl + "channel");
+            Role = RestService.For<IRoleApi>(ApiUrl + "role");
+            Team = RestService.For<ITeamApi>(ApiUrl + "team");
+            User = RestService.For<IUserApi>(ApiUrl + "user");
+        }
     }
 
     public interface IAuthApi

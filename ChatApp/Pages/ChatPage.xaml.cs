@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,6 +36,7 @@ namespace ChatApp.Pages
                 var scrollViewer = GetScrollViewer(MessageView);
                 scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
             };
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
         }
 
         private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -131,11 +133,26 @@ namespace ChatApp.Pages
         private async void Menu_EditChannel(object sender, RoutedEventArgs e)
         {
             var item = (Channel)((FrameworkElement)e.OriginalSource).DataContext;
-            await new EditChannelDialog(item, channel =>
+            try
             {
-                var index = viewModel.Channels.IndexOf(item);
-                viewModel.Channels[index] = channel;
-            }).ShowAsync();
+                await new EditChannelDialog(item, channel =>
+                {
+                    var index = viewModel.Channels.IndexOf(item);
+                    if (viewModel.SelectedChannel == viewModel.Channels[index])
+                    {
+                        viewModel.Channels[index] = channel;
+                        viewModel.SelectedChannel = viewModel.Channels[index];
+                    }
+                    else
+                    {
+                        viewModel.Channels[index] = channel;
+                    }
+                }).ShowAsync();
+            }
+            catch
+            {
+                //
+            }
         }
 
         private async void Menu_DeleteChannel(object sender, RoutedEventArgs e)
@@ -172,6 +189,11 @@ namespace ChatApp.Pages
                 return result;
             }
             return null;
+        }
+
+        private void MessageView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

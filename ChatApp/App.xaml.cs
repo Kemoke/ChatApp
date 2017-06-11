@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ChatApp.Api;
 using ChatApp.Pages;
 
 namespace ChatApp
@@ -40,6 +42,8 @@ namespace ChatApp
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            HttpApi.Init();
+            HttpApi.User.GetSelfAsync("").ConfigureAwait(false);
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -55,7 +59,7 @@ namespace ChatApp
                 {
                     //TODO: Load state from previously suspended application
                 }
-
+                SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
@@ -72,6 +76,15 @@ namespace ChatApp
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+        }
+
+        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+
+            var rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null || !rootFrame.CanGoBack || e.Handled) return;
+            e.Handled = true;
+            rootFrame.GoBack();
         }
 
         /// <summary>

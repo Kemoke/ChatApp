@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,6 +24,7 @@ namespace ChatApp.Pages
             GenderBox.Items?.Add("Male");
             GenderBox.Items?.Add("Female");
             CountryBox.ItemsSource = Countries;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
         }
 
         private static readonly List<string> Countries = new List<string>
