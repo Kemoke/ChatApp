@@ -59,13 +59,16 @@ namespace ChatApp.Pages
 
         private async void Button_OnClick(object sender, RoutedEventArgs e)
         {
-            var request = new SendMessageRequest
-            {
-                ChannelId = viewModel.SelectedChannel.Id,
-                MessageText = ChatBox.Text,
-                SenderId = HttpApi.LoggedInUser.Id,
-                TargetId = HttpApi.LoggedInUser.Id
-            };
+
+            
+                var request = new SendMessageRequest
+                {
+                    ChannelId = viewModel.SelectedChannel.Id,
+                    MessageText = ChatBox.Text,
+                    SenderId = HttpApi.LoggedInUser.Id,
+                    TargetId = HttpApi.LoggedInUser.Id
+                };
+            
             ChatBox.Text = "";
             try
             {
