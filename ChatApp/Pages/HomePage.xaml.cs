@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using ChatApp.Api;
+using ChatApp.Dialog;
 using ChatApp.Model;
 using ChatApp.ViewModel;
 
@@ -34,19 +35,27 @@ namespace ChatApp.Pages
         {
             this.InitializeComponent();
             viewModel = (HomeViewModel)DataContext;
-            //viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
        
 
         private void Team_RightClick(object sender, RightTappedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var item = (Grid)sender;
+            var flyoutBase = FlyoutBase.GetAttachedFlyout(item);
+            flyoutBase.ShowAt(item);
         }
+        
 
-        private void Menu_EditTeam(object sender, RoutedEventArgs e)
+        private async void Menu_EditTeam(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var item = (Team)((FrameworkElement)e.OriginalSource).DataContext;
+
+            await new EditTeamDialog(item, team =>
+            {
+                var index = viewModel.Teams.IndexOf(item);
+                viewModel.Teams[index] = team;
+            }).ShowAsync();
         }
 
         private void Menu_DeleteTeam(object sender, RoutedEventArgs e)

@@ -103,6 +103,9 @@
     <Compile Include="Dialog\EditChannelDialog.xaml.cs">
       <DependentUpon>EditChannelDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\EditTeamDialog.xaml.cs">
+      <DependentUpon>EditTeamDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Channel.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\Message.cs" />
@@ -170,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\EditChannelDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\EditTeamDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
