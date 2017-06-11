@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using ChatApp.Api;
 using ChatApp.Dialog;
 using ChatApp.Model;
@@ -29,6 +30,43 @@ namespace ChatApp.Pages
             InitializeComponent();
             viewModel = (ChatViewModel)DataContext;
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            MessageView.Loaded += (s, a) =>
+            {
+                var scrollViewer = GetScrollViewer(MessageView);
+                scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+            };
+        }
+
+        private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            var scrollViewer = (ScrollViewer) sender;
+            if (scrollViewer.VerticalOffset < 1)
+            {
+                LoadingRing.IsActive = true;
+                LoadingRing.Visibility = Visibility.Visible;
+                var skip = viewModel.Messages.Count;
+                try
+                {
+                    var request = new GetMessagesRequest
+                    {
+                        ChannelId = viewModel.SelectedChannel.Id
+                    };
+                    var result = await HttpApi.Channel.GetMessagesAsync(request, skip, 50, HttpApi.AuthToken);
+                    for (var i = result.Count - 1; i >= 0; i--)
+                    {
+                        viewModel.Messages.Insert(0, result[i]);
+                    }
+                }
+                catch (ApiException ex)
+                {
+                    await ex.ShowErrorDialog();
+                }
+                finally
+                {
+                    LoadingRing.IsActive = false;
+                    LoadingRing.Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -112,6 +150,28 @@ namespace ChatApp.Pages
             {
                 await ex.ShowErrorDialog();
             }
+        }
+
+        private static ScrollViewer GetScrollViewer(DependencyObject o)
+        {
+            // Return the DependencyObject if it is a ScrollViewer
+            if (o is ScrollViewer viewer)
+            {
+                return viewer;
+            }
+
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(o); i++)
+            {
+                var child = VisualTreeHelper.GetChild(o, i);
+
+                var result = GetScrollViewer(child);
+                if (result == null)
+                {
+                    continue;
+                }
+                return result;
+            }
+            return null;
         }
     }
 }

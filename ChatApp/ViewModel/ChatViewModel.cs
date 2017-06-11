@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
-using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
@@ -24,7 +19,6 @@ namespace ChatApp.ViewModel
         private ObservableCollection<Channel> channels;
         private ObservableCollection<Message> messages;
         private Channel selectedChannel;
-        private DispatcherTimer timer;
         private MessageWebSocket messageSocket;
         private int oldChannelId;
         private DataWriter writer;
@@ -50,22 +44,6 @@ namespace ChatApp.ViewModel
         public ChatViewModel()
         {
             PropertyChanged += OnPropertyChanged;
-            timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 5)};
-            timer.Tick += async (sender, o) =>
-            {
-                var last = Messages.LastOrDefault();
-                var lastId = last is null ? 0 : last.Id;
-                var request = new CheckNewMessagesRequest
-                {
-                    ChannelId = SelectedChannel.Id,
-                    MessageId = lastId
-                };
-                var response = await HttpApi.Channel.GetNewMessagesAsync(request, HttpApi.AuthToken);
-                foreach (var message in response)
-                {
-                    Messages.Add(message);
-                }
-            };
             oldChannelId = -1;
             LoadData().ConfigureAwait(false);
         }
