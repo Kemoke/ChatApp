@@ -101,7 +101,7 @@ namespace ChatApp.Api
         Task<Team> GetAsync(int id, [Header("Authorization")] string token);
 
         [Post("/")]
-        Task<Team> SaveAsync([Body] Team body, [Header("Authorization")] string token);
+        Task<Team> SaveAsync([Body] CreateTeamRequest body, [Header("Authorization")] string token);
 
         [Put("/{id}")]
         Task<Team> EditAsync(int id, [Body] Team body, [Header("Authorization")] string token);
