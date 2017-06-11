@@ -14,12 +14,17 @@
     </Page.DataContext>
     <Page.BottomAppBar>
         <CommandBar>
+            <CommandBar.Content>
+                <Grid Height="50" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <TextBlock FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </Grid>
+            </CommandBar.Content>
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Add" Label="Add new team"/>
-                <AppBarButton Icon="Setting" Label="User Settings"/>
+                <AppBarButton Icon="Add" Label="Add new team" Click="NewTeamButton_Click"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="303*"/>
@@ -33,7 +38,7 @@
             <RowDefinition Height="53*"/>
         </Grid.RowDefinitions>
 
-
+        
         <ListView ItemsSource="{Binding Teams}" Grid.Column="0"  
                   Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
                   SelectionChanged="List_item_click"

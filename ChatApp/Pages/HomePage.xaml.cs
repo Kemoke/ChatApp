@@ -19,6 +19,7 @@ using ChatApp.Api;
 using ChatApp.Dialog;
 using ChatApp.Model;
 using ChatApp.ViewModel;
+using Refit;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -60,15 +61,29 @@ namespace ChatApp.Pages
             }).ShowAsync();
         }
 
-        private void Menu_DeleteTeam(object sender, RoutedEventArgs e)
+        private async void Menu_DeleteTeam(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var item = (Team)((FrameworkElement)e.OriginalSource).DataContext;
+            try
+            {
+                await HttpApi.Team.DeleteAsync(item.Id, HttpApi.AuthToken);
+                viewModel.Teams.Remove(item);
+            }
+            catch (ApiException ex)
+            {
+                await ex.ShowErrorDialog();
+            }
         }
 
         private void List_item_click(object sender, SelectionChangedEventArgs e)
         {
             HttpApi.SelectedTeam = viewModel.SelectedTeam;
             Frame.Navigate(typeof(ChatPage));
+        }
+
+        private async void NewTeamButton_Click(object sender, RoutedEventArgs e)
+        {
+            await new AddTeamDialog(team => viewModel.Teams.Add(team)).ShowAsync();
         }
     }
 }

@@ -118,6 +118,9 @@ namespace ChatApp.Api
 
         [Put("/{id}")]
         Task<Team> EditAsync(int id, [Body] Team body, [Header("Authorization")] string token);
+        
+        [Delete("/{id}")]
+        Task<string> DeleteAsync(int id, [Header("Authorization")] string token);
     }
 
     public interface IUserApi
