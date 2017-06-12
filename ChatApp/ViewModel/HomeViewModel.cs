@@ -49,6 +49,8 @@ namespace ChatApp.ViewModel
             set => SetProperty(out selectedTeam, value);
         }
 
+        public User LoggedInUser => HttpApi.LoggedInUser;
+
         private async Task LoadData()
         {
             try
