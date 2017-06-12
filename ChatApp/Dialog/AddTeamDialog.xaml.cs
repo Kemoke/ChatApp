@@ -40,16 +40,18 @@ namespace ChatApp.Dialog
                 Name = TeamNameBox.Text,
                 UserId = HttpApi.LoggedInUser.Id
             };
+
             try
             {
                 var team = await HttpApi.Team.SaveAsync(request, HttpApi.AuthToken);
-                var role = await HttpApi.Role.AssignRoleAsync(new AssignRoleRequest
+                await HttpApi.Role.AssignRoleAsync(new AssignRoleRequest
                 {
                     RoleId = 1,
                     TeamId = team.Id,
                     UserId = HttpApi.LoggedInUser.Id
                 }, HttpApi.AuthToken);
-                callback(team);
+                var team1 = await HttpApi.Team.GetAsync(team.Id, HttpApi.AuthToken);
+                callback(team1);
             }
             catch (ApiException ex)
             {
