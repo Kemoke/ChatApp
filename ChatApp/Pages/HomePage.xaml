@@ -8,6 +8,135 @@
     xmlns:model="using:ChatApp.Model"
     xmlns:viewModel="using:ChatApp.ViewModel"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="DatePickerStyle1" TargetType="DatePicker">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="MinWidth" Value="296"/>
+            <Setter Property="MaxWidth" Value="456"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="Foreground" Value="{ThemeResource DatePickerButtonForeground}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DatePicker">
+                        <StackPanel x:Name="LayoutRoot" Margin="{TemplateBinding Padding}">
+                            <StackPanel.Resources>
+                                <Style x:Key="DatePickerFlyoutButtonStyle" TargetType="Button">
+                                    <Setter Property="UseSystemFocusVisuals" Value="False"/>
+                                    <Setter Property="ElementSoundMode" Value="FocusOnly"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid Background="{TemplateBinding Background}">
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup x:Name="CommonStates">
+                                                            <VisualState x:Name="Normal"/>
+                                                            <VisualState x:Name="PointerOver">
+                                                                <Storyboard>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBorderBrushPointerOver}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBackgroundPointerOver}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonForegroundPointerOver}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </VisualState>
+                                                            <VisualState x:Name="Pressed">
+                                                                <Storyboard>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBackgroundPressed}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBorderBrushPressed}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonForegroundPressed}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </VisualState>
+                                                            <VisualState x:Name="Disabled">
+                                                                <Storyboard>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBackgroundDisabled}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBorderBrushDisabled}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonForegroundDisabled}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </VisualState>
+                                                        </VisualStateGroup>
+                                                        <VisualStateGroup x:Name="FocusStates">
+                                                            <VisualState x:Name="Focused">
+                                                                <Storyboard>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonBackgroundFocused}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerButtonForegroundFocused}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </VisualState>
+                                                            <VisualState x:Name="Unfocused"/>
+                                                            <VisualState x:Name="PointerFocused"/>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                    <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{ThemeResource DatePickerButtonBorderBrush}" BorderThickness="2" Background="{ThemeResource DatePickerButtonBackground}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </StackPanel.Resources>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="HeaderContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerHeaderForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="FirstPickerSpacing">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerSpacerFillDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="SecondPickerSpacing">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource DatePickerSpacerFillDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="HeaderContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource DatePickerHeaderForeground}" Margin="0,0,0,8" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <Button x:Name="FlyoutButton" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsEnabled="{TemplateBinding IsEnabled}" Style="{StaticResource DatePickerFlyoutButtonStyle}">
+                                <Grid x:Name="FlyoutButtonContentGrid" HorizontalAlignment="Left" Width="168" MaxWidth="100">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition x:Name="DayColumn" Width="25"/>
+                                        <ColumnDefinition x:Name="FirstSpacerColumn" Width="5"/>
+                                        <ColumnDefinition x:Name="MonthColumn" Width="25"/>
+                                        <ColumnDefinition x:Name="SecondSpacerColumn" Width="5"/>
+                                        <ColumnDefinition x:Name="YearColumn" Width="25"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="DayTextBlock" AutomationProperties.AccessibilityView="Raw" FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" Padding="0,3,0,5" TextAlignment="Center" Text="Day"/>
+                                    <TextBlock x:Name="MonthTextBlock" AutomationProperties.AccessibilityView="Raw" FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" Padding="10,3,0,5" TextAlignment="Left" Text="Month"/>
+                                    <TextBlock x:Name="YearTextBlock" AutomationProperties.AccessibilityView="Raw" FontWeight="{TemplateBinding FontWeight}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" Padding="0,3,0,5" TextAlignment="Center" Text="Year"/>
+                                    <Rectangle x:Name="FirstPickerSpacing" Grid.Column="1" Fill="{ThemeResource DatePickerSpacerFill}" HorizontalAlignment="Center" Width="2"/>
+                                    <Rectangle x:Name="SecondPickerSpacing" Grid.Column="3" Fill="{ThemeResource DatePickerSpacerFill}" HorizontalAlignment="Center" Width="2"/>
+                                </Grid>
+                            </Button>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
 
     <Page.DataContext>
         <viewModel:HomeViewModel/>
@@ -24,12 +153,12 @@
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
-    
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="303*"/>
             <ColumnDefinition Width="957*"/>
-            
+
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -38,40 +167,62 @@
             <RowDefinition Height="53*"/>
         </Grid.RowDefinitions>
 
-        
+        <Grid Grid.Column="1" Margin="0.333,0,0,10" Grid.RowSpan="2">
+
+            <Grid.RowDefinitions >
+                <RowDefinition Height="202*"/>
+                <RowDefinition Height="51*"/>
+                <RowDefinition Height="210*"/>
+                <RowDefinition Height="40*"/>
+                <RowDefinition Height="40*"/>
+                <RowDefinition Height="40*"/>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Row="0" Name ="UserImage" Margin="37,34,36,0" Height="158" VerticalAlignment="Top"/>
+            <TextBox Grid.Row="1" TextAlignment="Center" Name="Username" Margin="67,9,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
+            <DatePicker x:Name="DatePicker" Height="34" Grid.Row="2" Margin="0,81,-23,95" HorizontalAlignment="Stretch" Width="100" Style="{StaticResource DatePickerStyle1}"/>
+            <TextBox Grid.Row="2" TextAlignment="Center" Name="FirstName" Margin="67,10,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
+            <TextBox Grid.Row="3" TextAlignment="Center" Name="email" Margin="188,10,0,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
+            <TextBox Grid.Row="3" TextAlignment="Center" Name="company" Margin="0,8,178,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
+            <TextBox Grid.Row="4" TextAlignment="Center" Name="country" Margin="188,8,0,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
+            <TextBox Grid.Row="4" TextAlignment="Center" Name="gender" Margin="0,8,178,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
+            <TextBox Grid.Row="5" TextAlignment="Center" Name="LastName" Margin="0,10,178,-2" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
+            <Button Grid.Row="5" Name="Edit_UserInfo" Margin="188,10,0,-2" Height="32"  Content="Edit Info" HorizontalAlignment="Left" Width="75" Click="Edit_info"/>
+        </Grid>
+
         <ListView ItemsSource="{Binding Teams}" Grid.Column="0"  
-                  Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
-                  SelectionChanged="List_item_click"
-                  SelectedItem="{Binding SelectedTeam, Mode=TwoWay}">
+            Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
+            SelectionChanged="List_item_click"
+            SelectedItem="{Binding SelectedTeam, Mode=TwoWay}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
-                                <ListViewItemPresenter
-                                    ContentTransitions="{TemplateBinding ContentTransitions}"
-                                    SelectionCheckMarkVisualEnabled="True"
-                                    CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                    CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                    DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
-                                    DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
-                                    FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
-                                    FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
-                                    PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                    PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                    PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                    SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-                                    SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                    SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
-                                    PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                    SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
-                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                    ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    ContentMargin="{TemplateBinding Padding}"
-                                    CheckMode="Inline"/>
+                                <ListViewItemPresenter   
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                SelectionCheckMarkVisualEnabled="True"
+                                CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+                                PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
+                                SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                                PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                                SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
+                                DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                ContentMargin="{TemplateBinding Padding}"
+                                CheckMode="Inline"/>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
@@ -79,7 +230,7 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:Team">
-                   <Grid RightTapped="Team_RightClick">
+                    <Grid RightTapped="Team_RightClick" >
                         <FlyoutBase.AttachedFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="Edit Team" Click="Menu_EditTeam"/>
