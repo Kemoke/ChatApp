@@ -22,10 +22,12 @@
                 <AppBarButton Icon="Add" Label="Add new channel" Click="NewChannelButton_Click"/>
                 <AppBarButton Icon="AddFriend" Label="Add a user"/>
                 <AppBarButton Icon="BlockContact" Label="Remove a user"/>
-                <AppBarButton Icon="ContactInfo" Label="User list"/>
+                <AppBarButton Icon="ContactInfo" Label="User list" Click="UserListButton_Click"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
+    
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="303*"/>

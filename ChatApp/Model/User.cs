@@ -72,5 +72,10 @@ namespace ChatApp.Model
         }
 
         public ObservableCollection<Team> Teams { get; set; }
+
+        public override string ToString()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
     }
 }

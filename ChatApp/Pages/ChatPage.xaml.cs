@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using ChatApp.Model;
 using ChatApp.Request;
 using ChatApp.ViewModel;
 using Refit;
+using User = ChatApp.Model.User;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -194,6 +196,13 @@ namespace ChatApp.Pages
         private void MessageView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private async void UserListButton_Click(object sender, RoutedEventArgs e)
+        {
+            var item = HttpApi.SelectedTeam.Users.ToList();
+
+            await new UserListDialog(item).ShowAsync();
         }
     }
 }
