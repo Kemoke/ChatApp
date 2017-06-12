@@ -167,27 +167,33 @@
             <RowDefinition Height="53*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1" Margin="0.333,0,0,10" Grid.RowSpan="2">
+        <Grid Grid.Column="1" Margin="0,0,0,9.667" Grid.RowSpan="2">
 
             <Grid.RowDefinitions >
-                <RowDefinition Height="202*"/>
-                <RowDefinition Height="51*"/>
-                <RowDefinition Height="210*"/>
-                <RowDefinition Height="40*"/>
-                <RowDefinition Height="40*"/>
-                <RowDefinition Height="40*"/>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Name ="UserImage" Margin="37,34,36,0" Height="158" VerticalAlignment="Top"/>
-            <TextBox Grid.Row="1" TextAlignment="Center" Name="Username" Margin="67,9,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
-            <DatePicker x:Name="DatePicker" Height="34" Grid.Row="2" Margin="0,81,-23,95" HorizontalAlignment="Stretch" Width="100" Style="{StaticResource DatePickerStyle1}"/>
-            <TextBox Grid.Row="2" TextAlignment="Center" Name="FirstName" Margin="67,10,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
-            <TextBox Grid.Row="3" TextAlignment="Center" Name="email" Margin="188,10,0,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
-            <TextBox Grid.Row="3" TextAlignment="Center" Name="company" Margin="0,8,178,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
-            <TextBox Grid.Row="4" TextAlignment="Center" Name="country" Margin="188,8,0,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
-            <TextBox Grid.Row="4" TextAlignment="Center" Name="gender" Margin="0,8,178,0" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
-            <TextBox Grid.Row="5" TextAlignment="Center" Name="LastName" Margin="0,10,178,-2" Height="32" VerticalAlignment="Top" IsEnabled="False"/>
-            <Button Grid.Row="5" Name="Edit_UserInfo" Margin="188,10,0,-2" Height="32"  Content="Edit Info" HorizontalAlignment="Left" Width="75" Click="Edit_info"/>
+            <Image Grid.Row="0" Name ="UserImage" Margin="188,7,223,0" Height="55" VerticalAlignment="Top"/>
+            <TextBox TextAlignment="Center" Name="Username" Margin="67,0,66,0" Height="29" VerticalAlignment="Top" IsEnabled="False" Grid.Row="1"/>
+            <TextBox Grid.Row="2" TextAlignment="Center" Name="FirstName" Margin="67,3,66,0" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
+            <TextBox Grid.Row="3" TextAlignment="Center" Name="LastName" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
+            <ComboBox Grid.Row="6"  Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353"/>
+            <DatePicker x:Name="DatePicker" Height="34" Grid.Row="4" Margin="67,27.333,66,25" HorizontalAlignment="Stretch" IsEnabled="False" Style="{StaticResource DatePickerStyle1}" Grid.RowSpan="3"/>
+            <TextBox Grid.Row="4" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
+            <TextBox Grid.Row="7" TextAlignment="Center" Name="company" Margin="67,3.,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
+            <ComboBox Grid.Row="8"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353"/>
+
+
+
+            <Button Grid.Row="8" Name="Edit_UserInfo" Margin="216,30,0,-30" Height="32"  Content="Edit Info" HorizontalAlignment="Left" Width="75" Click="Edit_info" RenderTransformOrigin="0.813,0.531"/>
         </Grid>
 
         <ListView ItemsSource="{Binding Teams}" Grid.Column="0"  

@@ -32,6 +32,7 @@ namespace ChatApp.Pages
             {
                 var messageDialog = new MessageDialog("please do not leave blanks");
                 await messageDialog.ShowAsync();
+                
                 return;
             }
             try
@@ -39,7 +40,7 @@ namespace ChatApp.Pages
                 ProgressIndicator.IsActive = true;
                 var response =
                     await HttpApi.Auth.LoginAsync(
-                        new LoginRequest {Username = Mail.Text, Password = Password.Password});
+                        new LoginRequest { Username = Mail.Text, Password = Password.Password });
                 HttpApi.AuthToken = response.Token;
                 HttpApi.LoggedInUser = response.User;
                 /*HttpApi.SelectedTeam = new Team
@@ -53,6 +54,8 @@ namespace ChatApp.Pages
             catch (ApiException ex)
             {
                 await ex.ShowErrorDialog();
+                Mail.Text = "";
+                Password.Password = ""; 
             }
             finally
             {
