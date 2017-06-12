@@ -181,12 +181,12 @@
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Name ="UserImage" Margin="188,7,223,0" Height="55" VerticalAlignment="Top"/>
+            <Image Grid.Row="0" Name ="UserImage" Margin="188,7,223,0" Height="75" VerticalAlignment="Top"/>
             <TextBox TextAlignment="Center" Name="Username" Margin="67,0,66,0" Height="29" VerticalAlignment="Top" IsEnabled="False" Grid.Row="1"/>
             <TextBox Grid.Row="2" TextAlignment="Center" Name="FirstName" Margin="67,3,66,0" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
             <TextBox Grid.Row="3" TextAlignment="Center" Name="LastName" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
             <ComboBox Grid.Row="6"  Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353"/>
-            <DatePicker x:Name="DatePicker" Height="34" Grid.Row="4" Margin="67,27.333,66,25" HorizontalAlignment="Stretch" IsEnabled="False" Style="{StaticResource DatePickerStyle1}" Grid.RowSpan="3"/>
+            <DatePicker x:Name="DatePicker" Height="34" Grid.Row="4" Margin="67,27.333,66,25" HorizontalAlignment="Stretch" IsEnabled="False"  Grid.RowSpan="3"/>
             <TextBox Grid.Row="4" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
             <TextBox Grid.Row="7" TextAlignment="Center" Name="company" Margin="67,3.,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
             <ComboBox Grid.Row="8"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353"/>
