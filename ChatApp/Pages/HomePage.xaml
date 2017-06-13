@@ -150,6 +150,7 @@
             </CommandBar.Content>
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Add" Label="Add new team" Click="NewTeamButton_Click"/>
+                <AppBarButton Icon="ContactInfo" Label="User List" Click="UserListButton_Click"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

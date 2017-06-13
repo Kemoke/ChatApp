@@ -1,0 +1,124 @@
+﻿<Page
+    x:Class="ChatApp.Pages.UserInfoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ChatApp.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:ChatApp.Model"
+    xmlns:viewModel="using:ChatApp.ViewModel"
+    mc:Ignorable="d">
+    
+    <Page.DataContext>
+        <viewModel:UserInfoViewModel/>
+    </Page.DataContext>
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="303*"/>
+            <ColumnDefinition Width="957*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72*"/>
+            <RowDefinition Height="595*"/>
+            <RowDefinition Height="53*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="1" Margin="0,0,0,9.667" Grid.RowSpan="2">
+
+            <Grid.RowDefinitions >
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="140*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Row="0" Name ="UserImage" Margin="188,7,223,0" Height="75" VerticalAlignment="Top"/>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions >
+                    <ColumnDefinition Width="257*"/>
+                    <ColumnDefinition Width="700*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="UserName:" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox TextAlignment="Center" Name="Username" Margin="67,0,66,0" Height="29" VerticalAlignment="Top" IsEnabled="False" Grid.Row="0" Grid.Column="1"/>
+
+                <TextBlock Text="First name:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="1" TextAlignment="Center" Name="FirstName" Margin="67,3,66,0" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
+
+                <TextBlock Text="Last name:" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="1" TextAlignment="Center" Name="LastName" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1"/>
+
+                <TextBlock Text="Gender:" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1" Width="353"/>
+
+                <TextBlock Text="Date of birth:" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox x:Name="DatePicker" Grid.Column ="1" Grid.Row="4" Margin="67,3,66,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Width="353" />
+
+                <TextBlock Text="E-mail:" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="5" Grid.Column="1" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
+
+                <TextBlock Text="Company:" Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="6" Grid.Column="1" TextAlignment="Center" Name="company" Margin="67,3.,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
+
+                <TextBlock Text="Country:" Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="7" Grid.Column="1"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"  Width="353" HorizontalContentAlignment="Center"/>
+
+            </Grid>
+
+        </Grid>
+
+        <ListView ItemsSource="{Binding Users}" Grid.Column="0"  
+                  Grid.Row="0" Grid.RowSpan="2" SelectionMode="Single"
+                  SelectionChanged="List_item_click"
+                  SelectedItem="{Binding SelectedUser, Mode=TwoWay}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter   
+                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                    SelectionCheckMarkVisualEnabled="True"
+                                    CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                    CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                    DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                    DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                    FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                    FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                    PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                    PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+                                    PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                    SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
+                                    SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                    SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                                    PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                                    SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
+                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                    ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    ContentMargin="{TemplateBinding Padding}"
+                                    CheckMode="Inline"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            
+        </ListView>
+
+    </Grid>
+</Page>

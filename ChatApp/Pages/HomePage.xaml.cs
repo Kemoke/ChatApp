@@ -34,28 +34,6 @@ namespace ChatApp.Pages
     /// </summary>
     public sealed partial class HomePage : Page
     {
-        private readonly HomeViewModel viewModel;
-
-        public HomePage()
-        {
-            this.InitializeComponent();
-            gender.Items.Add("Female");
-            gender.Items.Add("Male");
-            country.ItemsSource = Countries; 
-            viewModel = (HomeViewModel)DataContext;
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            UserImage.Source =
-                new BitmapImage(new Uri("https://scontent.flju2-1.fna.fbcdn.net/v/t1.0-9/11391338_1064066726954436_6934638157053324450_n.jpg?oh=fb94393d33f67b53c582670081a956c4&oe=59A401EC", UriKind.RelativeOrAbsolute));
-            Username.Text = HttpApi.LoggedInUser.Username;
-            email.Text = HttpApi.LoggedInUser.Email;
-            company.Text = HttpApi.LoggedInUser.Company;
-            FirstName.Text = HttpApi.LoggedInUser.FirstName;
-            LastName.Text = HttpApi.LoggedInUser.LastName;
-            country.SelectedItem = HttpApi.LoggedInUser.Country;
-            DatePicker.Date = HttpApi.LoggedInUser.DateOfBirth;
-            gender.SelectedItem = HttpApi.LoggedInUser.Gender;
-        }
-
         private static readonly List<string> Countries = new List<string>
         {
             "Afghanistan","Albania","Algeria", "American Samoa","Andorra","Angola","Anguilla",
@@ -85,6 +63,34 @@ namespace ChatApp.Pages
             "Zimbabwe",
         };
 
+        private readonly HomeViewModel viewModel;
+
+        public HomePage()
+        {
+            this.InitializeComponent();
+            gender.Items.Add("Female");
+            gender.Items.Add("Male");
+            country.ItemsSource = Countries; 
+            viewModel = (HomeViewModel)DataContext;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            InitializeLoggedinUserInfo();
+        }
+
+
+        private void InitializeLoggedinUserInfo()
+        {
+            //if(HttpApi.LoggedInUser.)
+            UserImage.Source =
+                new BitmapImage(new Uri("https://scontent.flju2-1.fna.fbcdn.net/v/t1.0-9/11391338_1064066726954436_6934638157053324450_n.jpg?oh=fb94393d33f67b53c582670081a956c4&oe=59A401EC", UriKind.RelativeOrAbsolute));
+            Username.Text = HttpApi.LoggedInUser.Username;
+            email.Text = HttpApi.LoggedInUser.Email;
+            company.Text = HttpApi.LoggedInUser.Company;
+            FirstName.Text = HttpApi.LoggedInUser.FirstName;
+            LastName.Text = HttpApi.LoggedInUser.LastName;
+            country.SelectedItem = HttpApi.LoggedInUser.Country;
+            DatePicker.Date = HttpApi.LoggedInUser.DateOfBirth;
+            gender.SelectedItem = HttpApi.LoggedInUser.Gender;
+        }
 
 
         private void Team_RightClick(object sender, RightTappedRoutedEventArgs e)
@@ -188,6 +194,11 @@ namespace ChatApp.Pages
                 }
                
             }
+        }
+
+        private void UserListButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(UserInfoPage));
         }
     }
 }

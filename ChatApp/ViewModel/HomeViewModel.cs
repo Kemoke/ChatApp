@@ -64,11 +64,5 @@ namespace ChatApp.ViewModel
                 await ex.ShowErrorDialog();
             }
         }
-
-        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            
-        }
-
     }
 }
