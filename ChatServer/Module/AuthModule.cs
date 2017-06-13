@@ -65,7 +65,7 @@ namespace ChatServer.Module
                 return Response.AsJson(new Msg("Email already exists")).WithStatusCode(HttpStatusCode.BadRequest);
             }
             request.User.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.User.Password);
-            context.Users.Add(request.User);
+            context.Users.Add(request.User);    
             await context.SaveChangesAsync(token);
             return Response.AsJson(new UserInfo
             {
