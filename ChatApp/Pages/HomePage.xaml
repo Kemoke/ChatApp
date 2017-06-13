@@ -171,29 +171,54 @@
 
             <Grid.RowDefinitions >
                 <RowDefinition Height="50*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="20*"/>
+                <RowDefinition Height="140*"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
             <Image Grid.Row="0" Name ="UserImage" Margin="188,7,223,0" Height="75" VerticalAlignment="Top"/>
-            <TextBox TextAlignment="Center" Name="Username" Margin="67,0,66,0" Height="29" VerticalAlignment="Top" IsEnabled="False" Grid.Row="1"/>
-            <TextBox Grid.Row="2" TextAlignment="Center" Name="FirstName" Margin="67,3,66,0" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
-            <TextBox Grid.Row="3" TextAlignment="Center" Name="LastName" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
-            <ComboBox Grid.Row="6"  Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353"/>
-            <DatePicker x:Name="DatePicker" Height="34" Grid.Row="4" Margin="67,27.333,66,25" HorizontalAlignment="Stretch" IsEnabled="False"  Grid.RowSpan="3"/>
-            <TextBox Grid.Row="4" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
-            <TextBox Grid.Row="7" TextAlignment="Center" Name="company" Margin="67,3.,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
-            <ComboBox Grid.Row="8"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353"/>
 
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions >
+                    <ColumnDefinition Width="257*"/>
+                    <ColumnDefinition Width="700*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="20*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="UserName:" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox TextAlignment="Center" Name="Username" Margin="67,0,66,0" Height="29" VerticalAlignment="Top" IsEnabled="False" Grid.Row="0" Grid.Column="1"/>
 
+                <TextBlock Text="First name:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="1" TextAlignment="Center" Name="FirstName" Margin="67,3,66,0" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
 
-            <Button Grid.Row="8" Name="Edit_UserInfo" Margin="216,30,0,-30" Height="32"  Content="Edit Info" HorizontalAlignment="Left" Width="75" Click="Edit_info" RenderTransformOrigin="0.813,0.531"/>
+                <TextBlock Text="Last name:" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="2" Grid.Column="1" TextAlignment="Center" Name="LastName" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1"/>
+
+                <TextBlock Text="Gender:" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1" Width="353"/>
+
+                <TextBlock Text="Date of birth:" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <DatePicker x:Name="DatePicker" Grid.Row="4" Margin="67,3,66,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Width="353" Grid.ColumnSpan="2"/>
+
+                <TextBlock Text="E-mail:" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="5" Grid.Column="1" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
+
+                <TextBlock Text="Company:" Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="6" Grid.Column="1" TextAlignment="Center" Name="company" Margin="67,3.,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
+
+                <TextBlock Text="Country:" Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="7" Grid.Column="1"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2" Width="353" HorizontalContentAlignment="Center"/>
+
+            </Grid>
+
+            <Button Grid.Row="2" Name="Edit_UserInfo" Margin="216,30,0,-30" Height="32"  Content="Edit Info" HorizontalAlignment="Left" Width="75" Click="Edit_info" RenderTransformOrigin="0.813,0.531"/>
         </Grid>
 
         <ListView ItemsSource="{Binding Teams}" Grid.Column="0"  
