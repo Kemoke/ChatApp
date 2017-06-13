@@ -174,9 +174,9 @@ namespace ChatServer.Module
 
             var messages = await context.Messages.AsNoTracking().Include(m => m.Sender)
                 .Where(m => m.TargetId == request.TargetId || m.ChannelId == request.ChannelId)
+                .OrderByDescending(m => m.Id)
                 .Skip((int)parameters.skip)
                 .Take((int)parameters.limit)
-                .OrderByDescending(m => m.Id)
                 .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);
             return Response.AsJson(messages);
