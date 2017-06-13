@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -42,6 +43,8 @@ namespace ChatApp.ViewModel
             set => SetProperty(out selectedChannel, value);
         }
 
+        public Action<Message> Recieved { get; set; }
+
         public string TeamName => HttpApi.SelectedTeam.Name;
 
         public ChatViewModel()
@@ -59,7 +62,11 @@ namespace ChatApp.ViewModel
             var msg = new UTF8Encoding(false).GetString(msgBytes);
             var message = JsonConvert.DeserializeObject<Message>(msg);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => Messages.Add(message));
+                () =>
+                {
+                    Messages.Add(message);
+                    Recieved(message);
+                });
         }
 
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -83,8 +90,9 @@ namespace ChatApp.ViewModel
                 oldChannelId = SelectedChannel.Id;
                 try
                 {
-                    Messages = new ObservableCollection<Message>(
-                        await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken));
+                    var response = await HttpApi.Channel.GetMessagesAsync(request, 0, 50, HttpApi.AuthToken);
+                    response.Reverse();
+                    Messages = new ObservableCollection<Message>(response);
                 }
                 catch (ApiException ex)
                 {

@@ -34,6 +34,11 @@ namespace ChatApp.Pages
             InitializeComponent();
             viewModel = (ChatViewModel)DataContext;
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            viewModel.Recieved = async message =>
+            {
+                await Task.Delay(100);
+                MessageView.ScrollIntoView(viewModel.Messages.LastOrDefault());
+            };
             MessageView.Loaded += (s, a) =>
             {
                 var scrollViewer = GetScrollViewer(MessageView);
@@ -45,11 +50,12 @@ namespace ChatApp.Pages
         private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var scrollViewer = (ScrollViewer) sender;
-            if (scrollViewer.VerticalOffset < 1)
+            if (scrollViewer.VerticalOffset < 0.001)
             {
                 LoadingRing.IsActive = true;
                 LoadingRing.Visibility = Visibility.Visible;
                 var skip = viewModel.Messages.Count;
+                var item = viewModel.Messages.FirstOrDefault();
                 try
                 {
                     var request = new GetMessagesRequest
@@ -61,6 +67,7 @@ namespace ChatApp.Pages
                     {
                         viewModel.Messages.Insert(0, result[i]);
                     }
+                    MessageView.ScrollIntoView(item);
                 }
                 catch (ApiException ex)
                 {
@@ -80,14 +87,6 @@ namespace ChatApp.Pages
             {
                 await Task.Delay(100);
                 MessageView.ScrollIntoView(viewModel.Messages.LastOrDefault());
-                viewModel.Messages.CollectionChanged += async (o, args) =>
-                {
-                    if (args.Action == NotifyCollectionChangedAction.Add)
-                    {
-                        await Task.Delay(100);
-                        MessageView.ScrollIntoView(viewModel.Messages.LastOrDefault());
-                    }
-                };
             }
         }
 
@@ -141,7 +140,7 @@ namespace ChatApp.Pages
                 await new EditChannelDialog(item, channel =>
                 {
                     var index = viewModel.Channels.IndexOf(item);
-                    if (viewModel.SelectedChannel == viewModel.Channels[index])
+                    if (viewModel.SelectedChannel.Equals(viewModel.Channels[index]))
                     {
                         viewModel.Channels[index] = channel;
                         viewModel.SelectedChannel = viewModel.Channels[index];
