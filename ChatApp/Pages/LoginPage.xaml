@@ -9,12 +9,13 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     KeyDown="LoginPage_OnKeyDown">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid Width="300" Height="250">
+        <Grid Width="300" Height="450">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -22,13 +23,14 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Username:" VerticalAlignment="Bottom"/>
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="Mail" VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Password:" VerticalAlignment="Bottom"/>
-            <PasswordBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" x:Name="Password" VerticalAlignment="Center"/>
-            <Button Grid.Row="4" Grid.Column="0" Content="Log in" Click="LoginButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="42"/>
-            <ProgressRing Name="ProgressIndicator" Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left"/>
-            <HyperlinkButton Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Don't have an account?" Click="HyperlinkButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Source="/Assets/Logo.png"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Username:" VerticalAlignment="Bottom"/>
+            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="Mail" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Password:" VerticalAlignment="Bottom"/>
+            <PasswordBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="Password" VerticalAlignment="Center"/>
+            <Button Grid.Row="5" Grid.Column="0" Content="Log in" Click="LoginButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="42"/>
+            <ProgressRing Name="ProgressIndicator" Grid.Row="5" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left"/>
+            <HyperlinkButton Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Don't have an account?" Click="HyperlinkButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         </Grid>
     </Grid>
