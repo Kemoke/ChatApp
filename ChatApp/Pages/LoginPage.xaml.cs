@@ -43,12 +43,6 @@ namespace ChatApp.Pages
                         new LoginRequest { Username = Mail.Text, Password = Password.Password });
                 HttpApi.AuthToken = response.Token;
                 HttpApi.LoggedInUser = response.User;
-                /*HttpApi.SelectedTeam = new Team
-                {
-                    Name = "Team1",
-                    Id = 1
-                };
-                Frame.Navigate(typeof(ChatPage));*/
                 Frame.Navigate(typeof(HomePage));
             }
             catch (ApiException ex)

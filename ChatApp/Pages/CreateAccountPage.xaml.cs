@@ -72,7 +72,15 @@ namespace ChatApp.Pages
                 return;
             }
 
-            var user = new User
+            if (PasswordText.Password != RepeatText.Password)
+            {
+                var messageDialog = new MessageDialog("Passwords do not match");
+                await messageDialog.ShowAsync();
+                return;
+            }
+            
+
+                var user = new User
             {
                 FirstName = NameText.Text,
                 LastName = SurnameText.Text,

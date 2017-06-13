@@ -16,6 +16,7 @@ namespace ChatApp.Model
         private string country;
         private DateTime dateOfBirth;
         private string gender;
+        private string pictureUrl;
 
         public string Username
         {
@@ -69,6 +70,11 @@ namespace ChatApp.Model
         {
             get => gender;
             set { gender = value; OnPropertyChanged();}
+        }
+        public string PictureUrl
+        {
+            get => pictureUrl;
+            set { pictureUrl = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<Team> Teams { get; set; }
