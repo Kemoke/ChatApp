@@ -45,7 +45,9 @@ namespace ChatServer.Module
         private async Task<dynamic> GetChannelAsync(dynamic parameters, CancellationToken cancellationToken)
         {
             int id = parameters.id;
-            var channel = await context.Channels.AsNoTracking().FirstAsync(c => c.Id == id, cancellationToken);
+            var channel = await context.Channels.AsNoTracking()
+                .FirstAsync(c => c.Id == id, cancellationToken)
+                .ConfigureAwait(false);
 
             return Response.AsJson(channel);
         }
@@ -54,7 +56,9 @@ namespace ChatServer.Module
         {
             var request = this.Bind<ListChannelRequest>();
 
-            var channelList = await context.Channels.AsNoTracking().Where(c => c.TeamId == request.TeamId).ToListAsync(cancellationToken);
+            var channelList = await context.Channels.AsNoTracking()
+                .Where(c => c.TeamId == request.TeamId).ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return Response.AsJson(channelList);
         }
@@ -65,7 +69,8 @@ namespace ChatServer.Module
 
             context.Channels.Remove(new Channel {Id = id});
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return Response.AsJson(new Msg("Channel Deleted"));
         }
@@ -75,7 +80,9 @@ namespace ChatServer.Module
             int id = parameters.id;
 
             var request = this.Bind<Channel>();
-            var channel = await context.Channels.FirstAsync(c => c.Id == id, cancellationToken);
+            var channel = await context.Channels
+                .FirstAsync(c => c.Id == id, cancellationToken)
+                .ConfigureAwait(false);
 
             if (await ChannelExistsAsync(request.ChannelName, channel.TeamId))
             {
@@ -84,7 +91,8 @@ namespace ChatServer.Module
             }
 
             channel.ChannelName = request.ChannelName;
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return Response.AsJson(channel);
         }
@@ -110,20 +118,29 @@ namespace ChatServer.Module
             };
 
             context.Channels.Add(channel);
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
             return Response.AsJson(channel);
         }
 
         private async Task<bool> IsUserAdminAsync(int teamId, int userId, CancellationToken cancellationToken)
         {
-            var roleId =  (await context.UserTeams.Where(ut => ut.UserId == userId && ut.TeamId == teamId).FirstAsync()).RoleId;
+            var roleId =  (await context.UserTeams
+                .Where(ut => ut.UserId == userId && ut.TeamId == teamId)
+                .FirstAsync(cancellationToken)
+                .ConfigureAwait(false)).RoleId;
 
-            return await context.Roles.Where(r => r.Id == roleId && r.Name == "Admin").AnyAsync(cancellationToken);
+            return await context.Roles
+                .Where(r => r.Id == roleId && r.Name == "Admin")
+                .AnyAsync(cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private async Task<bool> ChannelExistsAsync(string channelName, int teamId)
         {
-            return await context.Channels.AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId);
+            return await context.Channels
+                .AnyAsync(c => c.ChannelName == channelName && c.TeamId == teamId)
+                .ConfigureAwait(false);
         }
 
         private async Task<dynamic> CheckNewMessagesAsync(dynamic parameters, CancellationToken cancellationToken)
@@ -134,14 +151,18 @@ namespace ChatServer.Module
 
             var messages = new List<Message>();
             
-            var last = await context.Messages.AsNoTracking().Where(c => c.ChannelId == request.ChannelId).LastOrDefaultAsync(cancellationToken);
+            var last = await context.Messages.AsNoTracking()
+                .Where(c => c.ChannelId == request.ChannelId)
+                .LastOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
             var lastId = last is null ? 0 : last.Id;
             if (lastId != request.MessageId)
             {
                 messages = await context.Messages.AsNoTracking().Include(m => m.Sender)
                     .Where(m => m.Id > request.MessageId && m.ChannelId == request.ChannelId)
                     .OrderByDescending(m => m.Id)
-                    .ToListAsync(cancellationToken);
+                    .ToListAsync(cancellationToken)
+                    .ConfigureAwait(false);
             }
 
             return Response.AsJson(messages);
@@ -156,7 +177,8 @@ namespace ChatServer.Module
                 .Skip((int)parameters.skip)
                 .Take((int)parameters.limit)
                 .OrderByDescending(m => m.Id)
-                .ToListAsync(cancellationToken);
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
             return Response.AsJson(messages);
         }
 
@@ -174,7 +196,7 @@ namespace ChatServer.Module
             };
 
             context.Add(message);
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             message.Sender = User;
             var response = JsonConvert.SerializeObject(message);
             await notificationHandler.SendToRoom(response, request.ChannelId);

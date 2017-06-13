@@ -32,7 +32,9 @@ namespace ChatServer.Module
             try
             {
                 var request = this.Bind<LoginRequest>();
-                var user = await context.Users.AsNoTracking().FirstAsync(u => u.Username == request.Username, token);
+                var user = await context.Users.AsNoTracking()
+                    .FirstAsync(u => u.Username == request.Username, token)
+                    .ConfigureAwait(false);
                 if (!BCrypt.Net.BCrypt.EnhancedVerify(request.Password, user.Password))
                 {
                     return Response.AsJson(new Msg("Invalid credentials"))
@@ -60,13 +62,13 @@ namespace ChatServer.Module
         private async Task<dynamic> RegisterAsync(dynamic props, CancellationToken token)
         {
             var request = this.Bind<RegisterRequest>();
-            if (await EmailExistsAsync(request.User.Email))
+            if (await EmailExistsAsync(request.User.Email).ConfigureAwait(false))
             {
                 return Response.AsJson(new Msg("Email already exists")).WithStatusCode(HttpStatusCode.BadRequest);
             }
             request.User.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.User.Password);
             context.Users.Add(request.User);    
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
             return Response.AsJson(new UserInfo
             {
                 Username = request.User.Username,
@@ -82,7 +84,7 @@ namespace ChatServer.Module
 
         private async Task<bool> EmailExistsAsync(string email)
         {
-            return await context.Users.AnyAsync(u => u.Email == email);
+            return await context.Users.AnyAsync(u => u.Email == email).ConfigureAwait(false);
         }
     }
 }

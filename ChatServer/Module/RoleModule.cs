@@ -31,10 +31,12 @@ namespace ChatServer.Module
         {
             var request = this.Bind<UnsignRoleRequest>();
             var userteam = await context.UserTeams.FirstAsync(
-                ut => ut.TeamId == request.TeamId && ut.UserId == request.UserId, cancellationToken);
+                ut => ut.TeamId == request.TeamId 
+                && ut.UserId == request.UserId, cancellationToken)
+                .ConfigureAwait(false);
             context.UserTeams.Remove(userteam);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             return Response.AsJson(new Msg("Role Unassigned"));
         }
 
@@ -42,7 +44,7 @@ namespace ChatServer.Module
         {
             int id = parameters.id;
             context.Roles.Remove(new Role { Id = id });
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             return Response.AsJson(new Msg("Role Deleted"));
         }
 
@@ -50,11 +52,11 @@ namespace ChatServer.Module
         {
             var request = this.Bind<EditRoleRequest>();
             
-            var role = await context.Roles.FindAsync((int) parameters.id);
+            var role = await context.Roles.FindAsync((int) parameters.id).ConfigureAwait(false);
 
             role.Name = request.RoleName;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Response.AsJson(role);
         }
@@ -62,14 +64,17 @@ namespace ChatServer.Module
         private async Task<dynamic> GetRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
                 int id = parameters.id;
-                var channel = await context.Roles.AsNoTracking().FirstAsync(r => r.Id == id, cancellationToken);
-
+                var channel = await context.Roles.AsNoTracking()
+                    .FirstAsync(r => r.Id == id, cancellationToken)
+                    .ConfigureAwait(false);
                 return Response.AsJson(channel);
         }
 
         private async Task<dynamic> ListRoleAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var roleList = await context.Roles.AsNoTracking().ToListAsync(cancellationToken);
+            var roleList = await context.Roles.AsNoTracking()
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             var response = JsonConvert.SerializeObject(roleList);
 
@@ -89,7 +94,7 @@ namespace ChatServer.Module
 
             context.UserTeams.Add(userRole);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Response.AsJson(userRole);
         }
@@ -105,7 +110,7 @@ namespace ChatServer.Module
 
             context.Roles.Add(role);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Response.AsJson(role);
 
