@@ -7,7 +7,8 @@ using LightBDD.XUnit2;
 namespace ChatServerTests.Features
 {
     [FeatureDescription(
-        @"As an admin user I want to be able to create a channel inside of a team")]
+        @"As an admin user I want to be able to chat with other users inside of a channel.
+            I would like to see previous messages, and new ones should be updated when sent.")]
     [Label("Story-5")]
 
     public partial class ChatFeature

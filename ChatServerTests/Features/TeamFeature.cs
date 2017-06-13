@@ -6,7 +6,7 @@ using LightBDD.XUnit2;
 namespace ChatServerTests.Features
 {
     [FeatureDescription(
-        @"As a user I want to be able to create a team")]
+        @"As a user I want to be able to create a team, delete it and edit it")]
     [Label("Story-3")]
     public partial class TeamFeature
     {
