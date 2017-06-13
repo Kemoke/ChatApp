@@ -9,5 +9,10 @@
             get => name;
             set { name = value; OnPropertyChanged();}
         }
+
+        public override string ToString()
+        {
+            return this.name;
+        }
     }
 }

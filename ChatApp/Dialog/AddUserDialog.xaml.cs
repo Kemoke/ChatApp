@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ChatApp.Api;
 using ChatApp.Model;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -21,19 +22,26 @@ namespace ChatApp.Dialog
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class UserListDialog : ContentDialog
+    public sealed partial class AddUserDialog : ContentDialog
     {
-        private List<User> Users;
+        private readonly Action<User> callback;
 
-        public UserListDialog(List<User> target)
+        public AddUserDialog(List<User> items)
         {
-            InitializeComponent();
-            UserList.ItemsSource = target;
+            this.InitializeComponent();
+            UserList.ItemsSource = items;
         }
         
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Hide();
+        }
+
+        private async void MySelection(object sender, SelectionChangedEventArgs e)
+        {
+                var roles = await HttpApi.Role.GetListAsync(HttpApi.AuthToken);
+                var user = (User) UserList.SelectedItem;
+                await new NewUserDialog(user, roles).ShowAsync();
         }
     }
 }

@@ -15,7 +15,6 @@ using Windows.UI.Xaml.Navigation;
 using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
-using Refit;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,44 +23,31 @@ namespace ChatApp.Dialog
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddTeamDialog : ContentDialog
+    public sealed partial class NewUserDialog : ContentDialog
     {
-        private readonly Action<Team> callback;
-        public AddTeamDialog(Action<Team> callback)
+        private User user;
+        public NewUserDialog(User user, List<Role> roles)
         {
-            this.callback = callback;
+            this.user = user;
             this.InitializeComponent();
+            UsernameBox.Text = user.Username;
+            RoleBox.ItemsSource = roles;
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            var request = new CreateTeamRequest
+            await HttpApi.Role.AssignRoleAsync(new AssignRoleRequest
             {
-                Name = TeamNameBox.Text,
-                UserId = HttpApi.LoggedInUser.Id
-            };
-
-            try
-            {
-                var createTeam = await HttpApi.Team.SaveAsync(request, HttpApi.AuthToken);
-                await HttpApi.Role.AssignRoleAsync(new AssignRoleRequest
-                {
-                    RoleId = 1,
-                    TeamId = createTeam.Id,
-                    UserId = HttpApi.LoggedInUser.Id
-                }, HttpApi.AuthToken);
-                var getTeam = await HttpApi.Team.GetAsync(createTeam.Id, HttpApi.AuthToken);
-                callback(getTeam);
-            }
-            catch (ApiException ex)
-            {
-                await ex.ShowErrorDialog();
-            }
+                RoleId = ((Role)RoleBox.SelectionBoxItem).Id,
+                TeamId = HttpApi.SelectedTeam.Id,
+                UserId = user.Id
+            }, HttpApi.AuthToken);
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Hide();
         }
+
     }
 }

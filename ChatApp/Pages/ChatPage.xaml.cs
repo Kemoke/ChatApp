@@ -204,5 +204,17 @@ namespace ChatApp.Pages
 
             await new UserListDialog(item).ShowAsync();
         }
+
+        private async void AddUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            var item = await  HttpApi.User.GetListAsync(HttpApi.AuthToken);
+
+            await new UserListDialog(item).ShowAsync();
+        }
+
+        private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

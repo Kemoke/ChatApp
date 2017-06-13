@@ -20,8 +20,8 @@
             </CommandBar.Content>
             <CommandBar.PrimaryCommands>
                 <AppBarButton Icon="Add" Label="Add new channel" Click="NewChannelButton_Click"/>
-                <AppBarButton Icon="AddFriend" Label="Add a user"/>
-                <AppBarButton Icon="BlockContact" Label="Remove a user"/>
+                <AppBarButton Icon="AddFriend" Label="Add a user" Click ="AddUserButton_Click"/>
+                <AppBarButton Icon="BlockContact" Label="Remove a user" Click="DeleteUserButton_Click"/>
                 <AppBarButton Icon="ContactInfo" Label="User list" Click="UserListButton_Click"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
