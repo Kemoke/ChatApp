@@ -22,6 +22,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="47*"/>
@@ -39,10 +40,10 @@
             <TextBox x:Name="SurnameText"  Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
 
             <TextBlock Text="E-mail:" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBox x:Name="UsernameText"  Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"/>
+            <TextBox x:Name="MailText"  Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"/>
 
             <TextBlock  Text="Username" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBox x:Name="MailText" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center"/>
+            <TextBox x:Name="UsernameText" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center"/>
 
             <TextBlock Text="Password:" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <PasswordBox x:Name="PasswordText"  Grid.Row="5" Grid.Column="1" VerticalAlignment="Center"/>

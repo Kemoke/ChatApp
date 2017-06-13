@@ -43,8 +43,6 @@ namespace ChatApp.Pages
         {
             gender.Text = viewModel.SelectedUser.Gender;
             country.Text = viewModel.SelectedUser.Country;
-            UserImage.Source =
-                new BitmapImage(new Uri("https://scontent.flju2-1.fna.fbcdn.net/v/t1.0-9/11391338_1064066726954436_6934638157053324450_n.jpg?oh=fb94393d33f67b53c582670081a956c4&oe=59A401EC", UriKind.RelativeOrAbsolute));
             Username.Text = viewModel.SelectedUser.Username;
             email.Text = viewModel.SelectedUser.Email;
             company.Text = viewModel.SelectedUser.Company;
