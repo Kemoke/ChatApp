@@ -30,8 +30,8 @@ namespace ChatServer.WebSockets
         {
             if (socket.State != WebSocketState.Open)
                 return;
-
-            await socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.UTF8.GetBytes(message),
+            
+            await socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.Unicode.GetBytes(message),
                     offset: 0,
                     count: message.Length),
                 messageType: WebSocketMessageType.Text,
