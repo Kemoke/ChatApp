@@ -103,17 +103,17 @@
     <Compile Include="Dialog\AddTeamDialog.xaml.cs">
       <DependentUpon>AddTeamDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialog\AddUserDialog.xaml.cs">
-      <DependentUpon>AddUserDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialog\EditChannelDialog.xaml.cs">
       <DependentUpon>EditChannelDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialog\EditTeamDialog.xaml.cs">
       <DependentUpon>EditTeamDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialog\NewUserDialog.xaml.cs">
-      <DependentUpon>NewUserDialog.xaml</DependentUpon>
+    <Compile Include="Dialog\AddUserDialog.xaml.cs">
+      <DependentUpon>AddUserDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\RemoveUserDialog.xaml.cs">
+      <DependentUpon>RemoveUserDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialog\UserListDialog.xaml.cs">
       <DependentUpon>UserListDialog.xaml</DependentUpon>
@@ -154,7 +154,7 @@
     <Compile Include="Request\RegisterRequest.cs" />
     <Compile Include="Request\SendMessageRequest.cs" />
     <Compile Include="Request\UnsignRoleRequest.cs" />
-    <Compile Include="Response\Error.cs" />
+    <Compile Include="Response\Msg.cs" />
     <Compile Include="Response\LoginResponse.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
@@ -188,10 +188,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialog\AddUserDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialog\EditChannelDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,7 +196,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialog\NewUserDialog.xaml">
+    <Page Include="Dialog\AddUserDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\RemoveUserDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -207,14 +208,12 @@ namespace ChatApp.Pages
 
         private async void AddUserButton_Click(object sender, RoutedEventArgs e)
         {
-            var item = await  HttpApi.User.GetListAsync(HttpApi.AuthToken);
-
-            await new UserListDialog(item).ShowAsync();
+            await new AddUserDialog().ShowAsync();
         }
 
-        private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteUserButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            await new RemoveUserDialog().ShowAsync();
         }
     }
 }

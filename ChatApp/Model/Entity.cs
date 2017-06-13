@@ -18,5 +18,11 @@ namespace ChatApp.Model
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public override bool Equals(object obj)
+        {
+            var entity = obj as Entity;
+            return id == entity?.id;
+        }
     }
 }

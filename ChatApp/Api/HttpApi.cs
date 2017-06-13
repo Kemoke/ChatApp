@@ -14,7 +14,7 @@ namespace ChatApp.Api
     {
         public static string ErrorMessage(this ApiException ex)
         {
-            return ex.GetContentAs<Error>().Message;
+            return ex.GetContentAs<Msg>().Message;
         }
 
         public static IAsyncOperation<IUICommand> ShowErrorDialog(this ApiException ex)
@@ -102,7 +102,10 @@ namespace ChatApp.Api
         Task<string> DeleteAsync(int id, [Header("Authorization")] string token);
 
         [Post("/assign")]
-        Task<Role> AssignRoleAsync([Body] AssignRoleRequest request, [Header("Authorization")] string token);
+        Task<Msg> AssignRoleAsync([Body] AssignRoleRequest request, [Header("Authorization")] string token);
+
+        [Delete("/unsign")]
+        Task<Msg> UnAssignRoleAsync([Body] UnsignRoleRequest request, [Header("Authorization")] string token);
     }
 
     public interface ITeamApi

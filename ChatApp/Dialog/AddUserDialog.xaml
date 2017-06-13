@@ -6,51 +6,24 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Create Channel"
+    Title="Add User"
+    PrimaryButtonText="Add"
     SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        <ListView Name ="UserList"  Grid.Column="0"  
-                  Grid.Row="0" SelectionMode="Single"
-                  SelectionChanged="MySelection" SelectedItem="selected">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ListViewItemPresenter   
-                                    ContentTransitions="{TemplateBinding ContentTransitions}"
-                                    SelectionCheckMarkVisualEnabled="True"
-                                    CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                    CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                    DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
-                                    DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
-                                    FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
-                                    FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
-                                    PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                    PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                    PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                    SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-                                    SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                    SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
-                                    PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                    SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
-                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                    ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    ContentMargin="{TemplateBinding Padding}"
-                                    CheckMode="Inline"/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Username" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="0"/>
+        <ComboBox Name="UsernameBox" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0"/>
+        <TextBlock Text="Role" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1"/>
+        <ComboBox x:Name="RoleBox" Height="30" Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Stretch"/>
     </Grid>
 </ContentDialog>

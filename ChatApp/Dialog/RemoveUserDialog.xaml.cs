@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -16,32 +17,28 @@ using ChatApp.Api;
 using ChatApp.Model;
 using ChatApp.Request;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+// The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace ChatApp.Dialog
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class NewUserDialog : ContentDialog
+    public sealed partial class RemoveUserDialog : ContentDialog
     {
-        private User user;
-        public NewUserDialog(User user, List<Role> roles)
+        public RemoveUserDialog()
         {
-            this.user = user;
             this.InitializeComponent();
-            UsernameBox.Text = user.Username;
-            RoleBox.ItemsSource = roles;
+            UsernameBox.ItemsSource = HttpApi.SelectedTeam.Users.ToList();
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            await HttpApi.Role.AssignRoleAsync(new AssignRoleRequest
+            var user = (User) UsernameBox.SelectionBoxItem;
+            await HttpApi.Role.UnAssignRoleAsync(new UnsignRoleRequest
             {
-                RoleId = ((Role)RoleBox.SelectionBoxItem).Id,
                 TeamId = HttpApi.SelectedTeam.Id,
                 UserId = user.Id
             }, HttpApi.AuthToken);
+            HttpApi.SelectedTeam.Users.Remove(user);
+            await new MessageDialog("User removed successfully").ShowAsync();
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
