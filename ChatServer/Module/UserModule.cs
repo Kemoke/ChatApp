@@ -61,7 +61,7 @@ namespace ChatServer.Module
         {
             var request = this.Bind<ChangePasswordRequest>();
 
-            var user = context.Users.Find(request.UserId);
+            var user = await context.Users.FindAsync(request.UserId).ConfigureAwait(false);
             if (!BCrypt.Net.BCrypt.EnhancedVerify(request.OldPassword, user.Password))
             {
                 return Response.AsJson(new Msg("Wrong input for old password")).WithStatusCode(HttpStatusCode.BadRequest);
