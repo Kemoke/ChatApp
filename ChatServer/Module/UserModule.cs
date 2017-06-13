@@ -33,7 +33,7 @@ namespace ChatServer.Module
 
         private async Task<dynamic> ListUsersAsync(dynamic parameters, CancellationToken cancellationToken)
         {
-            var users = await context.Users.AsNoTracking().ToListAsync(cancellationToken);
+            var users = await context.Users.AsNoTracking().ToListAsync(cancellationToken).ConfigureAwait(false);
             return Response.AsJson(users);
         }
 
@@ -41,7 +41,7 @@ namespace ChatServer.Module
         {
             int id = parameters.id;
 
-            var user = await context.Users.AsNoTracking().FirstAsync(u => u.Id == id, cancellationToken);
+            var user = await context.Users.AsNoTracking().FirstAsync(u => u.Id == id, cancellationToken).ConfigureAwait(false);
 
             var userInfo = new UserInfo
             {
@@ -67,7 +67,7 @@ namespace ChatServer.Module
                 return Response.AsJson(new Msg("Wrong input for old password")).WithStatusCode(HttpStatusCode.BadRequest);
             }
             user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.NewPassword);
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Response.AsJson(new Msg("Password changed successfully"));
         }
@@ -76,7 +76,7 @@ namespace ChatServer.Module
         {
             var request = this.Bind<EditUserInfoRequest>();
 
-            User = await context.Users.FindAsync(User.Id);
+            User = await context.Users.FindAsync(User.Id).ConfigureAwait(false);
 
             User.Company = request.Company;
             User.Country = request.Country;
@@ -87,7 +87,7 @@ namespace ChatServer.Module
             User.PictureUrl = request.PictureUrl;
             User.Username = request.Username;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Response.AsJson(new Msg("Data changed successfully"));   
         }

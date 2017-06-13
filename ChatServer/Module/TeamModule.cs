@@ -32,10 +32,10 @@ namespace ChatServer.Module
         {
             var request = this.Bind<UnsignRoleRequest>();
             var userteam = await context.UserTeams.FirstAsync(
-                ut => ut.TeamId == request.TeamId && ut.UserId == request.UserId, cancellationToken);
+                ut => ut.TeamId == request.TeamId && ut.UserId == request.UserId, cancellationToken).ConfigureAwait(false);
             context.UserTeams.Remove(userteam);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             return Response.AsJson(new Msg("User Removed"));
         }
 
@@ -52,8 +52,8 @@ namespace ChatServer.Module
 
             context.UserTeams.Add(userRole);
 
-            await context.SaveChangesAsync(cancellationToken);
-
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            
             return Response.AsJson(userRole);
         }
 
@@ -61,7 +61,7 @@ namespace ChatServer.Module
         {
             int id = props.id;
             context.Teams.Remove(new Team {Id = id});
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
             return Response.AsJson(new Msg("Deleted"));
         }
 
@@ -69,9 +69,9 @@ namespace ChatServer.Module
         {
             int id = props.id;
             var request = this.Bind<Team>();
-            var team = await context.Teams.FirstAsync(t => t.Id == id, token);
+            var team = await context.Teams.FirstAsync(t => t.Id == id, token).ConfigureAwait(false);
             team.Name = request.Name;
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
             return Response.AsJson(team);
         }
 
@@ -80,7 +80,7 @@ namespace ChatServer.Module
             int id = props.id;
             var team = await context.Teams.AsNoTracking().Include(t => t.UserTeams)
                 .ThenInclude(t => t.User)
-                .FirstAsync(u => u.Id == id, token);
+                .FirstAsync(u => u.Id == id, token).ConfigureAwait(false);
             return Response.AsJson(team);
         }
 
@@ -88,14 +88,14 @@ namespace ChatServer.Module
         {
             var teams = await context.Teams.AsNoTracking().Include(t => t.UserTeams)
                 .ThenInclude(t => t.User)
-                .ToListAsync(token);
+                .ToListAsync(token).ConfigureAwait(false);
             return Response.AsJson(teams);
         }
 
         private async Task<dynamic> CreateTeamAsync(dynamic arg, CancellationToken cancellationToken)
         {
                 var request = this.Bind<CreateTeamRequest>();
-                if (await TeamExistsAsync(request.Name))
+                if (await TeamExistsAsync(request.Name).ConfigureAwait(false))
                 {
                     return Response.AsJson(new Msg("Channel with that name already exists")).WithStatusCode(HttpStatusCode.BadRequest);
                 }
@@ -108,14 +108,14 @@ namespace ChatServer.Module
 
                 context.Teams.Add(team);
 
-                await context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                 return Response.AsJson(team);
         }
 
         private async Task<bool> TeamExistsAsync(string teamName)
         {
-            return await context.Teams.AnyAsync(t => t.Name == teamName);
+            return await context.Teams.AnyAsync(t => t.Name == teamName).ConfigureAwait(false);
         }
     }
 }

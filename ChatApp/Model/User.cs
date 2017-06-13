@@ -71,6 +71,7 @@ namespace ChatApp.Model
             get => gender;
             set { gender = value; OnPropertyChanged();}
         }
+
         public string PictureUrl
         {
             get => pictureUrl;
