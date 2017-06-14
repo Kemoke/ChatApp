@@ -61,10 +61,10 @@
                 <TextBox Grid.Row="2" Grid.Column="1" TextAlignment="Center" Name="LastName" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1"/>
 
                 <TextBlock Text="Gender:" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1" Width="353"/>
+                <TextBox Grid.Row="3" Grid.Column="1" TextAlignment="Center" Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1" Width="353"/>
 
                 <TextBlock Text="Date of birth:" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <TextBox x:Name="Date" Grid.Column ="1" Grid.Row="4" Margin="67,3,66,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Width="353" HorizontalContentAlignment="Center" />
+                <TextBox x:Name="Date" Grid.Column ="1" Grid.Row="4" Margin="67,3,66,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Width="353" TextAlignment="Center" />
 
                 <TextBlock Text="E-mail:" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBox Grid.Row="5" Grid.Column="1" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
@@ -73,7 +73,7 @@
                 <TextBox Grid.Row="6" Grid.Column="1" TextAlignment="Center" Name="company" Margin="67,3.,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="2"/>
 
                 <TextBlock Text="Country:" Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="7" Grid.Column="1"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"  Width="353" HorizontalContentAlignment="Center"/>
+                <TextBox Grid.Row="7" Grid.Column="1"  Name="country" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False"  Width="353" TextAlignment="Center"/>
 
             </Grid>
 
