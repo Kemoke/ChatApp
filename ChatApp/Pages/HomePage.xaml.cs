@@ -70,7 +70,7 @@ namespace ChatApp.Pages
             this.InitializeComponent();
             gender.Items.Add("Female");
             gender.Items.Add("Male");
-            country.ItemsSource = Countries; 
+            country.ItemsSource = Countries;
             viewModel = (HomeViewModel)DataContext;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             InitializeLoggedinUserInfo();

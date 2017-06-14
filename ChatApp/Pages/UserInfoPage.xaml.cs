@@ -48,7 +48,7 @@ namespace ChatApp.Pages
             company.Text = viewModel.SelectedUser.Company;
             FirstName.Text = viewModel.SelectedUser.FirstName;
             LastName.Text = viewModel.SelectedUser.LastName;
-            DatePicker.Text = viewModel.SelectedUser.DateOfBirth.ToString();
+            Date.Text = viewModel.SelectedUser.DateOfBirth.Day + "/" +viewModel.SelectedUser.DateOfBirth.Month +  "/" + viewModel.SelectedUser.DateOfBirth.Year;
         }
     }
 }

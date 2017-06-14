@@ -88,7 +88,7 @@ namespace ChatApp.Pages
                 Password = PasswordText.Password,
                 Email = MailText.Text,
                 Company = CompanyText.Text,
-                DateOfBirth = DatePicker.Date.DateTime,
+                DateOfBirth = DatePicker.Date.Date,
                 Country = CountryBox.SelectedItem?.ToString(),
                 Gender = GenderBox.SelectedItem?.ToString()
             };

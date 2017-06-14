@@ -206,7 +206,7 @@
                 <ComboBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Name="gender" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="1" Width="353"/>
 
                 <TextBlock Text="Date of birth:" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <DatePicker x:Name="DatePicker" Grid.Row="4" Margin="67,3,66,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Width="353" Grid.ColumnSpan="2"/>
+                <DatePicker x:Name="DatePicker"  Grid.Row="4" Margin="67,3,66,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Width="353" Grid.ColumnSpan="2"/>
 
                 <TextBlock Text="E-mail:" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBox Grid.Row="5" Grid.Column="1" TextAlignment="Center" Name="email" Margin="67,3,66,0" Height="32" VerticalAlignment="Top" IsEnabled="False" Grid.RowSpan="3"/>
