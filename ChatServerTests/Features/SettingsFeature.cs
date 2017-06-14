@@ -17,7 +17,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Settings")]
+        [ScenarioCategory(Category.Settings)]
         public Task Personal_info_chage()
         {
             return Runner.RunScenarioAsync(
@@ -29,7 +29,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Settings")]
+        [ScenarioCategory(Category.Settings)]
         public Task Password_change()
         {
             return Runner.RunScenarioAsync(
@@ -40,7 +40,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-3")]
-        [ScenarioCategory("Settings")]
+        [ScenarioCategory(Category.Settings)]
         public Task Password_change_attempt_with_wrong_old_password()
         {
             return Runner.RunScenarioAsync(
@@ -51,7 +51,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-4")]
-        [ScenarioCategory("Settings")]
+        [ScenarioCategory(Category.Settings)]
         public Task Retriving_information_about_logged_in_user()
         {
             return Runner.RunScenarioAsync(
@@ -62,7 +62,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-5")]
-        [ScenarioCategory("Settings")]
+        [ScenarioCategory(Category.Settings)]
         public Task Retriving_information_about_user()
         {
             return Runner.RunScenarioAsync(
@@ -73,7 +73,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-6")]
-        [ScenarioCategory("Settings")]
+        [ScenarioCategory(Category.Settings)]
         public Task Retrieving_all_users()
         {
             return Runner.RunScenarioAsync(

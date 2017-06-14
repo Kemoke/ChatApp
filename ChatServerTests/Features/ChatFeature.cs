@@ -15,7 +15,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Chat")]
+        [ScenarioCategory(Category.Chat)]
         public Task Successfuly_create_channel()
         {
             return Runner.RunScenarioAsync(
@@ -27,7 +27,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Chat")]
+        [ScenarioCategory(Category.Chat)]
         public Task Upon_opening_user_wants_to_see_messages_for_channel()
         {
             return Runner.RunScenarioAsync(
@@ -40,7 +40,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-3")]
-        [ScenarioCategory("Chat")]
+        [ScenarioCategory(Category.Chat)]
         public Task User_tries_to_recieve_new_messages()
         {
             return Runner.RunScenarioAsync(
@@ -53,8 +53,8 @@ namespace ChatServerTests.Features
         }
 
         [Scenario]
-        [Label("Ticket-3")]
-        [ScenarioCategory("Chat")]
+        [Label("Ticket-4")]
+        [ScenarioCategory(Category.Chat)]
         public Task User_tries_to_recieve_new_messages_but_there_are_no_messages_in_channel()
         {
             return Runner.RunScenarioAsync(

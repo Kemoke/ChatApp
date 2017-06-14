@@ -13,7 +13,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Security)]
         public Task User_tries_to_perform_request_without_authentication_header()
         {
             return Runner.RunScenarioAsync(

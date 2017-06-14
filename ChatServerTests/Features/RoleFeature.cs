@@ -16,7 +16,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Roles")]
+        [ScenarioCategory(Category.Role)]
         public Task Deleting_role()
         {
             return Runner.RunScenarioAsync(
@@ -28,7 +28,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Roles")]
+        [ScenarioCategory(Category.Role)]
         public Task Edit_role()
         {
             return Runner.RunScenarioAsync(
@@ -40,7 +40,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-3")]
-        [ScenarioCategory("Roles")]
+        [ScenarioCategory(Category.Role)]
         public Task Get_role()
         {
             return Runner.RunScenarioAsync(
@@ -52,7 +52,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-4")]
-        [ScenarioCategory("Roles")]
+        [ScenarioCategory(Category.Role)]
         public Task Retrieve_list_of_roles()
         {
             return Runner.RunScenarioAsync(
@@ -64,7 +64,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-5")]
-        [ScenarioCategory("Roles")]
+        [ScenarioCategory(Category.Role)]
         public Task Assign_role_to_user()
         {
             return Runner.RunScenarioAsync(
@@ -77,7 +77,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-6")]
-        [ScenarioCategory("Roles")]
+        [ScenarioCategory(Category.Role)]
         public Task Unsign_role_to_user()
         {
             return Runner.RunScenarioAsync(

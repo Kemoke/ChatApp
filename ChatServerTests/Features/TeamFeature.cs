@@ -12,7 +12,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task Successfuly_create_team()
         {
             return Runner.RunScenarioAsync(
@@ -24,7 +24,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task Wrong_team_name()
         {
             return Runner.RunScenarioAsync(
@@ -38,7 +38,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-3")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task User_wants_to_retrieve_list_of_teams_in_which_he_is_in()
         {
             return Runner.RunScenarioAsync(
@@ -51,7 +51,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-4")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task User_wants_to_retrieve_info_about_team()
         {
             return Runner.RunScenarioAsync(
@@ -64,7 +64,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-5")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task User_wants_to_edit_team_info()
         {
             return Runner.RunScenarioAsync(
@@ -77,7 +77,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-6")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task User_wants_to_add_other_user_to_team()
         {
             return Runner.RunScenarioAsync(
@@ -92,7 +92,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-7")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task User_wants_to_remove_other_user_from_team()
         {
             return Runner.RunScenarioAsync(
@@ -108,7 +108,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-8")]
-        [ScenarioCategory("Teams")]
+        [ScenarioCategory(Category.Teams)]
         public Task User_wants_to_delete_channel()
         {
             return Runner.RunScenarioAsync(

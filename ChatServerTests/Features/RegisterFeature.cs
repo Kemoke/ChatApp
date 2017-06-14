@@ -15,7 +15,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Security")]
+        [ScenarioCategory(Category.Security)]
         public Task Successful_Registration()
         {
             return Runner.RunScenarioAsync(
@@ -26,7 +26,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Security")]
+        [ScenarioCategory(Category.Security)]
         public Task Registration_attempt_when_user_already_exists()
         {
             return Runner.RunScenarioAsync(

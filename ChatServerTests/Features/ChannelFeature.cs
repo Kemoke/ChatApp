@@ -16,9 +16,10 @@ namespace ChatServerTests.Features
 
     public partial class ChannelFeature
     {
+
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Channel)]
         public Task Successfuly_create_channel()
         {
             return Runner.RunScenarioAsync(
@@ -31,7 +32,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Chanel")]
+        [ScenarioCategory(Category.Channel)]
         public Task Unsuccessful_channel_creation_caused_by_duplicate_channel_name()
         {
             return Runner.RunScenarioAsync(
@@ -44,7 +45,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-3")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Channel)]
         public Task When_a_user_enters_team_list_of_channels_should_be_displayed()
         {
             return Runner.RunScenarioAsync(
@@ -57,7 +58,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-4")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Channel)]
         public Task Edit_channel_info()
         {
             return Runner.RunScenarioAsync(
@@ -70,7 +71,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-5")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Channel)]
         public Task Delete_channel()
         {
             return Runner.RunScenarioAsync(
@@ -84,7 +85,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-6")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Channel)]
         public Task Get_channel()
         {
             return Runner.RunScenarioAsync(
@@ -97,7 +98,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-7")]
-        [ScenarioCategory("Channel")]
+        [ScenarioCategory(Category.Channel)]
         public Task User_tries_to_create_channel_with_non_admin_account()
         {
             return Runner.RunScenarioAsync(
@@ -108,8 +109,8 @@ namespace ChatServerTests.Features
         }
 
         [Scenario]
-        [Label("Ticket-7")]
-        [ScenarioCategory("Channel")]
+        [Label("Ticket-8")]
+        [ScenarioCategory(Category.Channel)]
         public Task User_tries_to_change_channel_name_providing_name_that_already_exists()
         {
             return Runner.RunScenarioAsync(

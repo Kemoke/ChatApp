@@ -16,7 +16,7 @@ namespace ChatServerTests.Features
     {
         [Scenario]
         [Label("Ticket-1")]
-        [ScenarioCategory("Security")]
+        [ScenarioCategory(Category.Security)]
         public Task Successful_login()
         {
             return Runner.RunScenarioAsync(
@@ -28,7 +28,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-2")]
-        [ScenarioCategory("Security")]
+        [ScenarioCategory(Category.Security)]
         public Task Unsuccessful_login_caused_by_wrong_username()
         {
             return Runner.RunScenarioAsync(
@@ -38,7 +38,7 @@ namespace ChatServerTests.Features
 
         [Scenario]
         [Label("Ticket-3")]
-        [ScenarioCategory("Security")]
+        [ScenarioCategory(Category.Security)]
         public Task Unsuccessful_login_caused_by_wrong_password()
         {
             return Runner.RunScenarioAsync(
